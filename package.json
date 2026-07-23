@@ -1,0 +1,7 @@
+{
+  "name": "yoursoullife-demo",
+  "version": "1.0.0",
+  "description": "YourSoulLife - AI betegút navigációs demo",
+  "private": true,
+  "type": "module"
+}

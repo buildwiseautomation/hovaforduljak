@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HovaForduljak — Egészségügyi navigáció</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8FAFC;--bg2:#FFFFFF;--card:#FFFFFF;--card2:#EEF2F7;
+  --border:#E2E8F0;--border2:#CBD5E1;
+  --accent:#2F6FED;--accent2:#1E56D6;--accent-soft:rgba(47,111,237,0.08);
+  --teal:#16BFC8;--teal-soft:rgba(22,191,200,0.12);
+  --success:#34C38F;--success-soft:rgba(52,195,143,0.12);
+  --info:#8FBFE0;--info-soft:rgba(143,191,224,0.18);
+  --warm:#D97706;--warm-soft:rgba(217,119,6,0.10);
+  --red:#DC4C4C;--red-soft:rgba(220,76,76,0.10);
+  --text:#0F172A;--text2:#475569;--text3:#64748B;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+
+/* AMBIENT */
+.amb{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.amb::before{content:'';position:absolute;top:-20%;left:-10%;width:700px;height:700px;background:radial-gradient(circle,rgba(143,191,224,0.20) 0%,transparent 65%);animation:a1 14s ease-in-out infinite alternate}
+.amb::after{content:'';position:absolute;bottom:-10%;right:-5%;width:500px;height:500px;background:radial-gradient(circle,rgba(22,191,200,0.10) 0%,transparent 65%);animation:a2 18s ease-in-out infinite alternate}
+@keyframes a1{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,40px) scale(1.15)}}
+@keyframes a2{from{transform:translate(0,0)}to{transform:translate(-50px,-30px)}}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:18px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.nav.on{background:rgba(255,255,255,.88);backdrop-filter:blur(20px);border-color:var(--border)}
+.logo{font-family:'Manrope',sans-serif;font-size:1.25rem;font-weight:800;letter-spacing:-.02em;color:var(--text)}
+.logo em{font-style:normal;color:var(--accent)}
+.nav-pill{font-size:.68rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);border:1px solid var(--border);padding:4px 12px;border-radius:20px}
+
+/* SCREENS */
+.scr{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative}
+.scr.on{display:flex}
+.wrap{position:relative;z-index:1;width:100%;max-width:660px}
+
+/* LANDING */
+#s-land{padding-top:72px}
+.eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--accent2)}
+.h1{font-family:'Manrope',sans-serif;font-size:clamp(2.2rem,6vw,3.8rem);font-weight:800;line-height:1.12;letter-spacing:-.025em;margin-bottom:22px}
+.h1 em{font-style:normal;color:var(--accent)}
+.sub{font-size:1rem;color:var(--text2);line-height:1.75;max-width:500px;margin-bottom:38px}
+.consent-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:22px;cursor:pointer;font-size:.82rem;color:var(--text2);line-height:1.5;max-width:520px;transition:background .2s,box-shadow .2s;padding:8px 10px;margin-left:-10px;border-radius:10px}
+.consent-row.attn{background:var(--warm-soft);box-shadow:0 0 0 1.5px var(--warm)}
+.consent-checkbox{width:18px;height:18px;margin-top:1px;flex-shrink:0;accent-color:var(--accent);cursor:pointer}
+.consent-row a{color:var(--accent);text-decoration:underline}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:56px}
+.btn-p{display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#fff;font-family:'Manrope',sans-serif;font-size:.92rem;font-weight:500;padding:13px 26px;border-radius:12px;border:none;cursor:pointer;transition:background .2s,transform .15s,box-shadow .2s;box-shadow:0 4px 28px rgba(47,111,237,.32);text-decoration:none}
+.btn-p:hover{background:var(--accent2);transform:translateY(-2px);box-shadow:0 8px 36px rgba(47,111,237,.42)}
+.btn-s{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text2);font-family:'Manrope',sans-serif;font-size:.92rem;padding:13px 20px;border-radius:12px;border:1px solid var(--border2);cursor:pointer;transition:color .2s,border-color .2s,transform .15s}
+.btn-s:hover{color:var(--text);border-color:var(--text3);transform:translateY(-2px)}
+.stats{display:flex;gap:28px;flex-wrap:wrap;padding-top:36px;border-top:1px solid var(--border)}
+.sn{font-family:'Manrope',sans-serif;font-size:1.7rem;font-weight:700;line-height:1;margin-bottom:3px}
+.sl{font-size:.75rem;color:var(--text3);letter-spacing:.04em}
+
+/* HOW */
+.how-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:40px}
+@media(max-width:600px){.how-cards{grid-template-columns:1fr}}
+.how-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 20px}
+.how-num{font-family:'Manrope',sans-serif;font-size:2rem;font-weight:700;color:var(--accent);opacity:.5;margin-bottom:8px}
+.how-t{font-weight:500;font-size:.92rem;margin-bottom:6px}
+.how-d{font-size:.8rem;color:var(--text3);line-height:1.6}
+
+/* QUIZ */
+#s-quiz{padding-top:72px}
+.prog-wrap{width:100%;height:2px;background:var(--border);border-radius:2px;margin-bottom:44px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px rgba(47,111,237,.5)}
+
+.qstep{display:none;animation:fu .4s ease both}
+.qstep.on{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.q-meta{font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.q-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);display:inline-block}
+.q-title{font-family:'Manrope',sans-serif;font-size:clamp(1.45rem,4vw,2rem);font-weight:700;line-height:1.25;letter-spacing:-.015em;margin-bottom:6px}
+.q-sub{font-size:.86rem;color:var(--text3);margin-bottom:26px;line-height:1.6}
+.q-sub.has-why{margin-bottom:10px}
+.q-why{font-size:.76rem;color:var(--text3);margin-top:0;margin-bottom:24px;line-height:1.5;display:flex;align-items:flex-start;gap:6px}
+.q-why::before{content:'ⓘ';font-size:.8rem;opacity:.8;flex-shrink:0;margin-top:1px}
+
+/* summary card before free text */
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:20px}
+.summary-card-title{font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.summary-row{display:flex;gap:10px;font-size:.85rem;margin-bottom:9px;line-height:1.5}
+.summary-row:last-child{margin-bottom:0}
+.summary-key{color:var(--text3);flex-shrink:0;min-width:110px}
+.summary-val{color:var(--text);font-weight:500}
+
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:28px}
+.opts.solo{grid-template-columns:1fr}
+.opts.triple{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:480px){.opts,.opts.triple{grid-template-columns:1fr}}
+
+.opt{background:var(--card);border:1.5px solid var(--border);border-radius:13px;padding:14px 16px;cursor:pointer;transition:border-color .18s,background .18s,transform .14s;display:flex;align-items:flex-start;gap:11px;text-align:left}
+.opt:hover{border-color:var(--border2);background:var(--card2);transform:translateY(-1px)}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel .oi{background:var(--accent);color:#fff}
+.oi{width:32px;height:32px;border-radius:9px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;transition:background .18s,color .18s}
+.ol{font-size:.88rem;font-weight:500;color:var(--text);line-height:1.35}
+.od{font-size:.75rem;color:var(--text3);margin-top:2px;line-height:1.4}
+
+/* multi-select hint */
+.multi-hint{font-size:.72rem;color:var(--accent2);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.multi-hint::before{content:'↗';font-size:.9rem}
+
+/* mini optional comment fields */
+.mini-comment{margin-bottom:26px;padding-top:14px;border-top:1px dashed var(--border)}
+.mc-label{display:block;font-size:.78rem;color:var(--text3);margin-bottom:8px;cursor:pointer}
+.mc-input{width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:11px 14px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.85rem;line-height:1.55;resize:none;transition:border-color .2s;min-height:60px}
+.mc-input:focus{outline:none;border-color:var(--accent)}
+.mc-input::placeholder{color:var(--text3)}
+
+.txt-in{width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:13px;padding:15px 17px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.92rem;line-height:1.65;resize:none;transition:border-color .2s;margin-bottom:22px;min-height:110px}
+.txt-in:focus{outline:none;border-color:var(--accent)}
+.txt-in::placeholder{color:var(--text3)}
+
+.slider-wrap{margin-bottom:28px}
+.slider-labels{display:flex;justify-content:space-between;font-size:.75rem;color:var(--text3);margin-bottom:8px}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--border2);border-radius:4px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 10px rgba(47,111,237,.4)}
+.slider-val{text-align:center;font-family:'Manrope',sans-serif;font-size:1.5rem;font-weight:700;color:var(--accent2);margin-top:10px}
+
+.q-nav{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.btn-back{background:transparent;color:var(--text3);border:none;font-family:'Manrope',sans-serif;font-size:.85rem;cursor:pointer;padding:8px 0;transition:color .2s;display:flex;align-items:center;gap:6px}
+.btn-back:hover{color:var(--text)}
+
+/* symptom groups */
+.sym-group{margin-bottom:22px}
+.sym-group-title{font-size:.82rem;font-weight:600;color:var(--accent2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sym-group-title .gi{font-size:1rem}
+.sym-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:480px){.sym-opts{grid-template-columns:1fr}}
+.sym-opt{background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:11px 14px;cursor:pointer;transition:border-color .18s,background .18s;display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--text2)}
+.sym-opt:hover{border-color:var(--border2);background:var(--card2)}
+.sym-opt.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--text)}
+.sym-check{width:18px;height:18px;border-radius:6px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:all .18s}
+.sym-opt.sel .sym-check{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* severity scale */
+.sev-scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:28px}
+.sev-btn{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:10px 6px;cursor:pointer;text-align:center;transition:all .18s;font-size:.78rem;color:var(--text2)}
+.sev-btn:hover{border-color:var(--border2);background:var(--card2)}
+.sev-btn.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--text)}
+.sev-num{font-family:'Manrope',sans-serif;font-size:1.2rem;font-weight:700;color:var(--accent);display:block;line-height:1;margin-bottom:3px}
+
+/* LOADING */
+#s-load{text-align:center}
+.spin{width:52px;height:52px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 24px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.load-t{font-family:'Manrope',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:8px}
+.load-s{color:var(--text3);font-size:.88rem}
+.dots::after{content:'';animation:dt 1.5s infinite}
+@keyframes dt{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
+
+/* RESULT */
+#s-res{padding-top:72px;padding-bottom:48px}
+
+.res-tag{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;font-size:.7rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}
+.res-tag.ok{background:var(--success-soft);color:var(--success);border:1px solid rgba(52,195,143,.25)}
+.res-t{font-family:'Manrope',sans-serif;font-size:clamp(1.7rem,5vw,2.6rem);font-weight:800;line-height:1.2;letter-spacing:-.02em;margin-bottom:14px}
+.res-sum{font-size:.95rem;color:var(--text2);line-height:1.8;margin-bottom:26px}
+
+.urg{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:10px;font-size:.82rem;font-weight:500;margin-bottom:36px}
+.urg.low{background:var(--success-soft);color:var(--success);border:1px solid rgba(52,195,143,.22)}
+.urg.mid{background:var(--warm-soft);color:var(--warm);border:1px solid rgba(217,119,6,.22)}
+.urg.hi{background:var(--red-soft);color:var(--red);border:1px solid rgba(220,76,76,.22)}
+.med-disclaimer{background:var(--warm-soft);border:1px solid rgba(217,119,6,.25);border-radius:12px;padding:14px 18px;font-size:.8rem;color:var(--text2);line-height:1.6;margin-bottom:28px}
+.med-disclaimer strong{color:var(--warm)}
+
+.sec-lbl{font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;margin-top:36px}
+
+/* Next steps */
+.steps-list{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.step-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;cursor:default;transition:border-color .18s}
+.step-card:hover{border-color:var(--border2)}
+.step-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.step-icon.p{background:var(--accent-soft)}
+.step-icon.t{background:var(--teal-soft)}
+.step-icon.w{background:var(--warm-soft)}
+.step-body{}
+.step-head{font-weight:500;font-size:.9rem;margin-bottom:3px}
+.step-txt{font-size:.8rem;color:var(--text3);line-height:1.55}
+.step-num-badge{font-size:.65rem;font-weight:600;letter-spacing:.08em;color:var(--accent2);background:var(--accent-soft);padding:2px 7px;border-radius:6px;margin-right:6px}
+
+/* Partners */
+.p-grid{display:flex;flex-direction:column;gap:10px}
+.p-card{background:var(--card);border:1.5px solid var(--border);border-radius:15px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:border-color .18s,background .18s,transform .14s;position:relative;overflow:hidden}
+.p-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:0;transition:opacity .2s}
+.p-card:hover{border-color:var(--border2);background:var(--card2);transform:translateX(3px)}
+.p-card:hover::before,.p-card.top::before{opacity:1}
+.p-card.top{border-color:rgba(47,111,237,.35)}
+.p-av{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--teal));display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.p-inf{flex:1;min-width:0}
+.p-nm{font-weight:600;font-size:.9rem;margin-bottom:1px}
+.p-sp{font-size:.76rem;color:var(--text3);margin-bottom:5px}
+.p-tags{display:flex;flex-wrap:wrap;gap:5px}
+.p-tag{font-size:.66rem;font-weight:500;padding:2px 7px;border-radius:5px;background:var(--bg2);color:var(--text3);border:1px solid var(--border)}
+.p-right{flex-shrink:0;text-align:right}
+.p-pct{font-family:'Manrope',sans-serif;font-size:1.2rem;font-weight:700;color:var(--accent2);line-height:1}
+.p-plbl{font-size:.66rem;color:var(--text3);margin-top:2px}
+.top-badge{position:absolute;top:10px;right:12px;font-size:.62rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--accent2);background:var(--accent-soft);padding:2px 7px;border-radius:5px;border:1px solid rgba(47,111,237,.2)}
+.real-badge{position:absolute;top:10px;right:12px;font-size:.62rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text);background:linear-gradient(135deg,var(--success),#5FDCAE);padding:3px 9px;border-radius:5px;box-shadow:0 2px 10px rgba(52,195,143,.35)}
+.p-card.real{border-color:rgba(52,195,143,.45)}
+.p-book-btn.real{background:var(--success);color:var(--text);font-weight:600}
+.p-book-btn.real:hover{background:#5FDCAE}
+
+/* AI box */
+.ai-box{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:20px 22px;margin-top:8px}
+.ai-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ai-ico{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#5B8DF2);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#fff}
+.ai-ht{font-size:.8rem;font-weight:500;color:var(--text2)}
+.ai-body{font-size:.86rem;color:var(--text2);line-height:1.78}
+
+/* profile summary */
+.profile-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px}
+@media(max-width:480px){.profile-row{grid-template-columns:1fr 1fr}}
+.prof-chip{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:12px 14px}
+.prof-lbl{font-size:.68rem;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.prof-val{font-size:.85rem;font-weight:500;color:var(--text)}
+
+.btn-restart{display:inline-flex;align-items:center;gap:7px;background:transparent;color:var(--text3);border:1px solid var(--border);font-family:'Manrope',sans-serif;font-size:.82rem;padding:9px 16px;border-radius:9px;cursor:pointer;transition:color .2s,border-color .2s;margin-top:32px}
+.btn-restart:hover{color:var(--text);border-color:var(--border2)}
+
+.err{background:var(--red-soft);border:1px solid rgba(220,76,76,.25);border-radius:11px;padding:14px 18px;color:#B23A3A;font-size:.85rem;line-height:1.6;margin-top:14px;display:none}
+.err.on{display:block}
+
+@media(max-width:520px){
+  .how-cards{grid-template-columns:1fr}
+  .stats{gap:18px}
+  .nav{padding:14px 18px}
+  .scr{padding:16px}
+  .sev-scale{grid-template-columns:repeat(5,1fr)}
+}
+
+@keyframes pulse-ring{0%,100%{box-shadow:0 0 0 0 rgba(47,111,237,.12)}50%{box-shadow:0 0 0 8px rgba(47,111,237,0)}}
+.p-card.top{animation:pulse-ring 3.5s ease-in-out infinite}
+
+/* expandable clinic card */
+.p-card-wrap{margin-bottom:10px}
+.p-chevron{font-size:1.1rem;color:var(--text3);transition:transform .25s;margin-top:4px}
+.p-chevron.up{transform:rotate(180deg)}
+.p-expand{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);background:var(--card);border:1.5px solid var(--border);border-top:none;border-radius:0 0 15px 15px;margin-top:-4px}
+.p-expand.open{max-height:460px}
+.p-detail-row{display:flex;align-items:center;gap:10px;padding:0 20px;font-size:.84rem;color:var(--text2);margin-top:14px}
+.p-detail-row:first-child{margin-top:18px}
+.p-detail-ic{font-size:.95rem;flex-shrink:0}
+.p-detail-desc{padding:14px 20px 0;font-size:.82rem;color:var(--text3);line-height:1.6}
+.illustrative-note{margin:12px 20px 18px;padding:10px 14px;background:var(--info-soft);border:1px solid rgba(143,191,224,.5);border-radius:9px;font-size:.74rem;color:var(--text2);line-height:1.55}
+.p-actions{display:flex;gap:10px;padding:18px 20px 20px}
+.p-book-btn{flex:1;background:var(--accent);color:#fff;border:none;font-family:'Manrope',sans-serif;font-size:.86rem;font-weight:500;padding:11px;border-radius:10px;cursor:pointer;transition:background .2s}
+.p-book-btn:hover{background:var(--accent2)}
+.p-call-btn{background:transparent;color:var(--text2);border:1px solid var(--border2);font-family:'Manrope',sans-serif;font-size:.86rem;padding:11px 18px;border-radius:10px;cursor:pointer;text-decoration:none;display:flex;align-items:center;transition:color .2s,border-color .2s}
+.p-call-btn:hover{color:var(--text);border-color:var(--text3)}
+
+/* booking modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease}
+.modal-overlay.on{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:28px;max-width:440px;width:100%;position:relative;animation:modalUp .3s cubic-bezier(.4,0,.2,1);max-height:90vh;overflow-y:auto}
+@keyframes modalUp{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--card);border:1px solid var(--border);color:var(--text2);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:.9rem;transition:color .2s}
+.modal-close:hover{color:var(--text)}
+.bk-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.bk-av{width:52px;height:52px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--teal));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.bk-name{font-family:'Manrope',sans-serif;font-size:1.2rem;font-weight:600}
+.bk-spec{font-size:.82rem;color:var(--text3)}
+.bk-info{background:var(--card);border-radius:12px;padding:6px 0 16px;margin-bottom:16px}
+.bk-demo-note{font-size:.72rem;color:var(--warm);background:var(--warm-soft);border:1px solid rgba(217,119,6,.22);border-radius:9px;padding:8px 12px;margin-bottom:18px}
+.bk-slots-label{font-size:.8rem;color:var(--text2);margin-bottom:10px;font-weight:500}
+.bk-slots{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.bk-slot{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:11px;text-align:center;font-size:.84rem;color:var(--text2);cursor:pointer;transition:all .18s}
+.bk-slot:hover{border-color:var(--border2);background:var(--card2)}
+.bk-slot.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--text)}
+.bk-confirm{display:none;flex-direction:column;gap:12px;border-top:1px solid var(--border);padding-top:16px}
+.bk-confirm-info{font-size:.85rem;color:var(--text2)}
+.bk-confirm-info strong{color:var(--accent2)}
+.bk-confirm-btn{background:var(--accent);color:#fff;border:none;font-family:'Manrope',sans-serif;font-size:.9rem;font-weight:500;padding:13px;border-radius:11px;cursor:pointer;transition:background .2s;box-shadow:0 4px 20px rgba(47,111,237,.3)}
+.bk-confirm-btn:hover{background:var(--accent2)}
+#booking-success{display:none;text-align:center;padding:20px 0}
+.bk-success-icon{width:60px;height:60px;border-radius:50%;background:var(--teal-soft);border:2px solid var(--teal);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 18px}
+.bk-success-title{font-family:'Manrope',sans-serif;font-size:1.4rem;font-weight:600;margin-bottom:10px}
+.bk-success-txt{font-size:.9rem;color:var(--text2);margin-bottom:8px}
+.bk-success-txt strong{color:var(--accent2)}
+.bk-success-sub{font-size:.82rem;color:var(--text3);line-height:1.6;max-width:320px;margin:0 auto}
+</style>
+</head>
+<body>
+<div class="amb"></div>
+
+<nav class="nav" id="nav">
+  <div class="logo">HovaForduljak</div>
+  <div class="nav-pill">Demo · MVP</div>
+</nav>
+
+<!-- LANDING -->
+<section class="scr on" id="s-land">
+  <div class="wrap">
+    <div class="eyebrow">Egészségügyi navigáció</div>
+    <h1 class="h1">Segítünk megtalálni<br><em>a megfelelő irányt.</em></h1>
+    <p class="sub">Nem diagnosztizálunk. Utat találunk. Adj meg néhány fontos információt, és perceken belül megmutatjuk, milyen szakemberre van szükséged, mennyire sürgős, és pontosan hol találod meg.</p>
+    <label class="consent-row" id="consent-row">
+      <input type="checkbox" id="consent-check" class="consent-checkbox">
+      <span>Elfogadom, hogy a megadott egészségügyi adataimat elemzés céljából feldolgozzák. <a href="#" onclick="event.stopPropagation()">Adatkezelési tájékoztató</a></span>
+    </label>
+    <div class="ctas">
+      <button class="btn-p" onclick="goQuiz()">Kezdjük el <span>→</span></button>
+      <button class="btn-s" onclick="goHow()">Hogyan működik?</button>
+    </div>
+    <div class="stats">
+      <div><div class="sn">3 perc</div><div class="sl">Átlagos kitöltési idő</div></div>
+      <div><div class="sn">10</div><div class="sl">Egészségügyi szakterület</div></div>
+      <div><div class="sn">94%</div><div class="sl">Pontos irányítás</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="scr" id="s-how">
+  <div class="wrap">
+    <div class="eyebrow">Hogyan működik</div>
+    <h2 class="h1" style="font-size:clamp(1.8rem,5vw,3rem)">Három lépés,<br><em>valódi eredmény</em></h2>
+    <div class="how-cards">
+      <div class="how-card"><div class="how-num">01</div><div class="how-t">Meséld el a helyzeted</div><div class="how-d">Rövid, játékos kérdések — nem kérdőív, hanem egy intelligens párbeszéd.</div></div>
+      <div class="how-card"><div class="how-num">02</div><div class="how-t">Az AI értelmezi</div><div class="how-d">Validált orvosi protokollok alapján értékeli a tüneteid súlyosságát és sürgősségét.</div></div>
+      <div class="how-card"><div class="how-num">03</div><div class="how-t">Megkapod az útvonalad</div><div class="how-d">Személyre szabott következő lépések és konkrét klinikák — azonnal cselekvésre kész.</div></div>
+    </div>
+    <div style="margin-top:40px;display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn-p" onclick="goQuiz()">Elindulok →</button>
+      <button class="btn-s" onclick="go('s-land')">Vissza</button>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="scr" id="s-quiz">
+  <div class="wrap">
+    <div class="prog-wrap"><div class="prog-fill" id="prog" style="width:8%"></div></div>
+
+    <!-- Q1: Nem -->
+    <div class="qstep on" id="q1">
+      <div class="q-meta"><span class="q-dot"></span>Alap információk</div>
+      <h2 class="q-title">Biológiai nem</h2>
+      <p class="q-sub has-why">Egyes tünetek és kockázatok eltérőek — ez segít pontosabb képet adni.</p>
+      <p class="q-why">A biológiai nem befolyásolja bizonyos betegségek kockázatát és a hormonális hátteret — ezért kezdjük ezzel.</p>
+      <div class="opts triple">
+        <div class="opt" onclick="pick(this,'nem','Férfi')"><div class="oi">♂</div><div><div class="ol">Férfi</div></div></div>
+        <div class="opt" onclick="pick(this,'nem','Nő')"><div class="oi">♀</div><div><div class="ol">Nő</div></div></div>
+        <div class="opt" onclick="pick(this,'nem','Egyéb')"><div class="oi">◎</div><div><div class="ol">Nem adom meg</div></div></div>
+      </div>
+      <div class="q-nav"><span></span><button class="btn-p" onclick="nxt(2)">Tovább →</button></div>
+    </div>
+
+    <!-- Q2: Kor + testsúly -->
+    <div class="qstep" id="q2">
+      <div class="q-meta"><span class="q-dot"></span>Alap információk</div>
+      <h2 class="q-title">Néhány szám rólad</h2>
+      <p class="q-sub has-why">Kor és testsúly — segítenek a kockázatbecslésben.</p>
+      <p class="q-why">Az életkor és a testsúly több szűrési és kockázati küszöbérték alapja, így pontosabb ajánlást tudunk adni.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
+        <div>
+          <div style="font-size:.78rem;color:var(--text3);margin-bottom:6px">Életkor</div>
+          <input id="kor" type="number" min="10" max="99" placeholder="pl. 34" style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:12px 14px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div>
+          <div style="font-size:.78rem;color:var(--text3);margin-bottom:6px">Testsúly (kg)</div>
+          <input id="suly" type="number" min="30" max="250" placeholder="pl. 72" style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:12px 14px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="prv(1)">← Vissza</button><button class="btn-p" onclick="nxt(3)">Tovább →</button></div>
+    </div>
+
+    <!-- Q3: Tünetek - fő területek (multi) -->
+    <div class="qstep" id="q3">
+      <div class="q-meta"><span class="q-dot"></span>Tünetek felmérése</div>
+      <h2 class="q-title">Hol érzed a legtöbb panaszt?</h2>
+      <p class="q-sub has-why">Több területet is megjelölhetsz.</p>
+      <p class="q-why">Itt még csak a fő irányt keressük — a következő lépésben pontosítjuk a konkrét tüneteket.</p>
+      <div class="multi-hint">Jelölhetsz többet is</div>
+      <div class="opts" id="teruletek">
+        <div class="opt" onclick="mpick(this,'terület','Szív és keringés')"><div class="oi">❤️</div><div><div class="ol">Szív és keringés</div><div class="od">Mellkasi érzés, szívverés</div></div></div>
+        <div class="opt" onclick="mpick(this,'terület','Légzőszervi')"><div class="oi">🫁</div><div><div class="ol">Légzőszervi</div><div class="od">Légszomj, köhögés, allergia</div></div></div>
+        <div class="opt" onclick="mpick(this,'terület','Mozgásszervi')"><div class="oi">🦴</div><div><div class="ol">Mozgásszervi</div><div class="od">Fájdalom, merevség, ízület</div></div></div>
+        <div class="opt" onclick="mpick(this,'terület','Gyomor-bél')"><div class="oi">🫃</div><div><div class="ol">Emésztőrendszer</div><div class="od">Puffadás, reflux, emésztés</div></div></div>
+        <div class="opt" onclick="mpick(this,'terület','Mentális-Pszichés')"><div class="oi">🧠</div><div><div class="ol">Mentális, érzelmi</div><div class="od">Szorongás, hangulat, stressz</div></div></div>
+        <div class="opt" onclick="mpick(this,'terület','Alvás')"><div class="oi">🌙</div><div><div class="ol">Alvás</div><div class="od">Elalvás, ébredés, fáradtság</div></div></div>
+        <div class="opt" onclick="mpick(this,'terület','Anyagcsere-Hormonális')"><div class="oi">⚗️</div><div><div class="ol">Anyagcsere, hormon</div><div class="od">Súlyváltozás, fáradtság, ciklus</div></div></div>
+        <div class="opt" onclick="mpick(this,'terület','Bőr-Haj')"><div class="oi">✨</div><div><div class="ol">Bőr, haj</div><div class="od">Akne, hajhullás, bőrtünetek</div></div></div>
+        <div class="opt" onclick="mpick(this,'terület','Neurológiai')"><div class="oi">⚡</div><div><div class="ol">Neurológiai</div><div class="od">Fejfájás, szédülés, zsibbadás</div></div></div>
+        <div class="opt" onclick="mpick(this,'terület','Szűrés-Megelőzés')"><div class="oi">🔬</div><div><div class="ol">Szűrés, megelőzés</div><div class="od">Nem érzek különös panaszt</div></div></div>
+      </div>
+      <div class="mini-comment">
+        <label class="mc-label" for="cm-terulet">+ Van más is, ami nincs a listában? (opcionális)</label>
+        <textarea class="mc-input" id="cm-terulet" placeholder="Pl. valami olyan panaszom van, ami nem illik egyik kategóriába sem..."></textarea>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="prv(2)">← Vissza</button><button class="btn-p" onclick="goSymptoms()">Tovább →</button></div>
+    </div>
+
+    <!-- QSYM: Dinamikus tünet-kérdések -->
+    <div class="qstep" id="qsym">
+      <div class="q-meta"><span class="q-dot"></span>Tünetek pontosítása</div>
+      <h2 class="q-title">Pontosítsuk a tüneteket</h2>
+      <p class="q-sub">Jelöld be, amit tapasztalsz — minél pontosabb a kép, annál jobb az ajánlás.</p>
+      <div class="multi-hint">Jelölhetsz többet is</div>
+      <div id="sym-container"></div>
+      <div class="mini-comment">
+        <label class="mc-label" for="cm-tunet">+ Van olyan tüneted, ami nincs a listában? (opcionális)</label>
+        <textarea class="mc-input" id="cm-tunet" placeholder="Pl. egy tünet, ami fontos, de nem szerepelt a fenti listákban..."></textarea>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="showQ(3)">← Vissza</button><button class="btn-p" onclick="showQ(4)">Tovább →</button></div>
+    </div>
+
+    <!-- Q4: Súlyosság -->
+    <div class="qstep" id="q4">
+      <div class="q-meta"><span class="q-dot"></span>Tünetek felmérése</div>
+      <h2 class="q-title">Mennyire nehezíti meg a mindennapjaidat?</h2>
+      <p class="q-sub has-why">Legyél őszinte — ez határozza meg a sürgősséget.</p>
+      <p class="q-why">A hétköznapi életre gyakorolt hatás az egyik legfontosabb jelzés arról, mennyire sürgős a beavatkozás.</p>
+      <div class="sev-scale" id="sev-btns">
+        <div class="sev-btn" onclick="sevpick(this,1)"><span class="sev-num">1</span>Alig észrevehető</div>
+        <div class="sev-btn" onclick="sevpick(this,2)"><span class="sev-num">2</span>Enyhe, nem zavar</div>
+        <div class="sev-btn" onclick="sevpick(this,3)"><span class="sev-num">3</span>Mérsékelten befolyásol</div>
+        <div class="sev-btn" onclick="sevpick(this,4)"><span class="sev-num">4</span>Komolyan nehezíti</div>
+        <div class="sev-btn" onclick="sevpick(this,5)"><span class="sev-num">5</span>Szinte elviselhetetlen</div>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="goSymptoms()">← Vissza</button><button class="btn-p" onclick="nxt(5)" id="bn4">Tovább →</button></div>
+    </div>
+
+    <!-- Q5: Időtartam -->
+    <div class="qstep" id="q5">
+      <div class="q-meta"><span class="q-dot"></span>Tünetek felmérése</div>
+      <h2 class="q-title">Mióta tapasztalod ezeket?</h2>
+      <p class="q-sub has-why">Az időtartam alapvetően befolyásolja az ajánlásokat.</p>
+      <p class="q-why">Egy hirtelen és egy régóta fennálló panasz teljesen más ellátási utat igényelhet.</p>
+      <div class="opts solo">
+        <div class="opt" onclick="pick(this,'idotartam','Pár napja — hirtelen kezdődött')"><div class="oi">⚡</div><div><div class="ol">Pár napja — hirtelen kezdődött</div></div></div>
+        <div class="opt" onclick="pick(this,'idotartam','1-4 hete')"><div class="oi">📅</div><div><div class="ol">1–4 hete</div></div></div>
+        <div class="opt" onclick="pick(this,'idotartam','1-6 hónapja')"><div class="oi">🗓️</div><div><div class="ol">1–6 hónapja</div></div></div>
+        <div class="opt" onclick="pick(this,'idotartam','Fél évnél régebben')"><div class="oi">⏳</div><div><div class="ol">Fél évnél régebben — visszatérő</div></div></div>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="prv(4)">← Vissza</button><button class="btn-p" onclick="nxt(6)">Tovább →</button></div>
+    </div>
+
+    <!-- Q6: Életmód -->
+    <div class="qstep" id="q6">
+      <div class="q-meta"><span class="q-dot"></span>Életmód</div>
+      <h2 class="q-title">Milyen az életmódod?</h2>
+      <p class="q-sub has-why">Mozgás, alvás és stressz — a tünetek hátterét is értjük így.</p>
+      <p class="q-why">Az életmód sok tünet hátterében ott van — ez segít megkülönböztetni az okot a következménytől.</p>
+      <div class="opts">
+        <div class="opt" onclick="pick(this,'eletmod','Ülő, kevés mozgás')"><div class="oi">💺</div><div><div class="ol">Ülő életmód</div><div class="od">Szinte semmi rendszeres mozgás</div></div></div>
+        <div class="opt" onclick="pick(this,'eletmod','Könnyű napi aktivitás')"><div class="oi">🚶</div><div><div class="ol">Könnyű aktivitás</div><div class="od">Napi séta, háztartás</div></div></div>
+        <div class="opt" onclick="pick(this,'eletmod','Rendszeres sport')"><div class="oi">🏃</div><div><div class="ol">Rendszeres sport</div><div class="od">Heti 2-3 alkalom</div></div></div>
+        <div class="opt" onclick="pick(this,'eletmod','Aktív sportoló')"><div class="oi">🏋️</div><div><div class="ol">Aktív sportoló</div><div class="od">Heti 4+ célzott edzés</div></div></div>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="prv(5)">← Vissza</button><button class="btn-p" onclick="nxt(7)">Tovább →</button></div>
+    </div>
+
+    <!-- Q7: Korábbi betegségek + psziché -->
+    <div class="qstep" id="q7">
+      <div class="q-meta"><span class="q-dot"></span>Előzmények</div>
+      <h2 class="q-title">Van-e ismert betegséged vagy szedsz-e gyógyszert?</h2>
+      <p class="q-sub has-why">Több is megjelölhető.</p>
+      <p class="q-why">A meglévő betegségek és gyógyszerek befolyásolják, milyen szakemberhez érdemes fordulnod.</p>
+      <div class="multi-hint">Jelölhetsz többet is</div>
+      <div class="opts" id="betegsegek">
+        <div class="opt" onclick="mpick(this,'betegseg','Magas vérnyomás')"><div class="oi">💊</div><div><div class="ol">Magas vérnyomás</div></div></div>
+        <div class="opt" onclick="mpick(this,'betegseg','Cukorbetegség / IR')"><div class="oi">🩸</div><div><div class="ol">Cukorbetegség / IR</div></div></div>
+        <div class="opt" onclick="mpick(this,'betegseg','Pajzsmirigy betegség')"><div class="oi">⚗️</div><div><div class="ol">Pajzsmirigy betegség</div></div></div>
+        <div class="opt" onclick="mpick(this,'betegseg','Autoimmun betegség')"><div class="oi">🛡️</div><div><div class="ol">Autoimmun betegség</div></div></div>
+        <div class="opt" onclick="mpick(this,'betegseg','Szorongás / depresszió kezelés alatt')"><div class="oi">🧠</div><div><div class="ol">Szorongás / depresszió (kezelt)</div></div></div>
+        <div class="opt" onclick="mpick(this,'betegseg','Rendszeresen szedek gyógyszert')"><div class="oi">💉</div><div><div class="ol">Rendszeresen szedek gyógyszert</div></div></div>
+        <div class="opt" onclick="mpick(this,'betegseg','Nincs ismert betegségem')"><div class="oi">✓</div><div><div class="ol">Nincs ismert betegségem</div></div></div>
+      </div>
+      <div class="mini-comment">
+        <label class="mc-label" for="cm-betegseg">+ Van más betegséged vagy gyógyszered, ami nincs a listában? (opcionális)</label>
+        <textarea class="mc-input" id="cm-betegseg" placeholder="Pl. egy diagnózis vagy gyógyszer neve, ami fontos lehet..."></textarea>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="prv(6)">← Vissza</button><button class="btn-p" onclick="nxt(8)">Tovább →</button></div>
+    </div>
+
+    <!-- Q8: Psziché gyors -->
+    <div class="qstep" id="q8">
+      <div class="q-meta"><span class="q-dot"></span>Mentális állapot</div>
+      <h2 class="q-title">Az elmúlt hónapban hogyan voltál mentálisan?</h2>
+      <p class="q-sub has-why">Több is megjelölhető — ez fontos része az egészségképnek.</p>
+      <p class="q-why">A mentális és testi egészség szorosan összefügg — ezt együtt nézve pontosabb a kép.</p>
+      <div class="multi-hint">Jelölhetsz többet is</div>
+      <div class="opts" id="psziche">
+        <div class="opt" onclick="mpick(this,'psziche','Tartós szorongás, feszültség')"><div class="oi">😰</div><div><div class="ol">Tartós szorongás, feszültség</div></div></div>
+        <div class="opt" onclick="mpick(this,'psziche','Depresszív hangulat, kedvetlenség')"><div class="oi">😔</div><div><div class="ol">Depresszív hangulat</div></div></div>
+        <div class="opt" onclick="mpick(this,'psziche','Kiégés, motiváció hiány')"><div class="oi">🔋</div><div><div class="ol">Kiégés, motiváció hiány</div></div></div>
+        <div class="opt" onclick="mpick(this,'psziche','Krónikus stressz, túlterheltség')"><div class="oi">🌀</div><div><div class="ol">Krónikus stressz, túlterheltség</div></div></div>
+        <div class="opt" onclick="mpick(this,'psziche','Hangulatingadozás, ingerlékenység')"><div class="oi">⚡</div><div><div class="ol">Hangulatingadozás, ingerlékenység</div></div></div>
+        <div class="opt" onclick="mpick(this,'psziche','Nem tapasztalok ilyesmit')"><div class="oi">✓</div><div><div class="ol">Nem tapasztalok ilyesmit</div></div></div>
+      </div>
+      <div class="mini-comment">
+        <label class="mc-label" for="cm-psziche">+ Szeretnél még valamit hozzátenni a lelkiállapotodhoz? (opcionális)</label>
+        <textarea class="mc-input" id="cm-psziche" placeholder="Pl. valami, ami nem fért bele a fenti listába, de fontosnak érzed..."></textarea>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="prv(7)">← Vissza</button><button class="btn-p" onclick="nxt(9)">Tovább →</button></div>
+    </div>
+
+    <!-- Q9: Korábbi szakember -->
+    <div class="qstep" id="q9">
+      <div class="q-meta"><span class="q-dot"></span>Előzmények</div>
+      <h2 class="q-title">Voltál már ezzel kapcsolatban szakembernél?</h2>
+      <p class="q-why">Ha már jártál valahol, más irányból közelítünk — pl. második vélemény vagy más megközelítés felé.</p>
+      <div class="opts solo">
+        <div class="opt" onclick="pick(this,'elozmeny','Nem, most foglalkozom ezzel először')"><div class="oi">🆕</div><div><div class="ol">Nem, most foglalkozom ezzel először</div></div></div>
+        <div class="opt" onclick="pick(this,'elozmeny','Igen, de nem voltam elégedett az eredménnyel')"><div class="oi">🔁</div><div><div class="ol">Igen, de nem voltam elégedett</div></div></div>
+        <div class="opt" onclick="pick(this,'elozmeny','Voltam, de abbahagytam')"><div class="oi">⏸️</div><div><div class="ol">Voltam, de abbahagytam</div></div></div>
+        <div class="opt" onclick="pick(this,'elozmeny','Jelenleg is járok valahova')"><div class="oi">✅</div><div><div class="ol">Jelenleg is járok valahova</div></div></div>
+      </div>
+      <div class="mini-comment">
+        <label class="mc-label" for="cm-elozmeny">+ Röviden leírnád mi történt korábban? (opcionális)</label>
+        <textarea class="mc-input" id="cm-elozmeny" placeholder="Pl. miért nem voltál elégedett, vagy mit próbáltál már..."></textarea>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="prv(8)">← Vissza</button><button class="btn-p" onclick="nxt(10)">Tovább →</button></div>
+    </div>
+
+    <!-- Q10: Szabad szöveg -->
+    <div class="qstep" id="q10">
+      <div class="q-meta"><span class="q-dot"></span>Utolsó lépés</div>
+      <h2 class="q-title">Van valami, amit még fontosnak tartasz megosztani?</h2>
+      <p class="q-sub">Mielőtt elemezünk, itt egy összefoglaló arról, amit eddig megosztottál. Ha valami pontatlan vagy kimaradt, írd le alább.</p>
+      <div class="summary-card" id="summary-card"></div>
+      <textarea class="txt-in" id="szabadszoveg" placeholder="Pl. Hetek óta sokat fáradok, reggel nehezen kelek fel, és a munkában is jobban stresszelem magam mint korábban. Anyukámnál volt cukorbetegség..."></textarea>
+      <div class="q-nav">
+        <button class="btn-back" onclick="prv(9)">← Vissza</button>
+        <button class="btn-p" onclick="submit()">Elemzés kérése ✦</button>
+      </div>
+      <div class="err" id="errbox">Hiba történt az elemzés során. Kérlek próbáld újra.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- LOADING -->
+<section class="scr" id="s-load">
+  <div class="wrap" style="text-align:center">
+    <div class="spin"></div>
+    <h2 class="load-t">Elemzés folyamatban</h2>
+    <p class="load-s">Az AI feldolgozza a válaszaidat<span class="dots"></span></p>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section class="scr" id="s-res">
+  <div class="wrap">
+    <div class="res-tag ok">✦ Elemzés kész</div>
+    <h2 class="res-t" id="r-title"></h2>
+    <p class="res-sum" id="r-sum"></p>
+    <div class="urg" id="r-urg"></div>
+
+    <div class="med-disclaimer">⚠️ Ez az eszköz nem helyettesíti az orvosi ellátást és nem ad diagnózist — kizárólag eligazítást nyújt. Sürgős, életveszélyt jelentő tünetek esetén azonnal hívd a <strong>112</strong>-t vagy fordulj sürgősségi ellátáshoz.</div>
+
+    <div class="profile-row" id="r-profile"></div>
+
+    <div class="sec-lbl">Ajánlott következő lépések</div>
+    <div class="steps-list" id="r-steps"></div>
+
+    <div class="sec-lbl">Ajánlott partnerek</div>
+    <div class="p-grid" id="r-partners"></div>
+
+    <div class="sec-lbl">Miért ezek az ajánlások?</div>
+    <div class="ai-box">
+      <div class="ai-hd"><div class="ai-ico">✦</div><div class="ai-ht">AI magyarázat</div></div>
+      <div class="ai-body" id="r-explain"></div>
+    </div>
+
+    <button class="btn-restart" onclick="restart()">↺ Új elemzés indítása</button>
+  </div>
+</section>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="booking-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeBooking()">✕</button>
+    <div id="booking-body">
+      <div class="bk-header">
+        <div class="bk-av" id="bk-av">🏥</div>
+        <div>
+          <div class="bk-name" id="bk-name">Klinika</div>
+          <div class="bk-spec" id="bk-spec">Szakterület</div>
+        </div>
+      </div>
+      <div class="bk-info">
+        <div class="p-detail-row"><span class="p-detail-ic">📍</span><span id="bk-addr">Budapest</span></div>
+        <div class="p-detail-row"><span class="p-detail-ic">📞</span><span id="bk-tel">+36 1 000 0000</span></div>
+      </div>
+      <div class="bk-demo-note">Demo — a foglalás bemutató célú, valós időpont nem jön létre.</div>
+      <div class="bk-slots-label">Válassz szabad időpontot:</div>
+      <div class="bk-slots" id="bk-slots"></div>
+      <div class="bk-confirm" id="bk-confirm">
+        <div class="bk-confirm-info">Kiválasztott időpont: <strong id="bk-confirm-txt"></strong></div>
+        <button class="bk-confirm-btn" onclick="confirmBooking()">Foglalás megerősítése ✦</button>
+      </div>
+    </div>
+    <div id="booking-success">
+      <div class="bk-success-icon">✓</div>
+      <div class="bk-success-title">Foglalás rögzítve!</div>
+      <div class="bk-success-txt">Időpont: <strong id="bk-success-slot"></strong></div>
+      <div class="bk-success-sub">Egy megerősítő emailt küldtünk. A klinika hamarosan felveszi veled a kapcsolatot.</div>
+      <button class="bk-confirm-btn" onclick="closeBooking()" style="margin-top:20px">Bezárás</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const A = {};
+const MULTI = {};
+let SEV = 0;
+const TOTAL_Q = 10;
+
+// ── Partner adatbázis ──
+const PDATA = {
+  'Mentális-Pszichés': [
+    {nm:'MedSoulYou',sp:'Orvosi és pszichológiai csapat · Állapotfelmérés',ic:'💫',tags:['Pszichológia','Pszichiátria','Testi-lelki együtt'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Orvosokból és pszichológusokból álló csapat, akik a testi és lelki egészséget együtt vizsgálják — nem csak tüneti kezelést adnak, hanem a kiváltó okot keresik.'},
+    {nm:'Budai Pszichológus Központ',sp:'Klinikai pszichológia · Kognitív terápia',ic:'🧠',tags:['Szorongás','Depresszió','KBT','Online is'],pct:96,top:false,addr:'1104 Budapest, VI. Andrássy út 63.',tel:'+36 1 428 3286',hours:'H–P: 8:00–18:00'},
+    {nm:'Dr. Varga Éva',sp:'Pszichiáter · Magánrendelő',ic:'💊',tags:['Gyógyszeres kezelés','Burnout','Pánikroham'],pct:87,top:false,addr:'1119 Budapest, III. Bécsi út 109.',tel:'+36 1 232 1488',hours:'H–P: 8:00–18:00'},
+    {nm:'MindSpace Terápia',sp:'Egyéni és páros terápia',ic:'💬',tags:['Önismeret','Párkapcsolat','Online is'],pct:81,top:false,addr:'1138 Budapest, XIII. Váci út 155.',tel:'+36 1 227 4257',hours:'H–P: 9:00–19:00'}
+  ],
+  'Alvás': [
+    {nm:'MedSoulYou',sp:'Belgyógyászat + Pszichológia · Állapotfelmérés',ic:'💫',tags:['Alvászavar','Krónikus fáradtság','Komplex kivizsgálás'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Az alvászavarok hátterében gyakran hormonális, anyagcsere- vagy stressz-eredetű okok állnak — a MedSoulYou csapata ezeket egyben vizsgálja.'},
+    {nm:'SleepWell Alvásdiagnosztika',sp:'Alváscentrum · Poligráfia',ic:'🌙',tags:['Alvászavar','Apnoe','Horkolás'],pct:95,top:false,addr:'1179 Budapest, XIII. Váci út 72.',tel:'+36 1 206 3615',hours:'H–P: 9:00–19:00'},
+    {nm:'Dr. Molnár Zsófia',sp:'Neurológus · Alvásspecialista',ic:'⚡',tags:['Inszomnia','Alvásterápia'],pct:88,top:false,addr:'1142 Budapest, VII. Király utca 56.',tel:'+36 1 981 6514',hours:'H–P: 8:00–18:00'},
+    {nm:'Budai Egészségközpont',sp:'Általános kivizsgálás + alvás',ic:'🏥',tags:['Komplex szűrés','Labor'],pct:76,top:false,addr:'1161 Budapest, VI. Andrássy út 92.',tel:'+36 1 552 5333',hours:'H–P: 8:00–18:00'}
+  ],
+  'Anyagcsere-Hormonális': [
+    {nm:'MedSoulYou',sp:'Belgyógyászat, Dietetika · Életmódorvoslás',ic:'💫',tags:['Pajzsmirigy','PCOS','Inzulinrezisztencia','Cukorbetegség'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pajzsmirigy-, PCOS- és inzulinrezisztencia-problémákra szakosodott csapat, laborvizsgálattal és személyre szabott kezelési tervvel.'},
+    {nm:'NutriBalance Klinika',sp:'Dietetika · Anyagcsere felmérés',ic:'⚗️',tags:['IR','Hormonális','Diéta'],pct:94,top:false,addr:'1181 Budapest, XII. Alkotás utca 97.',tel:'+36 1 280 5803',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Dr. Kovács Petra',sp:'Endokrinológus · Magánrendelő',ic:'🔬',tags:['Pajzsmirigy','PCOS','Cukorbetegség'],pct:89,top:false,addr:'1131 Budapest, VIII. Üllői út 12.',tel:'+36 1 877 4733',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Medicover Endokrinológia',sp:'Komplex hormon kivizsgálás',ic:'🏥',tags:['Labor','Ultrahang','Tanácsadás'],pct:82,top:false,addr:'1233 Budapest, VI. Andrássy út 26.',tel:'+36 1 589 5554',hours:'H–P: 9:00–19:00'}
+  ],
+  'Mozgásszervi': [
+    {nm:'MedSoulYou',sp:'Gyógytorna, Fizioterápia · Állapotfelmérés',ic:'💫',tags:['Derékfájás','Ízületi panasz','Gyógytorna'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gyógytornász-fizioterapeuta szakértelem a mozgásszervi panaszok, sportsérülések és rehabilitáció kezelésére.'},
+    {nm:'Budapest Spine Center',sp:'Ortopédia · Gerincsebészet',ic:'🦴',tags:['Gerincbetegség','Rehabilitáció','Fizioterpia'],pct:95,top:false,addr:'1125 Budapest, VII. Király utca 91.',tel:'+36 1 414 5374',hours:'H–P: 8:00–18:00'},
+    {nm:'ProSport Medicina',sp:'Sportmedicina · Fizioterápia',ic:'💪',tags:['Sport sérülés','Mozgásterápia','Izomzat'],pct:87,top:false,addr:'1202 Budapest, VIII. Üllői út 137.',tel:'+36 1 946 5010',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Dr. Fekete Péter',sp:'Reumatológus · Ízületi betegségek',ic:'🔩',tags:['Ízület','Arthritis','Gyulladás'],pct:80,top:false,addr:'1164 Budapest, XII. Alkotás utca 164.',tel:'+36 1 904 4598',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'}
+  ],
+  'Gyomor-bél': [
+    {nm:'MedSoulYou',sp:'Gasztroenterológia · Állapotfelmérés',ic:'💫',tags:['Reflux','Puffadás','IBS','SIBO'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gasztroenterológus szakorvosi háttérrel vizsgálják a puffadás, reflux, IBS és egyéb emésztőrendszeri panaszok valódi kiváltó okát.'},
+    {nm:'Gasztro Centrum Budapest',sp:'Gasztroenterológia · Endoszkópia',ic:'🫃',tags:['Reflux','IBS','Intoleranciák'],pct:94,top:false,addr:'1130 Budapest, V. Váci utca 81.',tel:'+36 1 610 5386',hours:'H–P: 8:00–18:00'},
+    {nm:'Dr. Horváth Gábor',sp:'Belgyógyász · Emésztőrendszer',ic:'🩺',tags:['Emésztési zavar','Puffadás','Colon'],pct:86,top:false,addr:'1195 Budapest, XIII. Váci út 55.',tel:'+36 1 871 9179',hours:'H–P: 9:00–19:00'},
+    {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Labor','Intolerancia teszt','H. pylori'],pct:78,top:false,addr:'1124 Budapest, XII. Alkotás utca 36.',tel:'+36 1 452 9830',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'}
+  ],
+  'Szív és keringés': [
+    {nm:'MedSoulYou',sp:'Belgyógyászat · EKG, teljes állapotfelmérés',ic:'💫',tags:['Mellkasi fájdalom','Magas vérnyomás','Komplex kivizsgálás'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász szakorvosi vizsgálat, EKG és laborháttér egy helyen — a mellkasi panaszok és vérnyomásproblémák valós okának feltárására.'},
+    {nm:'Kardio Centrum Budapest',sp:'Kardiológia · Non-invazív diagnosztika',ic:'❤️',tags:['EKG','Echokardiográfia','Holter'],pct:96,top:false,addr:'1169 Budapest, VIII. Üllői út 103.',tel:'+36 1 570 4593',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Dr. Szabó András',sp:'Kardiológus · Magánrendelő',ic:'🫀',tags:['Vérnyomás','Ritmuszavar','Terheléses EKG'],pct:89,top:false,addr:'1171 Budapest, III. Bécsi út 13.',tel:'+36 1 312 3504',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Medicover Kardiológia',sp:'Komplex szív kivizsgálás',ic:'🏥',tags:['Teljes szűrés','Labor','Képalkotó'],pct:83,top:false,addr:'1191 Budapest, IX. Ferenc körút 99.',tel:'+36 1 590 8668',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'}
+  ],
+  'Légzőszervi': [
+    {nm:'Tüdő Centrum Budapest',sp:'Pulmonológia · Légzésfunkció',ic:'🫁',tags:['Asztma','Allergia','Spirometria'],pct:93,top:true,addr:'1230 Budapest, III. Bécsi út 175.',tel:'+36 1 938 2876',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Dr. Nagy Katalin',sp:'Allergológus · Immunológus',ic:'🌿',tags:['Allergia','Szénanátha','Immunterápia'],pct:87,top:false,addr:'1114 Budapest, VII. Király utca 112.',tel:'+36 1 361 8433',hours:'H–P: 8:00–18:00'},
+    {nm:'Fül-orr-gégészeti Centrum',sp:'ENT · Légúti betegségek',ic:'👃',tags:['Orrmelléküregek','Horkolás','Alvási apnoe'],pct:79,top:false,addr:'1182 Budapest, XI. Bartók Béla út 130.',tel:'+36 1 308 5889',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'}
+  ],
+  'Neurológiai': [
+    {nm:'Neurológiai Centrum Budapest',sp:'Neurológia · Fejfájásambulancia',ic:'⚡',tags:['Migrén','Szédülés','Zsibbadás'],pct:94,top:true,addr:'1152 Budapest, II. Margit körút 139.',tel:'+36 1 997 9689',hours:'H–P: 8:00–18:00'},
+    {nm:'Dr. Papp Erzsébet',sp:'Neurológus · Magánrendelő',ic:'🧬',tags:['Fejfájás','Memóriazavar','Idegrendszer'],pct:88,top:false,addr:'1157 Budapest, VIII. Üllői út 5.',tel:'+36 1 314 6947',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'MRI Centrum Budapest',sp:'Neuroradiológia · Képalkotó',ic:'🔬',tags:['MRI','CT','Diagnosztika'],pct:80,top:false,addr:'1103 Budapest, XIII. Váci út 146.',tel:'+36 1 280 2403',hours:'H–P: 9:00–19:00'}
+  ],
+  'Bőr-Haj': [
+    {nm:'Bőrgyógyászati Magánrendelő',sp:'Dermatológia · Esztétikai bőrgyógyászat',ic:'✨',tags:['Akne','Psoriasis','Hajhullás'],pct:93,top:true,addr:'1228 Budapest, VI. Andrássy út 33.',tel:'+36 1 331 8787',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Dr. Lakatos Mária',sp:'Bőrgyógyász · Trichológus',ic:'💇',tags:['Hajhullás','Bőrbetegségek','Hormonális akne'],pct:87,top:false,addr:'1189 Budapest, XI. Bartók Béla út 109.',tel:'+36 1 416 9835',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'SkinLab Budapest',sp:'Endokrinológia + Bőrgyógyászat',ic:'🔬',tags:['Hormonális összefüggés','Labor','Komplex'],pct:81,top:false,addr:'1165 Budapest, XI. Bartók Béla út 113.',tel:'+36 1 729 8397',hours:'H–P: 8:00–18:00'}
+  ],
+  'Szűrés-Megelőzés': [
+    {nm:'MedSoulYou',sp:'Teljes körű állapotfelmérés · Orvosi + pszichológiai',ic:'💫',tags:['Teljes állapotfelmérés','Labor','Prevenció'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'A MedSoulYou állapotfelmérése kérdőívet, labort, fizikai és pszichológiai vizsgálatot egyesít — a legátfogóbb kép a jelenlegi állapotodról.'},
+    {nm:'Medicover Szűrőprogram',sp:'Komplex prevenciós vizsgálat',ic:'🔬',tags:['Teljes labor','Képalkotó','Szívszűrés'],pct:97,top:false,addr:'1131 Budapest, XIII. Váci út 87.',tel:'+36 1 221 4770',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Vérkép','Tumormarker','Hormon panel'],pct:91,top:false,addr:'1110 Budapest, V. Váci utca 59.',tel:'+36 1 269 1514',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Duna Medical Center',sp:'Prevenciós egészségcsomag',ic:'🏥',tags:['Komplex szűrés','Szakorvos'],pct:84,top:false,addr:'1183 Budapest, VI. Andrássy út 72.',tel:'+36 1 885 8953',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'}
+  ],
+  'default': [
+    {nm:'MedSoulYou',sp:'Orvosi és pszichológiai csapat · Állapotfelmérés',ic:'💫',tags:['Teljes állapotfelmérés','Irányítás','Komplex'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Amikor nem egyértelmű merre indulj, a MedSoulYou átfogó állapotfelmérése segít feltárni a valódi okokat és a legjobb következő lépést.'},
+    {nm:'Budai Egészségközpont',sp:'Általános belgyógyász · Irányítás',ic:'🏥',tags:['Általános kivizsgálás','Irányítás','Labor'],pct:92,top:false,addr:'1129 Budapest, III. Bécsi út 148.',tel:'+36 1 684 4981',hours:'H–P: 9:00–19:00'},
+    {nm:'Medicover Diagnosztika',sp:'Komplex szűrőcsomag',ic:'🔬',tags:['Teljes szűrés','Labor','Képalkotó'],pct:86,top:false,addr:'1131 Budapest, IX. Ferenc körút 25.',tel:'+36 1 874 8062',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Dr. Balogh István',sp:'Belgyógyász · Általános orvostan',ic:'🩺',tags:['Panaszok tisztázása','Irányítás'],pct:79,top:false,addr:'1167 Budapest, IX. Ferenc körút 14.',tel:'+36 1 889 2612',hours:'H–P: 8:00–18:00'}
+  ]
+};
+
+// ── Navigation ──
+function go(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+function goHow(){go('s-how')}
+function goQuiz(){
+  const consent=document.getElementById('consent-check');
+  if(consent && !consent.checked){
+    go('s-land');
+    const row=document.getElementById('consent-row');
+    row.classList.add('attn');
+    row.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>row.classList.remove('attn'),2200);
+    return;
+  }
+  go('s-quiz');showQ(1);
+}
+function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');go('s-land')}
+
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('on',window.scrollY>10));
+
+// ── Quiz steps ──
+function showQ(n){
+  document.querySelectorAll('.qstep').forEach(s=>s.classList.remove('on'));
+  const el=document.getElementById('q'+n);
+  if(el){el.classList.add('on');el.style.animation='none';el.offsetHeight;el.style.animation=''}
+  const pct=Math.round((n/TOTAL_Q)*100);
+  document.getElementById('prog').style.width=pct+'%';
+  if(n===10)buildSummary();
+}
+function buildSummary(){
+  const card=document.getElementById('summary-card');
+  const rows=[];
+  const add=(k,v)=>{if(v&&v.trim())rows.push({k,v})};
+  add('Terület', A.terület);
+  const cmTerulet=(document.getElementById('cm-terulet')||{}).value;
+  if(cmTerulet&&cmTerulet.trim())add('Kiegészítés (terület)', cmTerulet.trim());
+  add('Tünetek', A.tunetek);
+  const cmTunet=(document.getElementById('cm-tunet')||{}).value;
+  if(cmTunet&&cmTunet.trim())add('Kiegészítés (tünetek)', cmTunet.trim());
+  if(A.sulyossag){
+    const sevTxt={'1':'Alig észrevehető','2':'Enyhe','3':'Mérsékelt','4':'Komoly','5':'Nagyon erős'}[A.sulyossag]||A.sulyossag;
+    add('Súlyosság', sevTxt+' ('+A.sulyossag+'/5)');
+  }
+  add('Fennállás', A.idotartam);
+  add('Életmód', A.eletmod);
+  if(A.betegseg && A.betegseg!=='Nincs ismert betegségem')add('Előzmény (betegség)', A.betegseg);
+  const cmBetegseg=(document.getElementById('cm-betegseg')||{}).value;
+  if(cmBetegseg&&cmBetegseg.trim())add('Kiegészítés (betegség)', cmBetegseg.trim());
+  if(A.psziche && A.psziche!=='Nem tapasztalok ilyesmit')add('Mentális', A.psziche);
+  const cmPsziche=(document.getElementById('cm-psziche')||{}).value;
+  if(cmPsziche&&cmPsziche.trim())add('Kiegészítés (mentális)', cmPsziche.trim());
+  const cmElozmeny=(document.getElementById('cm-elozmeny')||{}).value;
+  if(cmElozmeny&&cmElozmeny.trim())add('Kiegészítés (előzmény)', cmElozmeny.trim());
+  card.innerHTML=`<div class="summary-card-title">✦ Amit eddig megosztottál</div>`+
+    rows.map(r=>`<div class="summary-row"><span class="summary-key">${r.k}</span><span class="summary-val">${r.v}</span></div>`).join('');
+}
+function nxt(n){
+  // req[current_step] = required answer key before leaving that step
+  const req={1:'nem',4:'sulyossag',5:'idotartam',6:'eletmod',9:'elozmeny'};
+  const cur=n-1;
+  if(req[cur]&&!A[req[cur]]){shake(cur);return}
+  // save numeric inputs when leaving step 2
+  if(cur===2){A.kor=document.getElementById('kor').value||'nem adott meg';A.suly=document.getElementById('suly').value||'nem adott meg'}
+  showQ(n);
+}
+function prv(n){showQ(n)}
+function shake(n){
+  const el=document.getElementById('q'+n);
+  if(!el)return;
+  el.style.transform='translateX(-6px)';
+  setTimeout(()=>{el.style.transform='translateX(6px)'},120);
+  setTimeout(()=>{el.style.transform=''},240);
+}
+
+// ── Option picks ──
+function pick(el,key,val){
+  const p=el.closest('.qstep');
+  p.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  A[key]=val;
+}
+function mpick(el,key,val){
+  el.classList.toggle('sel');
+  if(!MULTI[key])MULTI[key]=[];
+  if(el.classList.contains('sel')){if(!MULTI[key].includes(val))MULTI[key].push(val)}
+  else{MULTI[key]=MULTI[key].filter(v=>v!==val)}
+  A[key]=(MULTI[key]||[]).join(', ')||'';
+}
+function sevpick(el,val){
+  document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  SEV=val;
+  A.sulyossag=String(val);
+}
+
+// ── Tünet-adatbázis (a felmérési dokumentum alapján) ──
+const SYMPTOMS={
+  'Szív és keringés':{ic:'❤️',list:['Szorító érzés a mellkasban','Szapora vagy kalapáló szívverés','Lábdagadás','Fekvő helyzetben nehézlégzés','Gyakori szédülés felálláskor']},
+  'Légzőszervi':{ic:'🫁',list:['Terhelésre jelentkező légszomj','Krónikus vagy visszatérő köhögés','Sípoló légzés','Gyakori orrdugulás, orrfolyás','Visszatérő orrmelléküreg-gyulladás','Éjszakai légzéskimaradás','Szaglás/ízérzés csökkenése']},
+  'Mozgásszervi':{ic:'🦴',list:['Nyaki merevség','Hát- vagy derékfájás','Ízületi fájdalom (térd, csípő, kéz)','Ízületi duzzanat vagy melegség','Reggeli ízületi merevség','Izomgyengeség vagy görcs','Zsibbadás, bizsergés a végtagokban']},
+  'Gyomor-bél':{ic:'🫃',list:['Reflux, savas felböfögés','Puffadás','Hasi fájdalom étkezés után','Székrekedés','Hasmenés','Émelygés, hányinger','Ételintolerancia gyanú','Rendszertelen székelési szokás']},
+  'Mentális-Pszichés':{ic:'🧠',list:['Tartós szorongás, feszültség','Lehangoltság, érdeklődés-vesztés','Indokolatlan ingerlékenység','Krónikus stressz, folyamatos agyalás','Önértékelési problémák','Kiégés érzése','Társas elzárkózás','Döntésképtelenség, túlterheltség']},
+  'Alvás':{ic:'🌙',list:['Elalvási nehézség','Gyakori éjszakai ébredés','Nehéz visszaalvás','5 óránál kevesebb alvás','Reggeli fáradtság, álmosság','Hangos horkolás','Gyakori rémálom','Reggeli szájszárazság']},
+  'Anyagcsere-Hormonális':{ic:'⚗️',list:['Hirtelen testsúlyváltozás','Túlzott meleg- vagy hidegérzékenység','Túlzott szomjúság','Gyakori vizelési inger','Fáradtság étkezés után','Édesség/sós iránti sóvárgás','Menstruációs ciklus rendszertelensége']},
+  'Bőr-Haj':{ic:'✨',list:['Hajhullás','Fokozott pattanás, mitesszer','Zsíros, fénylő bőr','Száraz, hámló bőr','Fokozott szőrnövekedés','Korpásodás, fejbőr viszketés','Viszkető, allergiás bőrtünetek','Töredezett körmök']},
+  'Neurológiai':{ic:'⚡',list:['Fejfájás, migrén','Szédülés, egyensúlyzavar','Zsibbadás, érzészavar','Memóriazavar, feledékenység','Fülzúgás, fülcsengés','Fény- vagy hangérzékenység','Izomrángás, görcs']}
+};
+
+// ── Dinamikus tünet-képernyő ──
+function goSymptoms(){
+  const areas=(MULTI['terület']||[]).filter(a=>SYMPTOMS[a]);
+  // Ha nincs olyan terület amihez tünet tartozik (pl. csak Szűrés-Megelőzés), ugrunk a súlyosságra
+  if(areas.length===0){showQ(4);return}
+  const cont=document.getElementById('sym-container');
+  cont.innerHTML='';
+  if(!MULTI['tunet'])MULTI['tunet']=[];
+  areas.forEach(area=>{
+    const data=SYMPTOMS[area];
+    const group=document.createElement('div');
+    group.className='sym-group';
+    const opts=data.list.map(sym=>{
+      const sel=MULTI['tunet'].includes(sym)?' sel':'';
+      const safe=sym.replace(/'/g,"\\'");
+      return `<div class="sym-opt${sel}" onclick="symPick(this,'${safe}')"><span class="sym-check">✓</span><span>${sym}</span></div>`;
+    }).join('');
+    group.innerHTML=`<div class="sym-group-title"><span class="gi">${data.ic}</span>${area==='Mentális-Pszichés'?'Mentális, érzelmi':area==='Anyagcsere-Hormonális'?'Anyagcsere, hormon':area==='Bőr-Haj'?'Bőr, haj':area}</div><div class="sym-opts">${opts}</div>`;
+    cont.appendChild(group);
+  });
+  // step megjelenítése (külön kezeljük, mert nem szám)
+  document.querySelectorAll('.qstep').forEach(s=>s.classList.remove('on'));
+  const el=document.getElementById('qsym');
+  el.classList.add('on');el.style.animation='none';el.offsetHeight;el.style.animation='';
+  document.getElementById('prog').style.width='35%';
+  window.scrollTo(0,0);
+}
+function symPick(el,sym){
+  el.classList.toggle('sel');
+  if(!MULTI['tunet'])MULTI['tunet']=[];
+  if(el.classList.contains('sel')){if(!MULTI['tunet'].includes(sym))MULTI['tunet'].push(sym)}
+  else{MULTI['tunet']=MULTI['tunet'].filter(v=>v!==sym)}
+  A.tunetek=(MULTI['tunet']||[]).join(', ')||'';
+}
+
+
+// ── Submit ──
+async function submit(){
+  document.getElementById('errbox').classList.remove('on');
+  const szabadszoveg=document.getElementById('szabadszoveg').value.trim();
+  A.szabadszoveg=szabadszoveg;
+
+  // opcionális mini-megjegyzések begyűjtése
+  const mcIds={terulet:'cm-terulet',tunet:'cm-tunet',betegseg:'cm-betegseg',psziche:'cm-psziche',elozmeny:'cm-elozmeny'};
+  Object.entries(mcIds).forEach(([key,id])=>{
+    const el=document.getElementById(id);
+    if(el)A['megjegyzes_'+key]=el.value.trim();
+  });
+
+  const prompt=`Te a HovaForduljak betegút-navigációs platform AI asszisztense vagy. Feladatod: a felhasználó adatai alapján személyre szabott, empatikus, de határozott egészségügyi eligazítást adni.
+
+FONTOS SZABÁLYOK:
+- NEM diagnosztizálsz, CSAK irányt mutatsz
+- Magyar egészségügyi rendszer keretein belül gondolkodj
+- Légy empatikus, de konkrét és cselekvésre ösztönző
+- Ha súlyos tüneteket látsz, ne bagatellizálj
+
+A FELHASZNÁLÓ ADATAI:
+Nem: ${A.nem||'nem adott meg'}
+Kor: ${A.kor||'nem adott meg'}
+Testsúly: ${A.suly||'nem adott meg'} kg
+Panasz területek: ${A.terület||'nem meghatározott'}${A.megjegyzes_terulet?' | Kiegészítés: '+A.megjegyzes_terulet:''}
+Konkrét tünetek: ${A.tunetek||'nem jelölt meg konkrét tünetet'}${A.megjegyzes_tunet?' | Kiegészítés: '+A.megjegyzes_tunet:''}
+Súlyosság (1-5): ${A.sulyossag||'nem adott meg'}
+Időtartam: ${A.idotartam||'nem adott meg'}
+Életmód: ${A.eletmod||'nem adott meg'}
+Ismert betegségek: ${A.betegseg||'nincs'}${A.megjegyzes_betegseg?' | Kiegészítés: '+A.megjegyzes_betegseg:''}
+Mentális állapot: ${A.psziche||'nem jelzett'}${A.megjegyzes_psziche?' | Kiegészítés: '+A.megjegyzes_psziche:''}
+Korábbi szakember: ${A.elozmeny||'nem adott meg'}${A.megjegyzes_elozmeny?' | Kiegészítés: '+A.megjegyzes_elozmeny:''}
+Saját szavakkal: ${A.szabadszoveg||'nem írt semmit'}
+
+Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy markdown:
+{
+  "title": "Személyre szabott, 5-8 szavas cím (pl. 'Mentális terhelés és alvásproblémák kombinációja')",
+  "summary": "3-4 mondatos, empatikus összefoglaló. Tükrözd vissza mit hallottál, mutass rá a fő mintára. Emberi, természetes hang.",
+  "urgency": "low|medium|high",
+  "urgency_label": "Magyar szöveg pl. 'Nem sürgős, de érdemes 2-4 héten belül lépni'",
+  "urgency_reason": "1 mondatos magyarázat miért pont ez az urgencia szint",
+  "profile_chips": [
+    {"label": "Panasz típusa", "value": "pl. Mentális + Alvás"},
+    {"label": "Fennállás", "value": "pl. 1-6 hónapja"},
+    {"label": "Súlyosság", "value": "pl. Közepes (3/5)"}
+  ],
+  "next_steps": [
+    {"icon": "1️⃣", "type": "p", "title": "Legsürgősebb lépés", "desc": "Konkrét, cselekvésre ösztönző leírás mit kell tenni, milyen szakembert keresni és miért."},
+    {"icon": "2️⃣", "type": "t", "title": "Második lépés", "desc": "A következő tennivaló — párhuzamosan vagy az első után."},
+    {"icon": "3️⃣", "type": "w", "title": "Hosszú távon", "desc": "Ami a jövőben fontos lesz az egészség fenntartásához ezzel a profillal."}
+  ],
+  "primary_specialty": "A fő terület kulcsszava a partner-adatbázis kiválasztásához. Pontosan egy ezek közül: Mentális-Pszichés | Alvás | Anyagcsere-Hormonális | Mozgásszervi | Gyomor-bél | Szív és keringés | Légzőszervi | Neurológiai | Bőr-Haj | Szűrés-Megelőzés",
+  "secondary_specialty": "Másodlagos terület kulcsszava ugyanabból a listából, vagy null ha nincs",
+  "explanation": "2-3 mondatos magyarázat: milyen adatok alapján jutottál erre a következtetésre? Milyen összefüggéseket láttál? Szakmai de érthető hang.",
+  "personal_note": "1 mondatos, személyes, meleg zárómondat kifejezetten ehhez a személyhez szólva."
+}`;
+
+  go('s-load');
+  try{
+    // A kulcs NEM itt van -- a sajat backend endpoint hivja biztonsagosan
+    const resp=await fetch("/api/analyze",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({prompt:prompt})
+    });
+    if(!resp.ok){
+      const errTxt=await resp.text();
+      throw new Error('Szerver '+resp.status+': '+errTxt.substring(0,200));
+    }
+    const result=await resp.json();
+    // a backend mar kesz JSON objektumot ad vissza
+    renderResult(result);
+  }catch(e){
+    console.error('HovaForduljak hiba:',e);
+    go('s-quiz');showQ(10);
+    const eb=document.getElementById('errbox');
+    eb.textContent='Hiba: '+e.message;
+    eb.classList.add('on');
+  }
+}
+
+// ── Render result ──
+function renderResult(d){
+  document.getElementById('r-title').textContent=d.title||'Személyre szabott ajánlás';
+  document.getElementById('r-sum').textContent=d.summary||'';
+
+  // urgency
+  const urgEl=document.getElementById('r-urg');
+  const urgMap={low:{cls:'low',ic:'🟢'},medium:{cls:'mid',ic:'🟡'},high:{cls:'hi',ic:'🔴'}};
+  const u=urgMap[d.urgency]||urgMap.low;
+  urgEl.className='urg '+u.cls;
+  urgEl.innerHTML=`<span>${u.ic}</span><span>${d.urgency_label||''}</span>`;
+
+  // profile chips
+  const pc=document.getElementById('r-profile');
+  pc.innerHTML='';
+  (d.profile_chips||[]).forEach(c=>{
+    const div=document.createElement('div');
+    div.className='prof-chip';
+    div.innerHTML=`<div class="prof-lbl">${c.label}</div><div class="prof-val">${c.value}</div>`;
+    pc.appendChild(div);
+  });
+
+  // next steps
+  const sl=document.getElementById('r-steps');
+  sl.innerHTML='';
+  (d.next_steps||[]).forEach(s=>{
+    const div=document.createElement('div');
+    div.className='step-card';
+    div.innerHTML=`<div class="step-icon ${s.type}">${s.icon}</div><div class="step-body"><div class="step-head">${s.title}</div><div class="step-txt">${s.desc}</div></div>`;
+    sl.appendChild(div);
+  });
+
+  // partners
+  const pg=document.getElementById('r-partners');
+  pg.innerHTML='';
+  // Fuzzy matcher: az AI valtozatos kulcsszavait a helyes kategoriahoz koti
+  function matchCat(s){
+    if(!s)return null;
+    if(PDATA[s])return s; // pontos talalat
+    const t=s.toLowerCase();
+    if(/ment|psz|szoron|depr|kiege|stressz|hangulat|lelki/.test(t))return 'Mentális-Pszichés';
+    if(/alv|insz|apno|horko/.test(t))return 'Alvás';
+    if(/anyagcs|hormon|pajzs|endokr|cukor|ir\b|inzulin|dieteti|taplal/.test(t))return 'Anyagcsere-Hormonális';
+    if(/mozgas|ortop|gerinc|izul|reuma|izom|csont/.test(t))return 'Mozgásszervi';
+    if(/gyomor|bel|emesz|reflux|gaszt|szekl|puffad/.test(t))return 'Gyomor-bél';
+    if(/sziv|kering|kardio|vernyom|ritmus/.test(t))return 'Szív és keringés';
+    if(/legz|tudo|pulmo|asztma|allerg|orr|gege/.test(t))return 'Légzőszervi';
+    if(/neuro|fejfaj|migren|szedu|zsibba|ideg/.test(t))return 'Neurológiai';
+    if(/bor|haj|derma|akne|psoria/.test(t))return 'Bőr-Haj';
+    if(/szur|megel|preven|labor|diagn/.test(t))return 'Szűrés-Megelőzés';
+    return null;
+  }
+  // elsodleges: AI valasz -> fuzzy -> elso megjelolt terulet -> default
+  const firstTerulet=(MULTI['terület']&&MULTI['terület'][0])||null;
+  const prim=matchCat(d.primary_specialty)||matchCat(firstTerulet)||'Szűrés-Megelőzés';
+  const sec=matchCat(d.secondary_specialty);
+  let partners=PDATA[prim]||PDATA['default'];
+  if(sec&&sec!==prim&&PDATA[sec]){
+    // elkerüljük a duplikációt, ha a másodlagos kategória első helyezettje
+    // (pl. MedSoulYou) már szerepel az elsődlegesben
+    const already=new Set(partners.map(p=>p.nm));
+    const secPick=PDATA[sec].find(p=>!already.has(p.nm))||PDATA[sec][0];
+    partners=[partners[0],partners[1],secPick];
+  }
+  partners.forEach((p,idx)=>{
+    const div=document.createElement('div');
+    div.className='p-card-wrap';
+    const badge = p.real
+      ? '<div class="real-badge">✓ Igazolt partner</div>'
+      : (p.top?'<div class="top-badge">Legjobb találat</div>':'');
+    const expandContent = p.real
+      ? `<div class="p-detail-row"><span class="p-detail-ic">📍</span><span>${p.addr||'Budapest'}</span></div>
+         <div class="p-detail-row"><span class="p-detail-ic">📞</span><span>${p.tel||''}</span></div>
+         <div class="p-detail-row"><span class="p-detail-ic">🕒</span><span>${p.hours||''}</span></div>
+         <div class="p-detail-desc">${p.about||''}</div>
+         <div class="p-actions">
+           <button class="p-book-btn real" onclick="openBooking(${idx})">📅 Időpontfoglalás a MedSoulYou oldalán →</button>
+           <a class="p-call-btn" href="tel:${(p.tel||'').replace(/\s/g,'')}">📞 Hívás</a>
+         </div>`
+      : `<div class="p-detail-desc">${p.about||'Illusztratív példa a bemutató céljából — nem valós partnerklinika.'}</div>
+         <div class="illustrative-note">Illusztratív példa — még nem partnerünk. A végleges verzióban itt valós, igazolt partnerklinikák jelennek meg elérhetőségekkel és időpontfoglalással.</div>`;
+    div.innerHTML=`
+      <div class="p-card${p.top?' top':''}${p.real?' real':''}" onclick="toggleClinic(${idx})">
+        ${badge}
+        <div class="p-av">${p.ic}</div>
+        <div class="p-inf">
+          <div class="p-nm">${p.nm}</div>
+          <div class="p-sp">${p.sp}</div>
+          <div class="p-tags">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
+        </div>
+        <div class="p-right">
+          <div class="p-pct">${p.pct}%</div>
+          <div class="p-plbl">egyezés</div>
+          <div class="p-chevron" id="chev-${idx}">⌄</div>
+        </div>
+      </div>
+      <div class="p-expand" id="exp-${idx}">
+        ${expandContent}
+      </div>`;
+    pg.appendChild(div);
+  });
+  // eltároljuk a jelenlegi partnereket a foglaláshoz
+  window.__partners=partners;
+
+  // explanation + personal note
+  document.getElementById('r-explain').textContent=
+    (d.explanation||'')+' '+(d.personal_note||'');
+
+  go('s-res');
+}
+
+// ── Klinika kártya kinyitás ──
+function toggleClinic(idx){
+  const exp=document.getElementById('exp-'+idx);
+  const chev=document.getElementById('chev-'+idx);
+  const isOpen=exp.classList.contains('open');
+  // csukjuk be a többit
+  document.querySelectorAll('.p-expand.open').forEach(e=>e.classList.remove('open'));
+  document.querySelectorAll('.p-chevron.up').forEach(c=>c.classList.remove('up'));
+  if(!isOpen){exp.classList.add('open');chev.classList.add('up')}
+}
+
+// ── Foglalási nézet ──
+function openBooking(idx){
+  const p=(window.__partners||[])[idx];
+  if(!p)return;
+  // Valódi partner (pl. MedSoulYou) -> tényleges foglalási oldalra visz, nem demo modal
+  if(p.real && p.bookingUrl){
+    window.open(p.bookingUrl,'_blank','noopener');
+    return;
+  }
+  document.getElementById('bk-name').textContent=p.nm;
+  document.getElementById('bk-spec').textContent=p.sp;
+  document.getElementById('bk-av').textContent=p.ic;
+  document.getElementById('bk-addr').textContent=p.addr||'Budapest';
+  document.getElementById('bk-tel').textContent=p.tel||'+36 1 000 0000';
+  // generálunk pár szabad időpontot
+  const slots=genSlots();
+  const sw=document.getElementById('bk-slots');
+  sw.innerHTML=slots.map((s,i)=>`<div class="bk-slot" onclick="pickSlot(this,'${s.label}')">${s.label}</div>`).join('');
+  document.getElementById('bk-confirm').style.display='none';
+  window.__pickedSlot='';
+  document.getElementById('booking-modal').classList.add('on');
+}
+function genSlots(){
+  const days=['Hétfő','Kedd','Szerda','Csütörtök','Péntek'];
+  const times=['9:00','10:30','13:00','15:30'];
+  const out=[];
+  const now=new Date();
+  for(let d=1;d<=3;d++){
+    const day=days[(now.getDay()-1+d)%5];
+    const t=times[Math.floor(Math.random()*times.length)];
+    const t2=times[(times.indexOf(t)+2)%times.length];
+    out.push({label:`${day} ${t}`});
+    out.push({label:`${day} ${t2}`});
+  }
+  return out.slice(0,6);
+}
+function pickSlot(el,label){
+  document.querySelectorAll('.bk-slot').forEach(s=>s.classList.remove('sel'));
+  el.classList.add('sel');
+  window.__pickedSlot=label;
+  const c=document.getElementById('bk-confirm');
+  c.style.display='flex';
+  document.getElementById('bk-confirm-txt').textContent=label;
+}
+function confirmBooking(){
+  document.getElementById('booking-body').style.display='none';
+  document.getElementById('booking-success').style.display='block';
+  document.getElementById('bk-success-slot').textContent=window.__pickedSlot||'';
+}
+function closeBooking(){
+  document.getElementById('booking-modal').classList.remove('on');
+  // reset
+  setTimeout(()=>{
+    document.getElementById('booking-body').style.display='block';
+    document.getElementById('booking-success').style.display='none';
+  },300);
+}
+</script>
+</body>
+</html>
