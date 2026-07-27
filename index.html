@@ -20,19 +20,27 @@
   --text:#0F172A;--text2:#475569;--text3:#64748B;
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+
+/* AMBIENT */
 .amb{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .amb::before{content:'';position:absolute;top:-20%;left:-10%;width:700px;height:700px;background:radial-gradient(circle,rgba(143,191,224,0.20) 0%,transparent 65%);animation:a1 14s ease-in-out infinite alternate}
 .amb::after{content:'';position:absolute;bottom:-10%;right:-5%;width:500px;height:500px;background:radial-gradient(circle,rgba(22,191,200,0.10) 0%,transparent 65%);animation:a2 18s ease-in-out infinite alternate}
 @keyframes a1{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,40px) scale(1.15)}}
 @keyframes a2{from{transform:translate(0,0)}to{transform:translate(-50px,-30px)}}
+
+/* NAV */
 .nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:18px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
 .nav.on{background:rgba(255,255,255,.88);backdrop-filter:blur(20px);border-color:var(--border)}
 .logo{font-family:'Manrope',sans-serif;font-size:1.25rem;font-weight:800;letter-spacing:-.02em;color:var(--text)}
 .logo em{font-style:normal;color:var(--accent)}
 .nav-pill{font-size:.68rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);border:1px solid var(--border);padding:4px 12px;border-radius:20px}
+
+/* SCREENS */
 .scr{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative}
 .scr.on{display:flex}
 .wrap{position:relative;z-index:1;width:100%;max-width:660px}
+
+/* LANDING */
 #s-land{padding-top:72px}
 .eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);margin-bottom:18px;display:flex;align-items:center;gap:10px}
 .eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--accent2)}
@@ -51,18 +59,24 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Manrop
 .stats{display:flex;gap:28px;flex-wrap:wrap;padding-top:36px;border-top:1px solid var(--border)}
 .sn{font-family:'Manrope',sans-serif;font-size:1.7rem;font-weight:700;line-height:1;margin-bottom:3px}
 .sl{font-size:.75rem;color:var(--text3);letter-spacing:.04em}
+
+/* HOW */
 .how-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:40px}
 @media(max-width:600px){.how-cards{grid-template-columns:1fr}}
 .how-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 20px}
 .how-num{font-family:'Manrope',sans-serif;font-size:2rem;font-weight:700;color:var(--accent);opacity:.5;margin-bottom:8px}
 .how-t{font-weight:500;font-size:.92rem;margin-bottom:6px}
 .how-d{font-size:.8rem;color:var(--text3);line-height:1.6}
+
+/* QUIZ */
 #s-quiz{padding-top:72px}
 .prog-wrap{width:100%;height:2px;background:var(--border);border-radius:2px;margin-bottom:44px;overflow:hidden}
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px rgba(47,111,237,.5)}
+
 .qstep{display:none;animation:fu .4s ease both}
 .qstep.on{display:block}
 @keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
 .q-meta{font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .q-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);display:inline-block}
 .q-title{font-family:'Manrope',sans-serif;font-size:clamp(1.45rem,4vw,2rem);font-weight:700;line-height:1.25;letter-spacing:-.015em;margin-bottom:6px}
@@ -70,16 +84,20 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Manrop
 .q-sub.has-why{margin-bottom:10px}
 .q-why{font-size:.76rem;color:var(--text3);margin-top:0;margin-bottom:24px;line-height:1.5;display:flex;align-items:flex-start;gap:6px}
 .q-why::before{content:'ⓘ';font-size:.8rem;opacity:.8;flex-shrink:0;margin-top:1px}
+
+/* summary card before free text */
 .summary-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:20px}
 .summary-card-title{font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);margin-bottom:14px;display:flex;align-items:center;gap:7px}
 .summary-row{display:flex;gap:10px;font-size:.85rem;margin-bottom:9px;line-height:1.5}
 .summary-row:last-child{margin-bottom:0}
 .summary-key{color:var(--text3);flex-shrink:0;min-width:110px}
 .summary-val{color:var(--text);font-weight:500}
+
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:28px}
 .opts.solo{grid-template-columns:1fr}
 .opts.triple{grid-template-columns:1fr 1fr 1fr}
 @media(max-width:480px){.opts,.opts.triple{grid-template-columns:1fr}}
+
 .opt{background:var(--card);border:1.5px solid var(--border);border-radius:13px;padding:14px 16px;cursor:pointer;transition:border-color .18s,background .18s,transform .14s;display:flex;align-items:flex-start;gap:11px;text-align:left}
 .opt:hover{border-color:var(--border2);background:var(--card2);transform:translateY(-1px)}
 .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
@@ -87,28 +105,39 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Manrop
 .oi{width:32px;height:32px;border-radius:9px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;transition:background .18s,color .18s}
 .ol{font-size:.88rem;font-weight:500;color:var(--text);line-height:1.35}
 .od{font-size:.75rem;color:var(--text3);margin-top:2px;line-height:1.4}
+
+/* multi-select hint */
 .multi-hint{font-size:.72rem;color:var(--accent2);margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .multi-hint::before{content:'↗';font-size:.9rem}
+
+/* mini optional comment fields */
 .mini-comment{margin-bottom:26px;padding-top:14px;border-top:1px dashed var(--border)}
 .mc-label{display:block;font-size:.78rem;color:var(--text3);margin-bottom:8px;cursor:pointer}
 .mc-input{width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:11px 14px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.85rem;line-height:1.55;resize:none;transition:border-color .2s;min-height:60px}
 .mc-input:focus{outline:none;border-color:var(--accent)}
+
+/* location filter */
 .location-block{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:20px}
 .loc-input{width:140px;background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.95rem;margin-top:10px;margin-bottom:8px;transition:border-color .2s}
 .loc-input:focus{outline:none;border-color:var(--accent)}
 .loc-hint{font-size:.76rem;color:var(--text3);line-height:1.5}
 .mc-input::placeholder{color:var(--text3)}
+
 .txt-in{width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:13px;padding:15px 17px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.92rem;line-height:1.65;resize:none;transition:border-color .2s;margin-bottom:22px;min-height:110px}
 .txt-in:focus{outline:none;border-color:var(--accent)}
 .txt-in::placeholder{color:var(--text3)}
+
 .slider-wrap{margin-bottom:28px}
 .slider-labels{display:flex;justify-content:space-between;font-size:.75rem;color:var(--text3);margin-bottom:8px}
 input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--border2);border-radius:4px;outline:none;cursor:pointer}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 10px rgba(47,111,237,.4)}
 .slider-val{text-align:center;font-family:'Manrope',sans-serif;font-size:1.5rem;font-weight:700;color:var(--accent2);margin-top:10px}
+
 .q-nav{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
 .btn-back{background:transparent;color:var(--text3);border:none;font-family:'Manrope',sans-serif;font-size:.85rem;cursor:pointer;padding:8px 0;transition:color .2s;display:flex;align-items:center;gap:6px}
 .btn-back:hover{color:var(--text)}
+
+/* symptom groups */
 .sym-group{margin-bottom:22px}
 .sym-group-title{font-size:.82rem;font-weight:600;color:var(--accent2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .sym-group-title .gi{font-size:1rem}
@@ -119,11 +148,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .sym-opt.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--text)}
 .sym-check{width:18px;height:18px;border-radius:6px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:all .18s}
 .sym-opt.sel .sym-check{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* severity scale */
 .sev-scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:28px}
 .sev-btn{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:10px 6px;cursor:pointer;text-align:center;transition:all .18s;font-size:.78rem;color:var(--text2)}
 .sev-btn:hover{border-color:var(--border2);background:var(--card2)}
 .sev-btn.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--text)}
 .sev-num{font-family:'Manrope',sans-serif;font-size:1.2rem;font-weight:700;color:var(--accent);display:block;line-height:1;margin-bottom:3px}
+
+/* LOADING */
 #s-load{text-align:center}
 .spin{width:52px;height:52px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 24px}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -131,18 +164,27 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .load-s{color:var(--text3);font-size:.88rem}
 .dots::after{content:'';animation:dt 1.5s infinite}
 @keyframes dt{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
+
+/* RESULT */
 #s-res{padding-top:72px;padding-bottom:48px}
+
 .res-tag{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;font-size:.7rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}
 .res-tag.ok{background:var(--success-soft);color:var(--success);border:1px solid rgba(52,195,143,.25)}
 .res-t{font-family:'Manrope',sans-serif;font-size:clamp(1.7rem,5vw,2.6rem);font-weight:800;line-height:1.2;letter-spacing:-.02em;margin-bottom:14px}
 .res-sum{font-size:.95rem;color:var(--text2);line-height:1.8;margin-bottom:26px}
+
 .urg{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:10px;font-size:.82rem;font-weight:500;margin-bottom:36px}
 .urg.low{background:var(--success-soft);color:var(--success);border:1px solid rgba(52,195,143,.22)}
 .urg.mid{background:var(--warm-soft);color:var(--warm);border:1px solid rgba(217,119,6,.22)}
 .urg.hi{background:var(--red-soft);color:var(--red);border:1px solid rgba(220,76,76,.22)}
 .med-disclaimer{background:var(--warm-soft);border:1px solid rgba(217,119,6,.25);border-radius:12px;padding:14px 18px;font-size:.8rem;color:var(--text2);line-height:1.6;margin-bottom:28px}
 .med-disclaimer strong{color:var(--warm)}
+.loc-banner{background:var(--info-soft);border:1px solid rgba(143,191,224,.5);border-radius:12px;padding:14px 18px;font-size:.82rem;color:var(--text2);line-height:1.6;margin-bottom:20px;display:flex;gap:10px;align-items:flex-start}
+.loc-banner .li{flex-shrink:0}
+
 .sec-lbl{font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;margin-top:36px}
+
+/* Next steps */
 .steps-list{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
 .step-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;cursor:default;transition:border-color .18s}
 .step-card:hover{border-color:var(--border2)}
@@ -150,9 +192,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .step-icon.p{background:var(--accent-soft)}
 .step-icon.t{background:var(--teal-soft)}
 .step-icon.w{background:var(--warm-soft)}
+.step-body{}
 .step-head{font-weight:500;font-size:.9rem;margin-bottom:3px}
 .step-txt{font-size:.8rem;color:var(--text3);line-height:1.55}
 .step-num-badge{font-size:.65rem;font-weight:600;letter-spacing:.08em;color:var(--accent2);background:var(--accent-soft);padding:2px 7px;border-radius:6px;margin-right:6px}
+
+/* Partners */
 .p-grid{display:flex;flex-direction:column;gap:10px}
 .p-card{background:var(--card);border:1.5px solid var(--border);border-radius:15px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:border-color .18s,background .18s,transform .14s;position:relative;overflow:hidden}
 .p-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:0;transition:opacity .2s}
@@ -173,20 +218,27 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .p-card.real{border-color:rgba(52,195,143,.45)}
 .p-book-btn.real{background:var(--success);color:var(--text);font-weight:600}
 .p-book-btn.real:hover{background:#5FDCAE}
+
+/* AI box */
 .ai-box{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:20px 22px;margin-top:8px}
 .ai-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .ai-ico{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#5B8DF2);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#fff}
 .ai-ht{font-size:.8rem;font-weight:500;color:var(--text2)}
 .ai-body{font-size:.86rem;color:var(--text2);line-height:1.78}
+
+/* profile summary */
 .profile-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px}
 @media(max-width:480px){.profile-row{grid-template-columns:1fr 1fr}}
 .prof-chip{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:12px 14px}
 .prof-lbl{font-size:.68rem;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
 .prof-val{font-size:.85rem;font-weight:500;color:var(--text)}
+
 .btn-restart{display:inline-flex;align-items:center;gap:7px;background:transparent;color:var(--text3);border:1px solid var(--border);font-family:'Manrope',sans-serif;font-size:.82rem;padding:9px 16px;border-radius:9px;cursor:pointer;transition:color .2s,border-color .2s;margin-top:32px}
 .btn-restart:hover{color:var(--text);border-color:var(--border2)}
+
 .err{background:var(--red-soft);border:1px solid rgba(220,76,76,.25);border-radius:11px;padding:14px 18px;color:#B23A3A;font-size:.85rem;line-height:1.6;margin-top:14px;display:none}
 .err.on{display:block}
+
 @media(max-width:520px){
   .how-cards{grid-template-columns:1fr}
   .stats{gap:18px}
@@ -194,8 +246,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   .scr{padding:16px}
   .sev-scale{grid-template-columns:repeat(5,1fr)}
 }
+
 @keyframes pulse-ring{0%,100%{box-shadow:0 0 0 0 rgba(47,111,237,.12)}50%{box-shadow:0 0 0 8px rgba(47,111,237,0)}}
 .p-card.top{animation:pulse-ring 3.5s ease-in-out infinite}
+
+/* expandable clinic card */
 .p-card-wrap{margin-bottom:10px}
 .p-chevron{font-size:1.1rem;color:var(--text3);transition:transform .25s;margin-top:4px}
 .p-chevron.up{transform:rotate(180deg)}
@@ -211,6 +266,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .p-book-btn:hover{background:var(--accent2)}
 .p-call-btn{background:transparent;color:var(--text2);border:1px solid var(--border2);font-family:'Manrope',sans-serif;font-size:.86rem;padding:11px 18px;border-radius:10px;cursor:pointer;text-decoration:none;display:flex;align-items:center;transition:color .2s,border-color .2s}
 .p-call-btn:hover{color:var(--text);border-color:var(--text3)}
+
+/* booking modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease}
 .modal-overlay.on{display:flex}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -250,6 +307,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   <div class="nav-pill">Demo · MVP</div>
 </nav>
 
+<!-- LANDING -->
 <section class="scr on" id="s-land">
   <div class="wrap">
     <div class="eyebrow">Egészségügyi navigáció</div>
@@ -271,6 +329,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   </div>
 </section>
 
+<!-- HOW IT WORKS -->
 <section class="scr" id="s-how">
   <div class="wrap">
     <div class="eyebrow">Hogyan működik</div>
@@ -287,10 +346,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   </div>
 </section>
 
+<!-- QUIZ -->
 <section class="scr" id="s-quiz">
   <div class="wrap">
     <div class="prog-wrap"><div class="prog-fill" id="prog" style="width:8%"></div></div>
 
+    <!-- Q1: Nem -->
     <div class="qstep on" id="q1">
       <div class="q-meta"><span class="q-dot"></span>Alap információk</div>
       <h2 class="q-title">Biológiai nem</h2>
@@ -304,6 +365,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div class="q-nav"><span></span><button class="btn-p" onclick="nxt(2)">Tovább →</button></div>
     </div>
 
+    <!-- Q2: Kor + testsúly -->
     <div class="qstep" id="q2">
       <div class="q-meta"><span class="q-dot"></span>Alap információk</div>
       <h2 class="q-title">Néhány szám rólad</h2>
@@ -322,6 +384,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div class="q-nav"><button class="btn-back" onclick="prv(1)">← Vissza</button><button class="btn-p" onclick="nxt(3)">Tovább →</button></div>
     </div>
 
+    <!-- Q3: Tünetek - fő területek (multi) -->
     <div class="qstep" id="q3">
       <div class="q-meta"><span class="q-dot"></span>Tünetek felmérése</div>
       <h2 class="q-title">Hol érzed a legtöbb panaszt?</h2>
@@ -347,6 +410,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div class="q-nav"><button class="btn-back" onclick="prv(2)">← Vissza</button><button class="btn-p" onclick="goSymptoms()">Tovább →</button></div>
     </div>
 
+    <!-- QSYM: Dinamikus tünet-kérdések -->
     <div class="qstep" id="qsym">
       <div class="q-meta"><span class="q-dot"></span>Tünetek pontosítása</div>
       <h2 class="q-title">Pontosítsuk a tüneteket</h2>
@@ -360,6 +424,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div class="q-nav"><button class="btn-back" onclick="showQ(3)">← Vissza</button><button class="btn-p" onclick="showQ(4)">Tovább →</button></div>
     </div>
 
+    <!-- Q4: Súlyosság -->
     <div class="qstep" id="q4">
       <div class="q-meta"><span class="q-dot"></span>Tünetek felmérése</div>
       <h2 class="q-title">Mennyire nehezíti meg a mindennapjaidat?</h2>
@@ -375,6 +440,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div class="q-nav"><button class="btn-back" onclick="goSymptoms()">← Vissza</button><button class="btn-p" onclick="nxt(5)" id="bn4">Tovább →</button></div>
     </div>
 
+    <!-- Q5: Időtartam -->
     <div class="qstep" id="q5">
       <div class="q-meta"><span class="q-dot"></span>Tünetek felmérése</div>
       <h2 class="q-title">Mióta tapasztalod ezeket?</h2>
@@ -389,6 +455,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div class="q-nav"><button class="btn-back" onclick="prv(4)">← Vissza</button><button class="btn-p" onclick="nxt(6)">Tovább →</button></div>
     </div>
 
+    <!-- Q6: Életmód -->
     <div class="qstep" id="q6">
       <div class="q-meta"><span class="q-dot"></span>Életmód</div>
       <h2 class="q-title">Milyen az életmódod?</h2>
@@ -403,6 +470,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div class="q-nav"><button class="btn-back" onclick="prv(5)">← Vissza</button><button class="btn-p" onclick="nxt(7)">Tovább →</button></div>
     </div>
 
+    <!-- Q7: Korábbi betegségek + psziché -->
     <div class="qstep" id="q7">
       <div class="q-meta"><span class="q-dot"></span>Előzmények</div>
       <h2 class="q-title">Van-e ismert betegséged vagy szedsz-e gyógyszert?</h2>
@@ -425,6 +493,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div class="q-nav"><button class="btn-back" onclick="prv(6)">← Vissza</button><button class="btn-p" onclick="nxt(8)">Tovább →</button></div>
     </div>
 
+    <!-- Q8: Psziché gyors -->
     <div class="qstep" id="q8">
       <div class="q-meta"><span class="q-dot"></span>Mentális állapot</div>
       <h2 class="q-title">Az elmúlt hónapban hogyan voltál mentálisan?</h2>
@@ -446,6 +515,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div class="q-nav"><button class="btn-back" onclick="prv(7)">← Vissza</button><button class="btn-p" onclick="nxt(9)">Tovább →</button></div>
     </div>
 
+    <!-- Q9: Korábbi szakember -->
     <div class="qstep" id="q9">
       <div class="q-meta"><span class="q-dot"></span>Előzmények</div>
       <h2 class="q-title">Voltál már ezzel kapcsolatban szakembernél?</h2>
@@ -463,6 +533,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div class="q-nav"><button class="btn-back" onclick="prv(8)">← Vissza</button><button class="btn-p" onclick="nxt(10)">Tovább →</button></div>
     </div>
 
+    <!-- Q10: Szabad szöveg -->
     <div class="qstep" id="q10">
       <div class="q-meta"><span class="q-dot"></span>Utolsó lépés</div>
       <h2 class="q-title">Van valami, amit még fontosnak tartasz megosztani?</h2>
@@ -484,6 +555,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   </div>
 </section>
 
+<!-- LOADING -->
 <section class="scr" id="s-load">
   <div class="wrap" style="text-align:center">
     <div class="spin"></div>
@@ -492,6 +564,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   </div>
 </section>
 
+<!-- RESULT -->
 <section class="scr" id="s-res">
   <div class="wrap">
     <div class="res-tag ok">✦ Elemzés kész</div>
@@ -507,6 +580,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
     <div class="steps-list" id="r-steps"></div>
 
     <div class="sec-lbl">Ajánlott partnerek</div>
+    <div id="loc-banner"></div>
     <div class="p-grid" id="r-partners"></div>
 
     <div class="sec-lbl">Miért ezek az ajánlások?</div>
@@ -519,6 +593,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   </div>
 </section>
 
+<!-- BOOKING MODAL -->
 <div class="modal-overlay" id="booking-modal">
   <div class="modal">
     <button class="modal-close" onclick="closeBooking()">✕</button>
@@ -558,72 +633,151 @@ const MULTI = {};
 let SEV = 0;
 const TOTAL_Q = 10;
 
+// ── Partner adatbázis ──
 const PDATA = {
   'Mentális-Pszichés': [
-    {nm:'MedSoulYou',sp:'Orvosi és pszichológiai csapat · Állapotfelmérés',ic:'💫',tags:['Pszichológia','Pszichiátria','Testi-lelki együtt'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Orvosokból és pszichológusokból álló csapat, akik a testi és lelki egészséget együtt vizsgálják — nem csak tüneti kezelést adnak, hanem a kiváltó okot keresik.'},
-    {nm:'Budai Pszichológus Központ',sp:'Klinikai pszichológia · Kognitív terápia',ic:'🧠',tags:['Szorongás','Depresszió','KBT','Online is'],pct:96,top:false,addr:'1104 Budapest, VI. Andrássy út 63.',tel:'+36 1 428 3286',hours:'H–P: 8:00–18:00'},
-    {nm:'Dr. Varga Éva',sp:'Pszichiáter · Magánrendelő',ic:'💊',tags:['Gyógyszeres kezelés','Burnout','Pánikroham'],pct:87,top:false,addr:'1119 Budapest, III. Bécsi út 109.',tel:'+36 1 232 1488',hours:'H–P: 8:00–18:00'},
-    {nm:'MindSpace Terápia',sp:'Egyéni és páros terápia',ic:'💬',tags:['Önismeret','Párkapcsolat','Online is'],pct:81,top:false,addr:'1138 Budapest, XIII. Váci út 155.',tel:'+36 1 227 4257',hours:'H–P: 9:00–19:00'}
+    {nm:'MedSoulYou',sp:'Orvosi és pszichológiai csapat · Állapotfelmérés',ic:'💫',tags:['Pszichológia','Pszichiátria','Testi-lelki együtt'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Orvosokból és pszichológusokból álló csapat, akik a testi és lelki egészséget együtt vizsgálják — nem csak tüneti kezelést adnak, hanem a kiváltó okot keresik.'},
+    {nm:'Budai Pszichológus Központ',sp:'Klinikai pszichológia · Kognitív terápia',ic:'🧠',tags:['Szorongás','Depresszió','KBT','Online is'],pct:96,top:false,region:'1',addr:'1104 Budapest, VI. Andrássy út 63.',tel:'+36 1 428 3286',hours:'H–P: 8:00–18:00'},
+    {nm:'Dr. Varga Éva',sp:'Pszichiáter · Magánrendelő',ic:'💊',tags:['Gyógyszeres kezelés','Burnout','Pánikroham'],pct:87,top:false,region:'1',addr:'1119 Budapest, III. Bécsi út 109.',tel:'+36 1 232 1488',hours:'H–P: 8:00–18:00'},
+    {nm:'MindSpace Terápia',sp:'Egyéni és páros terápia',ic:'💬',tags:['Önismeret','Párkapcsolat','Online is'],pct:81,top:false,region:'1',addr:'1138 Budapest, XIII. Váci út 155.',tel:'+36 1 227 4257',hours:'H–P: 9:00–19:00'},
+    {nm:'Miskolc Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'3',addr:'3525 Miskolc, Petőfi Sándor utca 12.',tel:'+36 46 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Debrecen Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'4',addr:'4025 Debrecen, Petőfi Sándor utca 12.',tel:'+36 52 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Szolnok Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'5',addr:'5000 Szolnok, Petőfi Sándor utca 12.',tel:'+36 56 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Szeged Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'6',addr:'6720 Szeged, Petőfi Sándor utca 12.',tel:'+36 62 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Pécs Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'7',addr:'7621 Pécs, Petőfi Sándor utca 12.',tel:'+36 72 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Székesfehérvár Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'8',addr:'8000 Székesfehérvár, Petőfi Sándor utca 12.',tel:'+36 22 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Győr Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'9',addr:'9021 Győr, Petőfi Sándor utca 12.',tel:'+36 96 420 315',hours:'H–P: 8:00–17:00'}
   ],
   'Alvás': [
-    {nm:'MedSoulYou',sp:'Belgyógyászat + Pszichológia · Állapotfelmérés',ic:'💫',tags:['Alvászavar','Krónikus fáradtság','Komplex kivizsgálás'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Az alvászavarok hátterében gyakran hormonális, anyagcsere- vagy stressz-eredetű okok állnak — a MedSoulYou csapata ezeket egyben vizsgálja.'},
-    {nm:'SleepWell Alvásdiagnosztika',sp:'Alváscentrum · Poligráfia',ic:'🌙',tags:['Alvászavar','Apnoe','Horkolás'],pct:95,top:false,addr:'1179 Budapest, XIII. Váci út 72.',tel:'+36 1 206 3615',hours:'H–P: 9:00–19:00'},
-    {nm:'Dr. Molnár Zsófia',sp:'Neurológus · Alvásspecialista',ic:'⚡',tags:['Inszomnia','Alvásterápia'],pct:88,top:false,addr:'1142 Budapest, VII. Király utca 56.',tel:'+36 1 981 6514',hours:'H–P: 8:00–18:00'},
-    {nm:'Budai Egészségközpont',sp:'Általános kivizsgálás + alvás',ic:'🏥',tags:['Komplex szűrés','Labor'],pct:76,top:false,addr:'1161 Budapest, VI. Andrássy út 92.',tel:'+36 1 552 5333',hours:'H–P: 8:00–18:00'}
+    {nm:'MedSoulYou',sp:'Belgyógyászat + Pszichológia · Állapotfelmérés',ic:'💫',tags:['Alvászavar','Krónikus fáradtság','Komplex kivizsgálás'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Az alvászavarok hátterében gyakran hormonális, anyagcsere- vagy stressz-eredetű okok állnak — a MedSoulYou csapata ezeket egyben vizsgálja.'},
+    {nm:'SleepWell Alvásdiagnosztika',sp:'Alváscentrum · Poligráfia',ic:'🌙',tags:['Alvászavar','Apnoe','Horkolás'],pct:95,top:false,region:'1',addr:'1179 Budapest, XIII. Váci út 72.',tel:'+36 1 206 3615',hours:'H–P: 9:00–19:00'},
+    {nm:'Dr. Molnár Zsófia',sp:'Neurológus · Alvásspecialista',ic:'⚡',tags:['Inszomnia','Alvásterápia'],pct:88,top:false,region:'1',addr:'1142 Budapest, VII. Király utca 56.',tel:'+36 1 981 6514',hours:'H–P: 8:00–18:00'},
+    {nm:'Budai Egészségközpont',sp:'Általános kivizsgálás + alvás',ic:'🏥',tags:['Komplex szűrés','Labor'],pct:76,top:false,region:'1',addr:'1161 Budapest, VI. Andrássy út 92.',tel:'+36 1 552 5333',hours:'H–P: 8:00–18:00'},
+    {nm:'Miskolc Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'3',addr:'3525 Miskolc, Petőfi Sándor utca 12.',tel:'+36 46 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Debrecen Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'4',addr:'4025 Debrecen, Petőfi Sándor utca 12.',tel:'+36 52 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Szolnok Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'5',addr:'5000 Szolnok, Petőfi Sándor utca 12.',tel:'+36 56 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Szeged Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'6',addr:'6720 Szeged, Petőfi Sándor utca 12.',tel:'+36 62 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Pécs Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'7',addr:'7621 Pécs, Petőfi Sándor utca 12.',tel:'+36 72 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Székesfehérvár Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'8',addr:'8000 Székesfehérvár, Petőfi Sándor utca 12.',tel:'+36 22 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Győr Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'9',addr:'9021 Győr, Petőfi Sándor utca 12.',tel:'+36 96 420 315',hours:'H–P: 8:00–17:00'}
   ],
   'Anyagcsere-Hormonális': [
-    {nm:'MedSoulYou',sp:'Belgyógyászat, Dietetika · Életmódorvoslás',ic:'💫',tags:['Pajzsmirigy','PCOS','Inzulinrezisztencia','Cukorbetegség'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pajzsmirigy-, PCOS- és inzulinrezisztencia-problémákra szakosodott csapat, laborvizsgálattal és személyre szabott kezelési tervvel.'},
-    {nm:'NutriBalance Klinika',sp:'Dietetika · Anyagcsere felmérés',ic:'⚗️',tags:['IR','Hormonális','Diéta'],pct:94,top:false,addr:'1181 Budapest, XII. Alkotás utca 97.',tel:'+36 1 280 5803',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Dr. Kovács Petra',sp:'Endokrinológus · Magánrendelő',ic:'🔬',tags:['Pajzsmirigy','PCOS','Cukorbetegség'],pct:89,top:false,addr:'1131 Budapest, VIII. Üllői út 12.',tel:'+36 1 877 4733',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Medicover Endokrinológia',sp:'Komplex hormon kivizsgálás',ic:'🏥',tags:['Labor','Ultrahang','Tanácsadás'],pct:82,top:false,addr:'1233 Budapest, VI. Andrássy út 26.',tel:'+36 1 589 5554',hours:'H–P: 9:00–19:00'}
+    {nm:'MedSoulYou',sp:'Belgyógyászat, Dietetika · Életmódorvoslás',ic:'💫',tags:['Pajzsmirigy','PCOS','Inzulinrezisztencia','Cukorbetegség'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pajzsmirigy-, PCOS- és inzulinrezisztencia-problémákra szakosodott csapat, laborvizsgálattal és személyre szabott kezelési tervvel.'},
+    {nm:'NutriBalance Klinika',sp:'Dietetika · Anyagcsere felmérés',ic:'⚗️',tags:['IR','Hormonális','Diéta'],pct:94,top:false,region:'1',addr:'1181 Budapest, XII. Alkotás utca 97.',tel:'+36 1 280 5803',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Dr. Kovács Petra',sp:'Endokrinológus · Magánrendelő',ic:'🔬',tags:['Pajzsmirigy','PCOS','Cukorbetegség'],pct:89,top:false,region:'1',addr:'1131 Budapest, VIII. Üllői út 12.',tel:'+36 1 877 4733',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Medicover Endokrinológia',sp:'Komplex hormon kivizsgálás',ic:'🏥',tags:['Labor','Ultrahang','Tanácsadás'],pct:82,top:false,region:'1',addr:'1233 Budapest, VI. Andrássy út 26.',tel:'+36 1 589 5554',hours:'H–P: 9:00–19:00'},
+    {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'3',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'4',addr:'4025 Debrecen, Rákóczi út 8.',tel:'+36 52 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'5',addr:'5000 Szolnok, Rákóczi út 8.',tel:'+36 56 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'6',addr:'6720 Szeged, Rákóczi út 8.',tel:'+36 62 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'7',addr:'7621 Pécs, Rákóczi út 8.',tel:'+36 72 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'8',addr:'8000 Székesfehérvár, Rákóczi út 8.',tel:'+36 22 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'9',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'}
   ],
   'Mozgásszervi': [
-    {nm:'MedSoulYou',sp:'Gyógytorna, Fizioterápia · Állapotfelmérés',ic:'💫',tags:['Derékfájás','Ízületi panasz','Gyógytorna'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gyógytornász-fizioterapeuta szakértelem a mozgásszervi panaszok, sportsérülések és rehabilitáció kezelésére.'},
-    {nm:'Budapest Spine Center',sp:'Ortopédia · Gerincsebészet',ic:'🦴',tags:['Gerincbetegség','Rehabilitáció','Fizioterpia'],pct:95,top:false,addr:'1125 Budapest, VII. Király utca 91.',tel:'+36 1 414 5374',hours:'H–P: 8:00–18:00'},
-    {nm:'ProSport Medicina',sp:'Sportmedicina · Fizioterápia',ic:'💪',tags:['Sport sérülés','Mozgásterápia','Izomzat'],pct:87,top:false,addr:'1202 Budapest, VIII. Üllői út 137.',tel:'+36 1 946 5010',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'Dr. Fekete Péter',sp:'Reumatológus · Ízületi betegségek',ic:'🔩',tags:['Ízület','Arthritis','Gyulladás'],pct:80,top:false,addr:'1164 Budapest, XII. Alkotás utca 164.',tel:'+36 1 904 4598',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'}
+    {nm:'MedSoulYou',sp:'Gyógytorna, Fizioterápia · Állapotfelmérés',ic:'💫',tags:['Derékfájás','Ízületi panasz','Gyógytorna'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gyógytornász-fizioterapeuta szakértelem a mozgásszervi panaszok, sportsérülések és rehabilitáció kezelésére.'},
+    {nm:'Budapest Spine Center',sp:'Ortopédia · Gerincsebészet',ic:'🦴',tags:['Gerincbetegség','Rehabilitáció','Fizioterpia'],pct:95,top:false,region:'1',addr:'1125 Budapest, VII. Király utca 91.',tel:'+36 1 414 5374',hours:'H–P: 8:00–18:00'},
+    {nm:'ProSport Medicina',sp:'Sportmedicina · Fizioterápia',ic:'💪',tags:['Sport sérülés','Mozgásterápia','Izomzat'],pct:87,top:false,region:'1',addr:'1202 Budapest, VIII. Üllői út 137.',tel:'+36 1 946 5010',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Dr. Fekete Péter',sp:'Reumatológus · Ízületi betegségek',ic:'🔩',tags:['Ízület','Arthritis','Gyulladás'],pct:80,top:false,region:'1',addr:'1164 Budapest, XII. Alkotás utca 164.',tel:'+36 1 904 4598',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'3',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'4',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'5',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'6',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'7',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'8',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'9',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'}
   ],
   'Gyomor-bél': [
-    {nm:'MedSoulYou',sp:'Gasztroenterológia · Állapotfelmérés',ic:'💫',tags:['Reflux','Puffadás','IBS','SIBO'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gasztroenterológus szakorvosi háttérrel vizsgálják a puffadás, reflux, IBS és egyéb emésztőrendszeri panaszok valódi kiváltó okát.'},
-    {nm:'Gasztro Centrum Budapest',sp:'Gasztroenterológia · Endoszkópia',ic:'🫃',tags:['Reflux','IBS','Intoleranciák'],pct:94,top:false,addr:'1130 Budapest, V. Váci utca 81.',tel:'+36 1 610 5386',hours:'H–P: 8:00–18:00'},
-    {nm:'Dr. Horváth Gábor',sp:'Belgyógyász · Emésztőrendszer',ic:'🩺',tags:['Emésztési zavar','Puffadás','Colon'],pct:86,top:false,addr:'1195 Budapest, XIII. Váci út 55.',tel:'+36 1 871 9179',hours:'H–P: 9:00–19:00'},
-    {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Labor','Intolerancia teszt','H. pylori'],pct:78,top:false,addr:'1124 Budapest, XII. Alkotás utca 36.',tel:'+36 1 452 9830',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'}
+    {nm:'MedSoulYou',sp:'Gasztroenterológia · Állapotfelmérés',ic:'💫',tags:['Reflux','Puffadás','IBS','SIBO'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gasztroenterológus szakorvosi háttérrel vizsgálják a puffadás, reflux, IBS és egyéb emésztőrendszeri panaszok valódi kiváltó okát.'},
+    {nm:'Gasztro Centrum Budapest',sp:'Gasztroenterológia · Endoszkópia',ic:'🫃',tags:['Reflux','IBS','Intoleranciák'],pct:94,top:false,region:'1',addr:'1130 Budapest, V. Váci utca 81.',tel:'+36 1 610 5386',hours:'H–P: 8:00–18:00'},
+    {nm:'Dr. Horváth Gábor',sp:'Belgyógyász · Emésztőrendszer',ic:'🩺',tags:['Emésztési zavar','Puffadás','Colon'],pct:86,top:false,region:'1',addr:'1195 Budapest, XIII. Váci út 55.',tel:'+36 1 871 9179',hours:'H–P: 9:00–19:00'},
+    {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Labor','Intolerancia teszt','H. pylori'],pct:78,top:false,region:'1',addr:'1124 Budapest, XII. Alkotás utca 36.',tel:'+36 1 452 9830',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'3',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'4',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'5',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'6',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'7',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'8',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'9',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'}
   ],
   'Szív és keringés': [
-    {nm:'MedSoulYou',sp:'Belgyógyászat · EKG, teljes állapotfelmérés',ic:'💫',tags:['Mellkasi fájdalom','Magas vérnyomás','Komplex kivizsgálás'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász szakorvosi vizsgálat, EKG és laborháttér egy helyen — a mellkasi panaszok és vérnyomásproblémák valós okának feltárására.'},
-    {nm:'Kardio Centrum Budapest',sp:'Kardiológia · Non-invazív diagnosztika',ic:'❤️',tags:['EKG','Echokardiográfia','Holter'],pct:96,top:false,addr:'1169 Budapest, VIII. Üllői út 103.',tel:'+36 1 570 4593',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'Dr. Szabó András',sp:'Kardiológus · Magánrendelő',ic:'🫀',tags:['Vérnyomás','Ritmuszavar','Terheléses EKG'],pct:89,top:false,addr:'1171 Budapest, III. Bécsi út 13.',tel:'+36 1 312 3504',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'Medicover Kardiológia',sp:'Komplex szív kivizsgálás',ic:'🏥',tags:['Teljes szűrés','Labor','Képalkotó'],pct:83,top:false,addr:'1191 Budapest, IX. Ferenc körút 99.',tel:'+36 1 590 8668',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'}
+    {nm:'MedSoulYou',sp:'Belgyógyászat · EKG, teljes állapotfelmérés',ic:'💫',tags:['Mellkasi fájdalom','Magas vérnyomás','Komplex kivizsgálás'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász szakorvosi vizsgálat, EKG és laborháttér egy helyen — a mellkasi panaszok és vérnyomásproblémák valós okának feltárására.'},
+    {nm:'Kardio Centrum Budapest',sp:'Kardiológia · Non-invazív diagnosztika',ic:'❤️',tags:['EKG','Echokardiográfia','Holter'],pct:96,top:false,region:'1',addr:'1169 Budapest, VIII. Üllői út 103.',tel:'+36 1 570 4593',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Dr. Szabó András',sp:'Kardiológus · Magánrendelő',ic:'🫀',tags:['Vérnyomás','Ritmuszavar','Terheléses EKG'],pct:89,top:false,region:'1',addr:'1171 Budapest, III. Bécsi út 13.',tel:'+36 1 312 3504',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Medicover Kardiológia',sp:'Komplex szív kivizsgálás',ic:'🏥',tags:['Teljes szűrés','Labor','Képalkotó'],pct:83,top:false,region:'1',addr:'1191 Budapest, IX. Ferenc körút 99.',tel:'+36 1 590 8668',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'3',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'4',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'5',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'6',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'7',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'8',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'9',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'}
   ],
   'Légzőszervi': [
-    {nm:'Tüdő Centrum Budapest',sp:'Pulmonológia · Légzésfunkció',ic:'🫁',tags:['Asztma','Allergia','Spirometria'],pct:93,top:true,addr:'1230 Budapest, III. Bécsi út 175.',tel:'+36 1 938 2876',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Dr. Nagy Katalin',sp:'Allergológus · Immunológus',ic:'🌿',tags:['Allergia','Szénanátha','Immunterápia'],pct:87,top:false,addr:'1114 Budapest, VII. Király utca 112.',tel:'+36 1 361 8433',hours:'H–P: 8:00–18:00'},
-    {nm:'Fül-orr-gégészeti Centrum',sp:'ENT · Légúti betegségek',ic:'👃',tags:['Orrmelléküregek','Horkolás','Alvási apnoe'],pct:79,top:false,addr:'1182 Budapest, XI. Bartók Béla út 130.',tel:'+36 1 308 5889',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'}
+    {nm:'Tüdő Centrum Budapest',sp:'Pulmonológia · Légzésfunkció',ic:'🫁',tags:['Asztma','Allergia','Spirometria'],pct:93,top:true,region:'1',addr:'1230 Budapest, III. Bécsi út 175.',tel:'+36 1 938 2876',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Dr. Nagy Katalin',sp:'Allergológus · Immunológus',ic:'🌿',tags:['Allergia','Szénanátha','Immunterápia'],pct:87,top:false,region:'1',addr:'1114 Budapest, VII. Király utca 112.',tel:'+36 1 361 8433',hours:'H–P: 8:00–18:00'},
+    {nm:'Fül-orr-gégészeti Centrum',sp:'ENT · Légúti betegségek',ic:'👃',tags:['Orrmelléküregek','Horkolás','Alvási apnoe'],pct:79,top:false,region:'1',addr:'1182 Budapest, XI. Bartók Béla út 130.',tel:'+36 1 308 5889',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'3',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'4',addr:'4025 Debrecen, Rákóczi út 8.',tel:'+36 52 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'5',addr:'5000 Szolnok, Rákóczi út 8.',tel:'+36 56 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'6',addr:'6720 Szeged, Rákóczi út 8.',tel:'+36 62 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'7',addr:'7621 Pécs, Rákóczi út 8.',tel:'+36 72 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'8',addr:'8000 Székesfehérvár, Rákóczi út 8.',tel:'+36 22 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'9',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'}
   ],
   'Neurológiai': [
-    {nm:'Neurológiai Centrum Budapest',sp:'Neurológia · Fejfájásambulancia',ic:'⚡',tags:['Migrén','Szédülés','Zsibbadás'],pct:94,top:true,addr:'1152 Budapest, II. Margit körút 139.',tel:'+36 1 997 9689',hours:'H–P: 8:00–18:00'},
-    {nm:'Dr. Papp Erzsébet',sp:'Neurológus · Magánrendelő',ic:'🧬',tags:['Fejfájás','Memóriazavar','Idegrendszer'],pct:88,top:false,addr:'1157 Budapest, VIII. Üllői út 5.',tel:'+36 1 314 6947',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'MRI Centrum Budapest',sp:'Neuroradiológia · Képalkotó',ic:'🔬',tags:['MRI','CT','Diagnosztika'],pct:80,top:false,addr:'1103 Budapest, XIII. Váci út 146.',tel:'+36 1 280 2403',hours:'H–P: 9:00–19:00'}
+    {nm:'Neurológiai Centrum Budapest',sp:'Neurológia · Fejfájásambulancia',ic:'⚡',tags:['Migrén','Szédülés','Zsibbadás'],pct:94,top:true,region:'1',addr:'1152 Budapest, II. Margit körút 139.',tel:'+36 1 997 9689',hours:'H–P: 8:00–18:00'},
+    {nm:'Dr. Papp Erzsébet',sp:'Neurológus · Magánrendelő',ic:'🧬',tags:['Fejfájás','Memóriazavar','Idegrendszer'],pct:88,top:false,region:'1',addr:'1157 Budapest, VIII. Üllői út 5.',tel:'+36 1 314 6947',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'MRI Centrum Budapest',sp:'Neuroradiológia · Képalkotó',ic:'🔬',tags:['MRI','CT','Diagnosztika'],pct:80,top:false,region:'1',addr:'1103 Budapest, XIII. Váci út 146.',tel:'+36 1 280 2403',hours:'H–P: 9:00–19:00'},
+    {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'3',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'4',addr:'4025 Debrecen, Rákóczi út 8.',tel:'+36 52 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'5',addr:'5000 Szolnok, Rákóczi út 8.',tel:'+36 56 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'6',addr:'6720 Szeged, Rákóczi út 8.',tel:'+36 62 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'7',addr:'7621 Pécs, Rákóczi út 8.',tel:'+36 72 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'8',addr:'8000 Székesfehérvár, Rákóczi út 8.',tel:'+36 22 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'9',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'}
   ],
   'Bőr-Haj': [
-    {nm:'Bőrgyógyászati Magánrendelő',sp:'Dermatológia · Esztétikai bőrgyógyászat',ic:'✨',tags:['Akne','Psoriasis','Hajhullás'],pct:93,top:true,addr:'1228 Budapest, VI. Andrássy út 33.',tel:'+36 1 331 8787',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'Dr. Lakatos Mária',sp:'Bőrgyógyász · Trichológus',ic:'💇',tags:['Hajhullás','Bőrbetegségek','Hormonális akne'],pct:87,top:false,addr:'1189 Budapest, XI. Bartók Béla út 109.',tel:'+36 1 416 9835',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'SkinLab Budapest',sp:'Endokrinológia + Bőrgyógyászat',ic:'🔬',tags:['Hormonális összefüggés','Labor','Komplex'],pct:81,top:false,addr:'1165 Budapest, XI. Bartók Béla út 113.',tel:'+36 1 729 8397',hours:'H–P: 8:00–18:00'}
+    {nm:'Bőrgyógyászati Magánrendelő',sp:'Dermatológia · Esztétikai bőrgyógyászat',ic:'✨',tags:['Akne','Psoriasis','Hajhullás'],pct:93,top:true,region:'1',addr:'1228 Budapest, VI. Andrássy út 33.',tel:'+36 1 331 8787',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Dr. Lakatos Mária',sp:'Bőrgyógyász · Trichológus',ic:'💇',tags:['Hajhullás','Bőrbetegségek','Hormonális akne'],pct:87,top:false,region:'1',addr:'1189 Budapest, XI. Bartók Béla út 109.',tel:'+36 1 416 9835',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'SkinLab Budapest',sp:'Endokrinológia + Bőrgyógyászat',ic:'🔬',tags:['Hormonális összefüggés','Labor','Komplex'],pct:81,top:false,region:'1',addr:'1165 Budapest, XI. Bartók Béla út 113.',tel:'+36 1 729 8397',hours:'H–P: 8:00–18:00'},
+    {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'3',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'4',addr:'4025 Debrecen, Rákóczi út 8.',tel:'+36 52 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'5',addr:'5000 Szolnok, Rákóczi út 8.',tel:'+36 56 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'6',addr:'6720 Szeged, Rákóczi út 8.',tel:'+36 62 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'7',addr:'7621 Pécs, Rákóczi út 8.',tel:'+36 72 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'8',addr:'8000 Székesfehérvár, Rákóczi út 8.',tel:'+36 22 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'9',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'}
   ],
   'Szűrés-Megelőzés': [
-    {nm:'MedSoulYou',sp:'Teljes körű állapotfelmérés · Orvosi + pszichológiai',ic:'💫',tags:['Teljes állapotfelmérés','Labor','Prevenció'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'A MedSoulYou állapotfelmérése kérdőívet, labort, fizikai és pszichológiai vizsgálatot egyesít — a legátfogóbb kép a jelenlegi állapotodról.'},
-    {nm:'Medicover Szűrőprogram',sp:'Komplex prevenciós vizsgálat',ic:'🔬',tags:['Teljes labor','Képalkotó','Szívszűrés'],pct:97,top:false,addr:'1131 Budapest, XIII. Váci út 87.',tel:'+36 1 221 4770',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Vérkép','Tumormarker','Hormon panel'],pct:91,top:false,addr:'1110 Budapest, V. Váci utca 59.',tel:'+36 1 269 1514',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Duna Medical Center',sp:'Prevenciós egészségcsomag',ic:'🏥',tags:['Komplex szűrés','Szakorvos'],pct:84,top:false,addr:'1183 Budapest, VI. Andrássy út 72.',tel:'+36 1 885 8953',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'}
+    {nm:'MedSoulYou',sp:'Teljes körű állapotfelmérés · Orvosi + pszichológiai',ic:'💫',tags:['Teljes állapotfelmérés','Labor','Prevenció'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'A MedSoulYou állapotfelmérése kérdőívet, labort, fizikai és pszichológiai vizsgálatot egyesít — a legátfogóbb kép a jelenlegi állapotodról.'},
+    {nm:'Medicover Szűrőprogram',sp:'Komplex prevenciós vizsgálat',ic:'🔬',tags:['Teljes labor','Képalkotó','Szívszűrés'],pct:97,top:false,region:'1',addr:'1131 Budapest, XIII. Váci út 87.',tel:'+36 1 221 4770',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Vérkép','Tumormarker','Hormon panel'],pct:91,top:false,region:'1',addr:'1110 Budapest, V. Váci utca 59.',tel:'+36 1 269 1514',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Duna Medical Center',sp:'Prevenciós egészségcsomag',ic:'🏥',tags:['Komplex szűrés','Szakorvos'],pct:84,top:false,region:'1',addr:'1183 Budapest, VI. Andrássy út 72.',tel:'+36 1 885 8953',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'3',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'4',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'5',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'6',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'7',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'8',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'9',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'}
   ],
   'default': [
-    {nm:'MedSoulYou',sp:'Orvosi és pszichológiai csapat · Állapotfelmérés',ic:'💫',tags:['Teljes állapotfelmérés','Irányítás','Komplex'],pct:98,top:true,real:true,bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Amikor nem egyértelmű merre indulj, a MedSoulYou átfogó állapotfelmérése segít feltárni a valódi okokat és a legjobb következő lépést.'},
-    {nm:'Budai Egészségközpont',sp:'Általános belgyógyász · Irányítás',ic:'🏥',tags:['Általános kivizsgálás','Irányítás','Labor'],pct:92,top:false,addr:'1129 Budapest, III. Bécsi út 148.',tel:'+36 1 684 4981',hours:'H–P: 9:00–19:00'},
-    {nm:'Medicover Diagnosztika',sp:'Komplex szűrőcsomag',ic:'🔬',tags:['Teljes szűrés','Labor','Képalkotó'],pct:86,top:false,addr:'1131 Budapest, IX. Ferenc körút 25.',tel:'+36 1 874 8062',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Dr. Balogh István',sp:'Belgyógyász · Általános orvostan',ic:'🩺',tags:['Panaszok tisztázása','Irányítás'],pct:79,top:false,addr:'1167 Budapest, IX. Ferenc körút 14.',tel:'+36 1 889 2612',hours:'H–P: 8:00–18:00'}
+    {nm:'MedSoulYou',sp:'Orvosi és pszichológiai csapat · Állapotfelmérés',ic:'💫',tags:['Teljes állapotfelmérés','Irányítás','Komplex'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Amikor nem egyértelmű merre indulj, a MedSoulYou átfogó állapotfelmérése segít feltárni a valódi okokat és a legjobb következő lépést.'},
+    {nm:'Budai Egészségközpont',sp:'Általános belgyógyász · Irányítás',ic:'🏥',tags:['Általános kivizsgálás','Irányítás','Labor'],pct:92,top:false,region:'1',addr:'1129 Budapest, III. Bécsi út 148.',tel:'+36 1 684 4981',hours:'H–P: 9:00–19:00'},
+    {nm:'Medicover Diagnosztika',sp:'Komplex szűrőcsomag',ic:'🔬',tags:['Teljes szűrés','Labor','Képalkotó'],pct:86,top:false,region:'1',addr:'1131 Budapest, IX. Ferenc körút 25.',tel:'+36 1 874 8062',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Dr. Balogh István',sp:'Belgyógyász · Általános orvostan',ic:'🩺',tags:['Panaszok tisztázása','Irányítás'],pct:79,top:false,region:'1',addr:'1167 Budapest, IX. Ferenc körút 14.',tel:'+36 1 889 2612',hours:'H–P: 8:00–18:00'},
+    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'3',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'4',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'5',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'6',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'7',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'8',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'9',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'}
   ]
 };
 
+// ── Navigation ──
 function go(id){
   document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
   document.getElementById(id).classList.add('on');
@@ -642,10 +796,11 @@ function goQuiz(){
   }
   go('s-quiz');showQ(1);
 }
-function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');go('s-land')}
+function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
 
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('on',window.scrollY>10));
 
+// ── Quiz steps ──
 function showQ(n){
   document.querySelectorAll('.qstep').forEach(s=>s.classList.remove('on'));
   const el=document.getElementById('q'+n);
@@ -682,9 +837,11 @@ function buildSummary(){
     rows.map(r=>`<div class="summary-row"><span class="summary-key">${r.k}</span><span class="summary-val">${r.v}</span></div>`).join('');
 }
 function nxt(n){
+  // req[current_step] = required answer key before leaving that step
   const req={1:'nem',4:'sulyossag',5:'idotartam',6:'eletmod',9:'elozmeny'};
   const cur=n-1;
   if(req[cur]&&!A[req[cur]]){shake(cur);return}
+  // save numeric inputs when leaving step 2
   if(cur===2){A.kor=document.getElementById('kor').value||'nem adott meg';A.suly=document.getElementById('suly').value||'nem adott meg'}
   showQ(n);
 }
@@ -697,6 +854,7 @@ function shake(n){
   setTimeout(()=>{el.style.transform=''},240);
 }
 
+// ── Option picks ──
 function pick(el,key,val){
   const p=el.closest('.qstep');
   p.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
@@ -717,6 +875,7 @@ function sevpick(el,val){
   A.sulyossag=String(val);
 }
 
+// ── Tünet-adatbázis (a felmérési dokumentum alapján) ──
 const SYMPTOMS={
   'Szív és keringés':{ic:'❤️',list:['Szorító érzés a mellkasban','Szapora vagy kalapáló szívverés','Lábdagadás','Fekvő helyzetben nehézlégzés','Gyakori szédülés felálláskor']},
   'Légzőszervi':{ic:'🫁',list:['Terhelésre jelentkező légszomj','Krónikus vagy visszatérő köhögés','Sípoló légzés','Gyakori orrdugulás, orrfolyás','Visszatérő orrmelléküreg-gyulladás','Éjszakai légzéskimaradás','Szaglás/ízérzés csökkenése']},
@@ -729,8 +888,10 @@ const SYMPTOMS={
   'Neurológiai':{ic:'⚡',list:['Fejfájás, migrén','Szédülés, egyensúlyzavar','Zsibbadás, érzészavar','Memóriazavar, feledékenység','Fülzúgás, fülcsengés','Fény- vagy hangérzékenység','Izomrángás, görcs']}
 };
 
+// ── Dinamikus tünet-képernyő ──
 function goSymptoms(){
   const areas=(MULTI['terület']||[]).filter(a=>SYMPTOMS[a]);
+  // Ha nincs olyan terület amihez tünet tartozik (pl. csak Szűrés-Megelőzés), ugrunk a súlyosságra
   if(areas.length===0){showQ(4);return}
   const cont=document.getElementById('sym-container');
   cont.innerHTML='';
@@ -747,6 +908,7 @@ function goSymptoms(){
     group.innerHTML=`<div class="sym-group-title"><span class="gi">${data.ic}</span>${area==='Mentális-Pszichés'?'Mentális, érzelmi':area==='Anyagcsere-Hormonális'?'Anyagcsere, hormon':area==='Bőr-Haj'?'Bőr, haj':area}</div><div class="sym-opts">${opts}</div>`;
     cont.appendChild(group);
   });
+  // step megjelenítése (külön kezeljük, mert nem szám)
   document.querySelectorAll('.qstep').forEach(s=>s.classList.remove('on'));
   const el=document.getElementById('qsym');
   el.classList.add('on');el.style.animation='none';el.offsetHeight;el.style.animation='';
@@ -761,12 +923,15 @@ function symPick(el,sym){
   A.tunetek=(MULTI['tunet']||[]).join(', ')||'';
 }
 
+
+// ── Submit ──
 async function submit(){
   document.getElementById('errbox').classList.remove('on');
   const szabadszoveg=document.getElementById('szabadszoveg').value.trim();
   A.szabadszoveg=szabadszoveg;
   A.iranyitoszam=(document.getElementById('iranyitoszam')||{}).value.trim();
 
+  // opcionális mini-megjegyzések begyűjtése
   const mcIds={terulet:'cm-terulet',tunet:'cm-tunet',betegseg:'cm-betegseg',psziche:'cm-psziche',elozmeny:'cm-elozmeny'};
   Object.entries(mcIds).forEach(([key,id])=>{
     const el=document.getElementById(id);
@@ -814,14 +979,15 @@ Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy m
     {"icon": "2️⃣", "type": "t", "title": "Második lépés", "desc": "A következő tennivaló — párhuzamosan vagy az első után."},
     {"icon": "3️⃣", "type": "w", "title": "Hosszú távon", "desc": "Ami a jövőben fontos lesz az egészség fenntartásához ezzel a profillal."}
   ],
-  "primary_specialty": "A fő terület kulcsszava a partner-adatbázis kiválasztásához. Pontosan egy ezek közül: Mentális-Pszichés | Alvás | Anyagcsere-Hormonális | Mozgásszervi | Gyomor-bél | Szív és keringés | Légzőszervi | Neurológiai | Bőr-Haj | Szűrés-Megelőzés",
-  "secondary_specialty": "Másodlagos terület kulcsszava ugyanabból a listából, vagy null ha nincs",
+  "primary_specialty": "KIZÁRÓLAG az alábbi 10 névből PONTOSAN egyet írj ide, SZÓ SZERINT másolva, semmi mást hozzá ne fűzz: Mentális-Pszichés / Alvás / Anyagcsere-Hormonális / Mozgásszervi / Gyomor-bél / Szív és keringés / Légzőszervi / Neurológiai / Bőr-Haj / Szűrés-Megelőzés",
+  "secondary_specialty": "Ugyanabból a 10 névből PONTOSAN egy, szó szerint másolva, vagy null ha nincs másodlagos terület",
   "explanation": "2-3 mondatos magyarázat: milyen adatok alapján jutottál erre a következtetésre? Milyen összefüggéseket láttál? Szakmai de érthető hang.",
   "personal_note": "1 mondatos, személyes, meleg zárómondat kifejezetten ehhez a személyhez szólva."
 }`;
 
   go('s-load');
   try{
+    // A kulcs NEM itt van -- a sajat backend endpoint hivja biztonsagosan
     const resp=await fetch("/api/analyze",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
@@ -832,6 +998,7 @@ Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy m
       throw new Error('Szerver '+resp.status+': '+errTxt.substring(0,200));
     }
     const result=await resp.json();
+    // a backend mar kesz JSON objektumot ad vissza
     renderResult(result);
   }catch(e){
     console.error('HovaForduljak hiba:',e);
@@ -842,16 +1009,30 @@ Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy m
   }
 }
 
+// ── Régió-felismerés irányítószám alapján (kemény, kódszintű ellenőrzés) ──
+const REGIONS={
+  '1':'Budapest','2':'Pest megye (Budapest környéke)','3':'Észak-Magyarország (Miskolc térsége)',
+  '4':'Debrecen / Hajdú-Bihar térsége','5':'Szolnok / Jász-Nagykun-Szolnok térsége','6':'Szeged / Csongrád térsége',
+  '7':'Pécs / Baranya térsége','8':'Veszprém / Székesfehérvár / Zalaegerszeg térsége','9':'Győr / Sopron térsége'
+};
+function getRegion(postal){
+  if(!postal||postal.length<1)return null;
+  return REGIONS[postal[0]]||null;
+}
+
+// ── Render result ──
 function renderResult(d){
   document.getElementById('r-title').textContent=d.title||'Személyre szabott ajánlás';
   document.getElementById('r-sum').textContent=d.summary||'';
 
+  // urgency
   const urgEl=document.getElementById('r-urg');
   const urgMap={low:{cls:'low',ic:'🟢'},medium:{cls:'mid',ic:'🟡'},high:{cls:'hi',ic:'🔴'}};
   const u=urgMap[d.urgency]||urgMap.low;
   urgEl.className='urg '+u.cls;
   urgEl.innerHTML=`<span>${u.ic}</span><span>${d.urgency_label||''}</span>`;
 
+  // profile chips
   const pc=document.getElementById('r-profile');
   pc.innerHTML='';
   (d.profile_chips||[]).forEach(c=>{
@@ -861,6 +1042,7 @@ function renderResult(d){
     pc.appendChild(div);
   });
 
+  // next steps
   const sl=document.getElementById('r-steps');
   sl.innerHTML='';
   (d.next_steps||[]).forEach(s=>{
@@ -870,17 +1052,24 @@ function renderResult(d){
     sl.appendChild(div);
   });
 
+  // partners
   const pg=document.getElementById('r-partners');
   pg.innerHTML='';
+  // Fuzzy matcher: az AI valtozatos kulcsszavait a helyes kategoriahoz koti
+  function foldHu(s){
+    return s.toLowerCase()
+      .replace(/[áàâ]/g,'a').replace(/é/g,'e').replace(/[íì]/g,'i')
+      .replace(/[óòô]/g,'o').replace(/ő/g,'o').replace(/[úùû]/g,'u').replace(/ű/g,'u');
+  }
   function matchCat(s){
     if(!s)return null;
-    if(PDATA[s])return s;
-    const t=s.toLowerCase();
+    if(PDATA[s])return s; // pontos talalat
+    const t=foldHu(s);
     if(/ment|psz|szoron|depr|kiege|stressz|hangulat|lelki/.test(t))return 'Mentális-Pszichés';
     if(/alv|insz|apno|horko/.test(t))return 'Alvás';
-    if(/anyagcs|hormon|pajzs|endokr|cukor|ir\b|inzulin|dieteti|taplal/.test(t))return 'Anyagcsere-Hormonális';
+    if(/anyagcs|hormon|pajzs|endokr|cukor|inzulin|dieteti|taplal/.test(t))return 'Anyagcsere-Hormonális';
     if(/mozgas|ortop|gerinc|izul|reuma|izom|csont/.test(t))return 'Mozgásszervi';
-    if(/gyomor|bel|emesz|reflux|gaszt|szekl|puffad/.test(t))return 'Gyomor-bél';
+    if(/gyomor|emeszt|reflux|gaszt|szekl|puffad/.test(t))return 'Gyomor-bél';
     if(/sziv|kering|kardio|vernyom|ritmus/.test(t))return 'Szív és keringés';
     if(/legz|tudo|pulmo|asztma|allerg|orr|gege/.test(t))return 'Légzőszervi';
     if(/neuro|fejfaj|migren|szedu|zsibba|ideg/.test(t))return 'Neurológiai';
@@ -888,15 +1077,47 @@ function renderResult(d){
     if(/szur|megel|preven|labor|diagn/.test(t))return 'Szűrés-Megelőzés';
     return null;
   }
+  // elsodleges: AI valasz -> fuzzy -> elso megjelolt terulet -> default
   const firstTerulet=(MULTI['terület']&&MULTI['terület'][0])||null;
   const prim=matchCat(d.primary_specialty)||matchCat(firstTerulet)||'Szűrés-Megelőzés';
   const sec=matchCat(d.secondary_specialty);
   let partners=PDATA[prim]||PDATA['default'];
   if(sec&&sec!==prim&&PDATA[sec]){
+    // elkerüljük a duplikációt, ha a másodlagos kategória első helyezettje
+    // (pl. MedSoulYou) már szerepel az elsődlegesben
     const already=new Set(partners.map(p=>p.nm));
     const secPick=PDATA[sec].find(p=>!already.has(p.nm))||PDATA[sec][0];
     partners=[partners[0],partners[1],secPick];
   }
+
+  // régió-tudatos rendezés: ha van megadott irányítószám és nem budapesti,
+  // a saját régiós találat kerüljön ELŐRE (teljes átállás, nem csak beszúrás)
+  const userRegion=(A.iranyitoszam||'').trim()[0]||null;
+  let regionMatchFound=false;
+  if(userRegion && userRegion!=='1'){
+    const regional=(PDATA[prim]||[]).find(p=>p.region===userRegion);
+    if(regional){
+      regionMatchFound=true;
+      // regionális találat előre, utána a valós/igazolt partner (akkor is ha távolabb van), majd a maradék
+      const rest=partners.filter(p=>p.nm!==regional.nm);
+      partners=[regional, ...rest].slice(0,3);
+    }
+  }
+
+  // lokáció-őszinteség: kódszinten ellenőrizzük, nem az AI-ra bízzuk
+  const locBanner=document.getElementById('loc-banner');
+  const postal=(A.iranyitoszam||'').trim();
+  if(postal && postal[0]!=='1'){
+    const region=getRegion(postal)||'a megadott területen';
+    if(regionMatchFound){
+      locBanner.innerHTML=`<div class="loc-banner"><span class="li">✓</span><span>A megadott irányítószám alapján <strong>${region}</strong> térségéből mutatjuk elsőként az ajánlást — a budapesti igazolt partnerünk (MedSoulYou) is elérhető, de távolabb esik. (A regionális ajánlás illusztratív, a hálózat bővülésével válik valódivá.)</span></div>`;
+    }else{
+      locBanner.innerHTML=`<div class="loc-banner"><span class="li">📍</span><span>Az igazolt partnerünk (MedSoulYou) Budapesten érhető el — a megadott irányítószám (${postal}) alapján ez <strong>${region}</strong> térségétől távol esik. A hálózatunk bővül, addig is a lenti ajánlások szakmailag relevánsak, de utazást igényelhetnek.</span></div>`;
+    }
+  }else{
+    locBanner.innerHTML='';
+  }
+
   partners.forEach((p,idx)=>{
     const div=document.createElement('div');
     div.className='p-card-wrap';
@@ -912,7 +1133,8 @@ function renderResult(d){
            <button class="p-book-btn real" onclick="openBooking(${idx})">📅 Időpontfoglalás a MedSoulYou oldalán →</button>
            <a class="p-call-btn" href="tel:${(p.tel||'').replace(/\s/g,'')}">📞 Hívás</a>
          </div>`
-      : `<div class="p-detail-desc">${p.about||'Illusztratív példa a bemutató céljából — nem valós partnerklinika.'}</div>
+      : `<div class="p-detail-row"><span class="p-detail-ic">📍</span><span>${p.addr||'Budapest'}</span></div>
+         <div class="p-detail-desc">${p.about||'Illusztratív példa a bemutató céljából — nem valós partnerklinika.'}</div>
          <div class="illustrative-note">Illusztratív példa — még nem partnerünk. A végleges verzióban itt valós, igazolt partnerklinikák jelennek meg elérhetőségekkel és időpontfoglalással.</div>`;
     div.innerHTML=`
       <div class="p-card${p.top?' top':''}${p.real?' real':''}" onclick="toggleClinic(${idx})">
@@ -934,26 +1156,32 @@ function renderResult(d){
       </div>`;
     pg.appendChild(div);
   });
+  // eltároljuk a jelenlegi partnereket a foglaláshoz
   window.__partners=partners;
 
+  // explanation + personal note
   document.getElementById('r-explain').textContent=
     (d.explanation||'')+' '+(d.personal_note||'');
 
   go('s-res');
 }
 
+// ── Klinika kártya kinyitás ──
 function toggleClinic(idx){
   const exp=document.getElementById('exp-'+idx);
   const chev=document.getElementById('chev-'+idx);
   const isOpen=exp.classList.contains('open');
+  // csukjuk be a többit
   document.querySelectorAll('.p-expand.open').forEach(e=>e.classList.remove('open'));
   document.querySelectorAll('.p-chevron.up').forEach(c=>c.classList.remove('up'));
   if(!isOpen){exp.classList.add('open');chev.classList.add('up')}
 }
 
+// ── Foglalási nézet ──
 function openBooking(idx){
   const p=(window.__partners||[])[idx];
   if(!p)return;
+  // Valódi partner (pl. MedSoulYou) -> tényleges foglalási oldalra visz, nem demo modal
   if(p.real && p.bookingUrl){
     window.open(p.bookingUrl,'_blank','noopener');
     return;
@@ -963,6 +1191,7 @@ function openBooking(idx){
   document.getElementById('bk-av').textContent=p.ic;
   document.getElementById('bk-addr').textContent=p.addr||'Budapest';
   document.getElementById('bk-tel').textContent=p.tel||'+36 1 000 0000';
+  // generálunk pár szabad időpontot
   const slots=genSlots();
   const sw=document.getElementById('bk-slots');
   sw.innerHTML=slots.map((s,i)=>`<div class="bk-slot" onclick="pickSlot(this,'${s.label}')">${s.label}</div>`).join('');
@@ -999,6 +1228,7 @@ function confirmBooking(){
 }
 function closeBooking(){
   document.getElementById('booking-modal').classList.remove('on');
+  // reset
   setTimeout(()=>{
     document.getElementById('booking-body').style.display='block';
     document.getElementById('booking-success').style.display='none';
