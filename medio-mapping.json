@@ -1,0 +1,16 @@
+{
+    "_megjegyzes": "Töltsd ki a MedSoulYou tényleges Medio-azonosítóival! Ehhez hívd meg egyszer a /api/medsoulyou-discover?key=A_TE_TITKOS_KULCSOD végpontot (miután beállítottad a MEDIO_* env változókat) — az visszaadja a Medio-ban regisztrált location-öket, szakterületeket és orvosokat. Keresd ki köztük a MedSoulYou telephelyét, és párosítsd a saját 10 belépési területünket a hozzá legközelebb álló Medio specializationId-vel.",
+    "locationId": "",
+    "specialtyMap": {
+          "Mentális-Pszichés": { "specializationId": "", "doctorId": "" },
+          "Alvás": { "specializationId": "", "doctorId": "" },
+          "Anyagcsere-Hormonális": { "specializationId": "", "doctorId": "" },
+          "Mozgásszervi": { "specializationId": "", "doctorId": "" },
+          "Gyomor-bél": { "specializationId": "", "doctorId": "" },
+          "Szív és keringés": { "specializationId": "", "doctorId": "" },
+          "Légzőszervi": { "specializationId": "", "doctorId": "" },
+          "Neurológiai": { "specializationId": "", "doctorId": "" },
+          "Bőr-Haj": { "specializationId": "", "doctorId": "" },
+          "Szűrés-Megelőzés": { "specializationId": "", "doctorId": "" }
+    }
+}
