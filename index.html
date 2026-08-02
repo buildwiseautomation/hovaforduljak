@@ -1068,6 +1068,7 @@ input[type=range]::-webkit-slider-thumb {
     <div class="sec-lbl">Ajánlott partnerek</div>
     <div id="loc-banner"></div>
     <div class="p-grid" id="r-partners"></div>
+    <div id="medsoulyou-booking"></div>
 
     <div class="sec-lbl">Miért ezek az ajánlások?</div>
     <div class="ai-box">
@@ -1566,6 +1567,7 @@ function renderResult(d){
   // elsodleges: AI valasz -> fuzzy -> elso megjelolt terulet -> default
   const firstTerulet=(MULTI['terület']&&MULTI['terület'][0])||null;
   const prim=matchCat(d.primary_specialty)||matchCat(firstTerulet)||'Szűrés-Megelőzés';
+  if(window.MedSoulYouBooking){try{MedSoulYouBooking.render(document.getElementById('medsoulyou-booking'), prim);}catch(e){console.error('MedSoulYou widget hiba:',e);}}
   const sec=matchCat(d.secondary_specialty);
   let partners=PDATA[prim]||PDATA['default'];
   if(sec&&sec!==prim&&PDATA[sec]){
@@ -1721,5 +1723,6 @@ function closeBooking(){
   },300);
 }
 </script>
+<script src="/medsoulyou-widget.js"></script>
 </body>
 </html>
