@@ -938,7 +938,7 @@ input[type=range]::-webkit-slider-thumb {
         <div class="opt" onclick="pick(this,'idotartam','1-6 hónapja')"><div class="oi">🗓️</div><div><div class="ol">1–6 hónapja</div></div></div>
         <div class="opt" onclick="pick(this,'idotartam','Fél évnél régebben')"><div class="oi">⏳</div><div><div class="ol">Fél évnél régebben — visszatérő</div></div></div>
       </div>
-      <div class="q-nav"><button class="btn-back" onclick="backFromQ5()">← Vissza</button><button class="btn-p" onclick="nxt(6)">Tovább →</button></div>
+      <div class="q-nav"><button class="btn-back" onclick="prv(4)">← Vissza</button><button class="btn-p" onclick="nxt(6)">Tovább →</button></div>
     </div>
 
     <!-- Q6: Életmód -->
@@ -953,7 +953,7 @@ input[type=range]::-webkit-slider-thumb {
         <div class="opt" onclick="pick(this,'eletmod','Rendszeres sport')"><div class="oi">🏃</div><div><div class="ol">Rendszeres sport</div><div class="od">Heti 2-3 alkalom</div></div></div>
         <div class="opt" onclick="pick(this,'eletmod','Aktív sportoló')"><div class="oi">🏋️</div><div><div class="ol">Aktív sportoló</div><div class="od">Heti 4+ célzott edzés</div></div></div>
       </div>
-      <div class="q-nav"><button class="btn-back" onclick="prv(5)">← Vissza</button><button class="btn-p" onclick="nxt(7)">Tovább →</button></div>
+      <div class="q-nav"><button class="btn-back" onclick="backFromQ6()">← Vissza</button><button class="btn-p" onclick="nxt(7)">Tovább →</button></div>
     </div>
 
     <!-- Q7: Korábbi betegségek + psziché -->
@@ -1388,10 +1388,12 @@ function goSymptoms(){
   if(areas.length===0){
     // Kizárólag olyan terület(ek) vannak kijelölve, amikhez nincs konkrét
     // tünetlista (pl. "Szűrés, megelőzés" — "Nem érzek különös panaszt").
-    // Ilyenkor sem tünetet, sem súlyosságot nem kérdezünk — egyenesen
-    // az időtartamra ugrunk.
+    // Ha nincs konkrét panasz, sem a tünet, sem a súlyosság, SEM az
+    // időtartam kérdés nem értelmezhető (nem tudja megmondani, mióta van
+    // valamije, ha nem tud semmi bajáról) — egyenesen az életmód
+    // kérdésre (Q6) ugrunk, ami már nem feltételez konkrét panaszt.
     symptomsSkipped=true;
-    showQ(5);
+    showQ(6);
     return;
   }
   symptomsSkipped=false;
@@ -1416,9 +1418,9 @@ function goSymptoms(){
   document.getElementById('prog').style.width='35%';
   window.scrollTo(0,0);
 }
-function backFromQ5(){
+function backFromQ6(){
   if(symptomsSkipped){showQ(3);return}
-  prv(4);
+  prv(5);
 }
 function symPick(el,sym){
   el.classList.toggle('sel');
