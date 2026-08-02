@@ -789,7 +789,7 @@ input[type=range]::-webkit-slider-thumb {
 <div class="amb"></div>
 
 <nav class="nav" id="nav">
-  <div class="logo">HovaForduljak</div>
+  <div class="logo" onclick="restart()" style="cursor:pointer" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){restart()}">HovaForduljak</div>
   <div class="nav-pill">Demo · MVP</div>
 </nav>
 
@@ -938,7 +938,7 @@ input[type=range]::-webkit-slider-thumb {
         <div class="opt" onclick="pick(this,'idotartam','1-6 hónapja')"><div class="oi">🗓️</div><div><div class="ol">1–6 hónapja</div></div></div>
         <div class="opt" onclick="pick(this,'idotartam','Fél évnél régebben')"><div class="oi">⏳</div><div><div class="ol">Fél évnél régebben — visszatérő</div></div></div>
       </div>
-      <div class="q-nav"><button class="btn-back" onclick="prv(4)">← Vissza</button><button class="btn-p" onclick="nxt(6)">Tovább →</button></div>
+      <div class="q-nav"><button class="btn-back" onclick="backFromQ5()">← Vissza</button><button class="btn-p" onclick="nxt(6)">Tovább →</button></div>
     </div>
 
     <!-- Q6: Életmód -->
@@ -1118,6 +1118,7 @@ input[type=range]::-webkit-slider-thumb {
 const A = {};
 const MULTI = {};
 let SEV = 0;
+let symptomsSkipped = false;
 const TOTAL_Q = 10;
 
 // ── Partner adatbázis ──
@@ -1377,9 +1378,23 @@ const SYMPTOMS={
 
 // ── Dinamikus tünet-képernyő ──
 function goSymptoms(){
-  const areas=(MULTI['terület']||[]).filter(a=>SYMPTOMS[a]);
-  // Ha nincs olyan terület amihez tünet tartozik (pl. csak Szűrés-Megelőzés), ugrunk a súlyosságra
-  if(areas.length===0){showQ(4);return}
+  const selected=(MULTI['terület']||[]);
+  if(selected.length===0){
+    // Nincs kijelölve egyetlen terület sem — nem engedünk tovább.
+    shake(3);
+    return;
+  }
+  const areas=selected.filter(a=>SYMPTOMS[a]);
+  if(areas.length===0){
+    // Kizárólag olyan terület(ek) vannak kijelölve, amikhez nincs konkrét
+    // tünetlista (pl. "Szűrés, megelőzés" — "Nem érzek különös panaszt").
+    // Ilyenkor sem tünetet, sem súlyosságot nem kérdezünk — egyenesen
+    // az időtartamra ugrunk.
+    symptomsSkipped=true;
+    showQ(5);
+    return;
+  }
+  symptomsSkipped=false;
   const cont=document.getElementById('sym-container');
   cont.innerHTML='';
   if(!MULTI['tunet'])MULTI['tunet']=[];
@@ -1395,12 +1410,15 @@ function goSymptoms(){
     group.innerHTML=`<div class="sym-group-title"><span class="gi">${data.ic}</span>${area==='Mentális-Pszichés'?'Mentális, érzelmi':area==='Anyagcsere-Hormonális'?'Anyagcsere, hormon':area==='Bőr-Haj'?'Bőr, haj':area}</div><div class="sym-opts">${opts}</div>`;
     cont.appendChild(group);
   });
-  // step megjelenítése (külön kezeljük, mert nem szám)
   document.querySelectorAll('.qstep').forEach(s=>s.classList.remove('on'));
   const el=document.getElementById('qsym');
   el.classList.add('on');el.style.animation='none';el.offsetHeight;el.style.animation='';
   document.getElementById('prog').style.width='35%';
   window.scrollTo(0,0);
+}
+function backFromQ5(){
+  if(symptomsSkipped){showQ(3);return}
+  prv(4);
 }
 function symPick(el,sym){
   el.classList.toggle('sel');
