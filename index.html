@@ -893,7 +893,21 @@ input[type=range]::-webkit-slider-thumb {
         <label class="mc-label" for="cm-terulet">+ Van más is, ami nincs a listában? (opcionális)</label>
         <textarea class="mc-input" id="cm-terulet" placeholder="Pl. valami olyan panaszom van, ami nem illik egyik kategóriába sem..."></textarea>
       </div>
-      <div class="q-nav"><button class="btn-back" onclick="prv(2)">← Vissza</button><button class="btn-p" onclick="goSymptoms()">Tovább →</button></div>
+      <div class="q-nav"><button class="btn-back" onclick="prv(2)">← Vissza</button><button class="btn-p" onclick="goAllapot()">Tovább →</button></div>
+    </div>
+
+    <!-- QSTATE: Állapot-meghatározás (A/B/C) — a terület után, a tünetlista előtt -->
+    <div class="qstep" id="qstate">
+      <div class="q-meta"><span class="q-dot"></span>Helyzetfelmérés</div>
+      <h2 class="q-title">Mi jellemzi jobban a helyzeted ezen a területen?</h2>
+      <p class="q-sub has-why">Válaszd azt, amelyik a legközelebb áll hozzád.</p>
+      <p class="q-why">Ez segít abban, hogy csak olyat kérdezzünk, aminek nálad értelme van — nem kérdezünk rá olyanra, ami nem áll fenn.</p>
+      <div class="opts solo" id="qstate-opts">
+        <div class="opt" onclick="pickAllapot(this,'A')"><div class="oi">🔍</div><div><div class="ol">Csak felmérném magam, nincs konkrét panaszom</div></div></div>
+        <div class="opt" onclick="pickAllapot(this,'B')"><div class="oi">🆕</div><div><div class="ol">Most kezdődött, vagy nemrég vettem észre</div></div></div>
+        <div class="opt" onclick="pickAllapot(this,'C')"><div class="oi">⏳</div><div><div class="ol">Már régebb óta fennáll, de sosem vizsgáltattam ki</div></div></div>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="showQ(3)">← Vissza</button><button class="btn-p" onclick="afterAllapot()">Tovább →</button></div>
     </div>
 
     <!-- QSYM: Dinamikus tünet-kérdések -->
@@ -907,7 +921,7 @@ input[type=range]::-webkit-slider-thumb {
         <label class="mc-label" for="cm-tunet">+ Van olyan tüneted, ami nincs a listában? (opcionális)</label>
         <textarea class="mc-input" id="cm-tunet" placeholder="Pl. egy tünet, ami fontos, de nem szerepelt a fenti listákban..."></textarea>
       </div>
-      <div class="q-nav"><button class="btn-back" onclick="showQ(3)">← Vissza</button><button class="btn-p" onclick="showQ(4)">Tovább →</button></div>
+      <div class="q-nav"><button class="btn-back" onclick="backFromSym()">← Vissza</button><button class="btn-p" onclick="afterSymptoms()">Tovább →</button></div>
     </div>
 
     <!-- Q4: Súlyosság -->
@@ -916,6 +930,7 @@ input[type=range]::-webkit-slider-thumb {
       <h2 class="q-title">Mennyire nehezíti meg a mindennapjaidat?</h2>
       <p class="q-sub has-why">Legyél őszinte — ez határozza meg a sürgősséget.</p>
       <p class="q-why">A hétköznapi életre gyakorolt hatás az egyik legfontosabb jelzés arról, mennyire sürgős a beavatkozás.</p>
+      <div id="sev-wrap">
       <div class="sev-scale" id="sev-btns">
         <div class="sev-btn" onclick="sevpick(this,1)"><span class="sev-num">1</span>Alig észrevehető</div>
         <div class="sev-btn" onclick="sevpick(this,2)"><span class="sev-num">2</span>Enyhe, nem zavar</div>
@@ -923,21 +938,23 @@ input[type=range]::-webkit-slider-thumb {
         <div class="sev-btn" onclick="sevpick(this,4)"><span class="sev-num">4</span>Komolyan nehezíti</div>
         <div class="sev-btn" onclick="sevpick(this,5)"><span class="sev-num">5</span>Szinte elviselhetetlen</div>
       </div>
-      <div class="q-nav"><button class="btn-back" onclick="goSymptoms()">← Vissza</button><button class="btn-p" onclick="nxt(5)" id="bn4">Tovább →</button></div>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="goSymptoms()">← Vissza</button><button class="btn-p" onclick="afterSeverity()" id="bn4">Tovább →</button></div>
     </div>
 
     <!-- Q5: Időtartam -->
     <div class="qstep" id="q5">
       <div class="q-meta"><span class="q-dot"></span>Tünetek felmérése</div>
-      <h2 class="q-title">Mióta tapasztalod ezeket?</h2>
+      <h2 class="q-title" id="q5-title">Mióta tapasztalod ezeket?</h2>
       <p class="q-sub has-why">Az időtartam alapvetően befolyásolja az ajánlásokat.</p>
       <p class="q-why">Egy hirtelen és egy régóta fennálló panasz teljesen más ellátási utat igényelhet.</p>
-      <div class="opts solo">
+      <div class="opts solo" id="q5-opts">
         <div class="opt" onclick="pick(this,'idotartam','Pár napja — hirtelen kezdődött')"><div class="oi">⚡</div><div><div class="ol">Pár napja — hirtelen kezdődött</div></div></div>
         <div class="opt" onclick="pick(this,'idotartam','1-4 hete')"><div class="oi">📅</div><div><div class="ol">1–4 hete</div></div></div>
         <div class="opt" onclick="pick(this,'idotartam','1-6 hónapja')"><div class="oi">🗓️</div><div><div class="ol">1–6 hónapja</div></div></div>
         <div class="opt" onclick="pick(this,'idotartam','Fél évnél régebben')"><div class="oi">⏳</div><div><div class="ol">Fél évnél régebben — visszatérő</div></div></div>
       </div>
+      <div id="q5-valtozas"></div>
       <div class="q-nav"><button class="btn-back" onclick="prv(4)">← Vissza</button><button class="btn-p" onclick="nxt(6)">Tovább →</button></div>
     </div>
 
@@ -998,15 +1015,27 @@ input[type=range]::-webkit-slider-thumb {
         <label class="mc-label" for="cm-psziche">+ Szeretnél még valamit hozzátenni a lelkiállapotodhoz? (opcionális)</label>
         <textarea class="mc-input" id="cm-psziche" placeholder="Pl. valami, ami nem fért bele a fenti listába, de fontosnak érzed..."></textarea>
       </div>
-      <div class="q-nav"><button class="btn-back" onclick="prv(7)">← Vissza</button><button class="btn-p" onclick="nxt(9)">Tovább →</button></div>
+      <div class="q-nav"><button class="btn-back" onclick="prv(7)">← Vissza</button><button class="btn-p" onclick="goTreat()">Tovább →</button></div>
+    </div>
+
+    <!-- QTREAT: "Szedsz-e valamit rá?" állapotfüggő átfogalmazása (A-ban kihagyva) -->
+    <div class="qstep" id="qtreat">
+      <div class="q-meta"><span class="q-dot"></span>Előzmények</div>
+      <h2 class="q-title" id="qtreat-title">Kezelted-e már valahogy?</h2>
+      <p class="q-why">Ha már próbáltál valamit, az segít abban, hogy a következő lépés ne ugyanaz legyen.</p>
+      <div class="opts solo" id="qtreat-opts">
+        <div class="opt" onclick="pick(this,'kezeles','Igen')"><div class="oi">✅</div><div><div class="ol">Igen</div></div></div>
+        <div class="opt" onclick="pick(this,'kezeles','Nem')"><div class="oi">◎</div><div><div class="ol">Nem</div></div></div>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="showQ(8)">← Vissza</button><button class="btn-p" onclick="showQ(9)">Tovább →</button></div>
     </div>
 
     <!-- Q9: Korábbi szakember -->
     <div class="qstep" id="q9">
       <div class="q-meta"><span class="q-dot"></span>Előzmények</div>
-      <h2 class="q-title">Voltál már ezzel kapcsolatban szakembernél?</h2>
+      <h2 class="q-title" id="q9-title">Voltál már ezzel kapcsolatban szakembernél?</h2>
       <p class="q-why">Ha már jártál valahol, más irányból közelítünk — pl. második vélemény vagy más megközelítés felé.</p>
-      <div class="opts solo">
+      <div class="opts solo" id="q9-opts">
         <div class="opt" onclick="pick(this,'elozmeny','Nem, most foglalkozom ezzel először')"><div class="oi">🆕</div><div><div class="ol">Nem, most foglalkozom ezzel először</div></div></div>
         <div class="opt" onclick="pick(this,'elozmeny','Igen, de nem voltam elégedett az eredménnyel')"><div class="oi">🔁</div><div><div class="ol">Igen, de nem voltam elégedett</div></div></div>
         <div class="opt" onclick="pick(this,'elozmeny','Voltam, de abbahagytam')"><div class="oi">⏸️</div><div><div class="ol">Voltam, de abbahagytam</div></div></div>
@@ -1016,7 +1045,7 @@ input[type=range]::-webkit-slider-thumb {
         <label class="mc-label" for="cm-elozmeny">+ Röviden leírnád mi történt korábban? (opcionális)</label>
         <textarea class="mc-input" id="cm-elozmeny" placeholder="Pl. miért nem voltál elégedett, vagy mit próbáltál már..."></textarea>
       </div>
-      <div class="q-nav"><button class="btn-back" onclick="prv(8)">← Vissza</button><button class="btn-p" onclick="nxt(10)">Tovább →</button></div>
+      <div class="q-nav"><button class="btn-back" onclick="backFromQ9()">← Vissza</button><button class="btn-p" onclick="nxt(10)">Tovább →</button></div>
     </div>
 
     <!-- Q10: Szabad szöveg -->
@@ -1032,7 +1061,7 @@ input[type=range]::-webkit-slider-thumb {
       </div>
       <textarea class="txt-in" id="szabadszoveg" placeholder="Pl. Hetek óta sokat fáradok, reggel nehezen kelek fel, és a munkában is jobban stresszelem magam mint korábban. Anyukámnál volt cukorbetegség..."></textarea>
       <div class="q-nav">
-        <button class="btn-back" onclick="prv(9)">← Vissza</button>
+        <button class="btn-back" onclick="backFromQ10()">← Vissza</button>
         <button class="btn-p" onclick="submit()">Elemzés kérése ✦</button>
       </div>
       <div class="err" id="errbox">Hiba történt az elemzés során. Kérlek próbáld újra.</div>
@@ -1080,6 +1109,18 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 </section>
 
+<!-- SAFETY / RED ZONE — állapot-független biztonsági réteg -->
+<section class="scr" id="s-alert">
+  <div class="wrap">
+    <div class="urg hi" id="alert-tag"><span>🔴</span><span>Fontos jelzés</span></div>
+    <h2 class="res-t" id="alert-title"></h2>
+    <p class="res-sum" id="alert-sum"></p>
+    <div class="med-disclaimer" id="alert-nums"></div>
+    <p class="res-sum" id="alert-note"></p>
+    <button class="btn-restart" onclick="restart()">↺ Új elemzés indítása</button>
+  </div>
+</section>
+
 <!-- BOOKING MODAL -->
 <div class="modal-overlay" id="booking-modal">
   <div class="modal">
@@ -1120,6 +1161,83 @@ const MULTI = {};
 let SEV = 0;
 let symptomsSkipped = false;
 const TOTAL_Q = 10;
+
+// ── Session-state (kliens oldali, a kérdőív-logikai doksi 10-es pontja szerint) ──
+const S = {terulet:null, allapot:null, zona:'zold', flaggedItems:[], megszakitva:false};
+
+// Az állapot-tételenkénti súlyosság (Állapot A: csak az igennel jelölt tételekre)
+const SEVITEMS = {};
+
+// ── Piros zászlók szakterületenként (kérdőív-logikai doksi 07-es szekció) ──
+// FIGYELEM: ezek UX-vázlatok, NEM klinikailag validált triázs-küszöbök.
+const RED_FLAGS={
+  'Szív és keringés':[
+    {t:'Szorító, nyomó mellkasi fájdalom, amely a karba, állkapocsba vagy hátba sugárzik, verejtékezéssel vagy légszomjjal együtt'},
+    {t:'Hirtelen fellépő, korábban nem tapasztalt szapora szívverés ájulással vagy majdnem-ájulással'},
+    {t:'Hirtelen kialakuló, egyoldali lábdagadás bőrelszíneződéssel'},
+    {t:'Nyugalmi állapotban is jelentkező, súlyosbodó légszomj'}
+  ],
+  'Légzőszervi':[
+    {t:'Hirtelen fellépő, súlyos légszomj nyugalomban'},
+    {t:'Kék elszíneződés az ajkakon vagy ujjakon'},
+    {t:'Véres köhögés'},
+    {t:'Magas láz mellkasi fájdalommal és zavartsággal együtt'}
+  ],
+  'Mozgásszervi':[
+    {t:'Trauma utáni deformitás vagy nem terhelhető végtag'},
+    {t:'Éjszakai, terheléstől független, folyamatosan súlyosbodó fájdalom'},
+    {t:'Progresszíven súlyosbodó zsibbadás vagy erőgyengeség'},
+    {t:'Lázzal együtt járó, hirtelen ízületi duzzanat'}
+  ],
+  'Gyomor-bél':[
+    {t:'Fekete, kátrányos vagy véres széklet'},
+    {t:'Nem szándékos, jelentős fogyás rövid idő alatt'},
+    {t:'Nyelési képtelenség'},
+    {t:'Hirtelen, heves hasi fájdalom merev hassal'}
+  ],
+  'Mentális-Pszichés':[
+    {t:'Öngyilkossági gondolat vagy önsértési szándék', crisis:true},
+    {t:'Kontrollálhatatlan, másra irányuló agresszív késztetés'},
+    {t:'Akut, pánikroham-szerű, testi tünetekkel járó epizód'}
+  ],
+  'Alvás':[
+    {t:'Partner által észlelt légzéskimaradás alvás közben, nappali elalvással vezetés vagy munka közben'},
+    {t:'Hirtelen kialakuló, súlyos álmatlanság jelentős testsúlyváltozással együtt'}
+  ],
+  'Anyagcsere-Hormonális':[
+    {t:'Hirtelen, nem szándékos, jelentős testsúlyváltozás rövid idő alatt'},
+    {t:'Extrém szomjúság és gyakori vizelés súlyos fáradtsággal'},
+    {t:'Szapora szívverés, remegés és hőintolerancia együttes, hirtelen fellépése'}
+  ],
+  'Neurológiai':[
+    {t:'Hirtelen fellépő féloldali gyengeség, zsibbadás vagy beszédzavar'},
+    {t:'Az eddigi legerősebb, hirtelen kialakuló fejfájás'},
+    {t:'Első alkalommal jelentkező eszméletvesztés'},
+    {t:'Hirtelen kialakuló látászavar'}
+  ],
+  'Bőr-Haj':[
+    {t:'Gyorsan növekvő, alakot vagy színt váltó anyajegy'},
+    {t:'Hetek óta nem gyógyuló seb'},
+    {t:'Kiterjedt, lázzal együtt járó bőrgyulladás'}
+  ]
+};
+
+// Krízis-kulcsszavak a szabad szöveges mezőkhöz.
+// NYITOTT PONT: a pontos triggerlista klinikai jóváhagyást igényel (doksi 11-es pont).
+const CRISIS_WORDS=['öngyilkos','ongyilkos','önsért','onsert','nem akarok élni','nem akarok elni','véget vetnék','veget vetnek','végezni magammal','vegezni magammal','bántani magam','bantani magam','megölöm magam','megolom magam'];
+
+// ── Állapotfüggő kérdésváltozatok ──
+const DUR_OPTS={
+  B:[['⚡','Néhány napja'],['📅','1–2 hete'],['🗓️','2–4 hete'],['⏳','1 hónapnál régebben']],
+  C:[['📅','Néhány hónapja'],['🗓️','1 éven belül'],['⏳','1–3 éve'],['♾️','3 évnél régebben']]
+};
+const SEV_LABELS=['Alig észrevehető','Enyhe, nem zavar','Mérsékelten befolyásol','Komolyan nehezíti','Szinte elviselhetetlen'];
+const ELOZMENY_OPTS={
+  B:[['🩺','Igen, fordultam már ezzel orvoshoz'],['🆕','Nem, még nem fordultam ezzel orvoshoz']],
+  C:[['🧭','Nem tudtam, kihez forduljak'],['⏱️','Nem volt rá időm'],['😟','Tartottam tőle, mit fognak mondani'],['🙉','Korábban lekicsinyelték a panaszomat'],['🌀','Egyszerűen halogattam']]
+};
+
+function isAllapot(x){return S.allapot===x}
 
 // ── Partner adatbázis ──
 const PDATA = {
@@ -1284,7 +1402,7 @@ function goQuiz(){
   }
   go('s-quiz');showQ(1);
 }
-function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
+function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
 
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('on',window.scrollY>10));
 
@@ -1295,12 +1413,18 @@ function showQ(n){
   if(el){el.classList.add('on');el.style.animation='none';el.offsetHeight;el.style.animation=''}
   const pct=Math.round((n/TOTAL_Q)*100);
   document.getElementById('prog').style.width=pct+'%';
+  if(n===4)buildSeverity();
+  if(n===5)buildDuration();
+  if(n===9)buildElozmeny();
   if(n===10)buildSummary();
 }
+// A meglévő (B/C-ben változatlan) súlyosság-skála eredeti markupja
+const SEV_HTML_ORIG=(document.getElementById('sev-wrap')||{}).innerHTML||'';
 function buildSummary(){
   const card=document.getElementById('summary-card');
   const rows=[];
   const add=(k,v)=>{if(v&&v.trim())rows.push({k,v})};
+  add('Helyzet', {A:'Csak felmérés, nincs konkrét panasz',B:'Most kezdődött / nemrég vette észre',C:'Régóta fennáll, eddig nem volt kivizsgálva'}[S.allapot]||'');
   add('Terület', A.terület);
   const cmTerulet=(document.getElementById('cm-terulet')||{}).value;
   if(cmTerulet&&cmTerulet.trim())add('Kiegészítés (terület)', cmTerulet.trim());
@@ -1312,6 +1436,8 @@ function buildSummary(){
     add('Súlyosság', sevTxt+' ('+A.sulyossag+'/5)');
   }
   add('Fennállás', A.idotartam);
+  add('Változott mostanában', A.valtozas);
+  add('Eddigi kezelés', A.kezeles);
   add('Életmód', A.eletmod);
   if(A.betegseg && A.betegseg!=='Nincs ismert betegségem')add('Előzmény (betegség)', A.betegseg);
   const cmBetegseg=(document.getElementById('cm-betegseg')||{}).value;
@@ -1357,10 +1483,26 @@ function mpick(el,key,val){
   A[key]=(MULTI[key]||[]).join(', ')||'';
 }
 function sevpick(el,val){
-  document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));
+  const scope=el.closest('.sev-scale')||document;
+  scope.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));
   el.classList.add('sel');
-  SEV=val;
-  A.sulyossag=String(val);
+  const sym=scope.getAttribute&&scope.getAttribute('data-sym');
+  if(sym){
+    // Állapot A: tételenkénti, halkabb súlyosság — csak az igennel jelölt tételekre
+    SEVITEMS[sym]=val;
+    const vals=Object.keys(SEVITEMS).map(k=>SEVITEMS[k]);
+    SEV=Math.max.apply(null,vals);
+    A.sulyossag=String(SEV);
+    A.sulyossag_tetelek=Object.keys(SEVITEMS).map(k=>k+': '+SEVITEMS[k]+'/5').join('; ');
+  }else{
+    SEV=val;
+    A.sulyossag=String(val);
+  }
+  checkZona();
+}
+// Sárga zóna: súlyosság >= 4 bármely tételen (doksi 09-es szekció)
+function checkZona(){
+  if(S.zona!=='piros' && SEV>=4)S.zona='sarga';
 }
 
 // ── Tünet-adatbázis (a felmérési dokumentum alapján) ──
@@ -1379,6 +1521,7 @@ const SYMPTOMS={
 // ── Dinamikus tünet-képernyő ──
 function goSymptoms(){
   const selected=(MULTI['terület']||[]);
+  S.terulet=selected.slice();
   if(selected.length===0){
     // Nincs kijelölve egyetlen terület sem — nem engedünk tovább.
     shake(3);
@@ -1408,6 +1551,11 @@ function goSymptoms(){
       const sel=MULTI['tunet'].includes(sym)?' sel':'';
       const safe=sym.replace(/'/g,"\\'");
       return `<div class="sym-opt${sel}" onclick="symPick(this,'${safe}')"><span class="sym-check">✓</span><span>${sym}</span></div>`;
+    }).join('')
+    // Piros zászlók — állapot-független biztonsági réteg (A-ban is fut)
+    +(RED_FLAGS[area]||[]).map((rf,i)=>{
+      const areaSafe=area.replace(/'/g,"\\'");
+      return `<div class="sym-opt" onclick="rfPick(this,'${areaSafe}',${i})"><span class="sym-check">✓</span><span>${rf.t}</span></div>`;
     }).join('');
     group.innerHTML=`<div class="sym-group-title"><span class="gi">${data.ic}</span>${area==='Mentális-Pszichés'?'Mentális, érzelmi':area==='Anyagcsere-Hormonális'?'Anyagcsere, hormon':area==='Bőr-Haj'?'Bőr, haj':area}</div><div class="sym-opts">${opts}</div>`;
     cont.appendChild(group);
@@ -1420,7 +1568,178 @@ function goSymptoms(){
 }
 function backFromQ6(){
   if(symptomsSkipped){showQ(3);return}
+  if(isAllapot('A')){
+    if((MULTI['tunet']||[]).length===0){goSymptoms();return}
+    showQ(4);return;
+  }
   prv(5);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  A/B/C állapot-logika (kérdőív-logikai doksi 02–05. szekció)
+// ══════════════════════════════════════════════════════════════
+
+// Egy nem-numerikus id-jű lépés megjelenítése (mint a qsym)
+function showStep(id,pct){
+  document.querySelectorAll('.qstep').forEach(s=>s.classList.remove('on'));
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.add('on');el.style.animation='none';el.offsetHeight;el.style.animation='';
+  if(pct)document.getElementById('prog').style.width=pct;
+  window.scrollTo(0,0);
+}
+function shakeEl(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.style.transform='translateX(-6px)';
+  setTimeout(()=>{el.style.transform='translateX(6px)'},120);
+  setTimeout(()=>{el.style.transform=''},240);
+}
+
+// A terület kiválasztása UTÁN, a tünetlista ELŐTT: állapot-meghatározó kérdés.
+// A "Szűrés, megelőzés" kategóriában ez SOHA nem jelenik meg — ott mindig Állapot A fut.
+function goAllapot(){
+  const selected=(MULTI['terület']||[]);
+  if(selected.length===0){shake(3);return}
+  const nemSzures=selected.filter(a=>a!=='Szűrés-Megelőzés');
+  if(nemSzures.length===0){
+    // Szűrés-Megelőzés: implicit Állapot A, kérdés nélkül
+    S.allapot='A';A.allapot='A';
+    goSymptoms();return;
+  }
+  showStep('qstate','30%');
+}
+function pickAllapot(el,val){
+  pick(el,'allapot',val);
+  S.allapot=val;
+}
+function afterAllapot(){
+  if(!A.allapot){shakeEl('qstate');return}
+  goSymptoms();
+}
+function backFromSym(){
+  if(document.getElementById('qstate')&&(MULTI['terület']||[]).filter(a=>a!=='Szűrés-Megelőzés').length>0){showStep('qstate','30%');return}
+  showQ(3);
+}
+function afterSymptoms(){
+  // Állapot A + egyetlen bejelölt tétel sincs -> nincs mit súlyozni, és nincs "mióta tart" sem
+  if(isAllapot('A')&&(MULTI['tunet']||[]).length===0){showQ(6);return}
+  showQ(4);
+}
+
+// Súlyosság: A-ban csak az igennel jelölt tételekre (branching-minta, doksi 09),
+// B/C-ben a meglévő, egységes 1–5 skála a fő panaszra.
+function buildSeverity(){
+  const wrap=document.getElementById('sev-wrap');
+  if(!wrap)return;
+  if(!isAllapot('A')){
+    if(wrap.getAttribute('data-mode')!=='orig'){
+      wrap.innerHTML=SEV_HTML_ORIG;
+      wrap.setAttribute('data-mode','orig');
+      if(A.sulyossag){
+        const btns=wrap.querySelectorAll('.sev-btn');
+        const idx=parseInt(A.sulyossag,10)-1;
+        if(btns[idx])btns[idx].classList.add('sel');
+      }
+    }
+    return;
+  }
+  // Állapot A: könnyített, tételenkénti követés — a többi tétel A-szintű marad
+  const items=(MULTI['tunet']||[]);
+  wrap.setAttribute('data-mode','items');
+  wrap.innerHTML=items.map(sym=>{
+    const safe=sym.replace(/"/g,'&quot;');
+    const btns=SEV_LABELS.map((lb,i)=>`<div class="sev-btn${SEVITEMS[sym]===i+1?' sel':''}" onclick="sevpick(this,${i+1})"><span class="sev-num">${i+1}</span>${lb}</div>`).join('');
+    return `<div class="sym-group"><div class="sym-group-title"><span class="gi">✓</span>${sym}</div><div class="sev-scale" data-sym="${safe}">${btns}</div></div>`;
+  }).join('');
+}
+function afterSeverity(){
+  if(!A.sulyossag){shake(4);return}
+  // Fennállás időtartama: Állapot A-ban kihagyva (nincs "az", aminek a fennállását mérnénk)
+  if(isAllapot('A')){showQ(6);return}
+  showQ(5);
+}
+
+// Fennállás időtartama: B rövid skála, C hosszú skála + "változott-e mostanában"
+function buildDuration(){
+  const box=document.getElementById('q5-opts');
+  const extra=document.getElementById('q5-valtozas');
+  if(!box)return;
+  const set=DUR_OPTS[S.allapot];
+  if(set){
+    box.innerHTML=set.map(o=>`<div class="opt${A.idotartam===o[1]?' sel':''}" onclick="pick(this,'idotartam','${o[1]}')"><div class="oi">${o[0]}</div><div><div class="ol">${o[1]}</div></div></div>`).join('');
+  }
+  if(!extra)return;
+  if(isAllapot('C')){
+    const vopts=[['🔄','Igen, változott'],['➖','Nem, nagyjából ugyanolyan'],['❓','Nem tudom megítélni']];
+    extra.innerHTML=`<p class="q-sub">Változott-e mostanában a jellege vagy az erőssége?</p><div class="opts solo">`+
+      vopts.map(o=>`<div class="opt${A.valtozas===o[1]?' sel':''}" onclick="pick(this,'valtozas','${o[1]}')"><div class="oi">${o[0]}</div><div><div class="ol">${o[1]}</div></div></div>`).join('')+`</div>`;
+  }else{
+    extra.innerHTML='';
+  }
+}
+
+// "Szedsz-e valamit rá?" — A-ban kihagyva, B/C-ben átfogalmazva
+function goTreat(){
+  if(isAllapot('A')){showQ(10);return}
+  document.getElementById('qtreat-title').textContent=isAllapot('C')?'Próbáltál-e már valamit ellene?':'Kezelted-e már valahogy?';
+  showStep('qtreat','85%');
+}
+function backFromQ9(){goTreat()}
+function backFromQ10(){
+  if(isAllapot('A')){showQ(8);return}
+  showQ(9);
+}
+
+// Korábbi szakember / kivizsgálás — B: egyszerű igen/nem, C: kulcskérdés
+function buildElozmeny(){
+  const box=document.getElementById('q9-opts');
+  const title=document.getElementById('q9-title');
+  if(!box||!title)return;
+  const set=ELOZMENY_OPTS[S.allapot];
+  if(!set)return;
+  title.textContent=isAllapot('C')?'Miért nem vizsgáltattad ki eddig?':'Fordultál-e már ezzel orvoshoz?';
+  box.innerHTML=set.map(o=>`<div class="opt${A.elozmeny===o[1]?' sel':''}" onclick="pick(this,'elozmeny','${o[1]}')"><div class="oi">${o[0]}</div><div><div class="ol">${o[1]}</div></div></div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  Biztonsági réteg — állapot-független (doksi 06. szekció)
+// ══════════════════════════════════════════════════════════════
+function rfPick(el,area,i){
+  const rf=(RED_FLAGS[area]||[])[i];
+  if(!rf)return;
+  el.classList.add('sel');
+  if(!MULTI['tunet'])MULTI['tunet']=[];
+  if(!MULTI['tunet'].includes(rf.t))MULTI['tunet'].push(rf.t);
+  A.tunetek=(MULTI['tunet']||[]).join(', ');
+  S.zona='piros';
+  S.flaggedItems.push({tetel:rf.t, terulet:area});
+  if(rf.crisis){showCrisis();return}
+  showRedZone(area,rf.t);
+}
+function scanCrisis(){
+  const ids=['szabadszoveg','cm-tunet','cm-psziche','cm-terulet','cm-betegseg','cm-elozmeny'];
+  const txt=ids.map(id=>((document.getElementById(id)||{}).value)||'').join(' ').toLowerCase();
+  if(!txt.trim())return false;
+  return CRISIS_WORDS.some(w=>txt.indexOf(w)!==-1);
+}
+function showRedZone(area,tetel){
+  S.megszakitva=true;
+  document.getElementById('alert-tag').innerHTML='<span>🔴</span><span>Sürgős jelzés — a kérdőív itt megszakad</span>';
+  document.getElementById('alert-title').textContent='Ezzel most ne várj';
+  document.getElementById('alert-sum').textContent='Amit bejelöltél („'+tetel+'”), olyan jelzés, amit nem érdemes kivárni. Nem tudjuk megmondani, mi áll mögötte — de azt igen, hogy ezt most, késlekedés nélkül szakemberrel kell megnézetni.';
+  document.getElementById('alert-nums').innerHTML='⚠️ Ha a panasz most is fennáll vagy súlyosbodik, hívd a <strong>112</strong>-t, vagy menj a legközelebbi sürgősségi ellátásra. Ha már elmúlt, akkor is keresd fel mielőbb a háziorvosodat vagy a megfelelő szakrendelést.';
+  document.getElementById('alert-note').textContent='Ezen a ponton nem folytatjuk a tünetgyűjtést, és nem ajánlunk partnereket — most az azonnali ellátás a fontos.';
+  go('s-alert');
+}
+function showCrisis(){
+  S.megszakitva=true;S.zona='piros';
+  document.getElementById('alert-tag').innerHTML='<span>🔴</span><span>Most ez a legfontosabb</span>';
+  document.getElementById('alert-title').textContent='Nem kell ezzel egyedül maradnod';
+  document.getElementById('alert-sum').textContent='Amit jeleztél, komolyan vesszük. Van, akivel most, azonnal beszélhetsz — ingyenesen, névtelenül, éjjel-nappal.';
+  document.getElementById('alert-nums').innerHTML='☎️ <strong>116-123</strong> — Lelki Elsősegély Telefonszolgálatok Szövetsége (ingyenes, 0–24, névtelenül hívható).<br>⚠️ Közvetlen veszély esetén hívd a <strong>112</strong>-t.';
+  document.getElementById('alert-note').textContent='Itt megszakítjuk a kérdéssort — most nem tünetekre van szükség, hanem arra, hogy beszélj valakivel.';
+  go('s-alert');
 }
 function symPick(el,sym){
   el.classList.toggle('sel');
@@ -1434,6 +1753,8 @@ function symPick(el,sym){
 // ── Submit ──
 async function submit(){
   document.getElementById('errbox').classList.remove('on');
+  // Biztonsági réteg: krízis-jelzés a szabad szöveges mezőkben — minden más logika fölött áll
+  if(scanCrisis()){showCrisis();return}
   const szabadszoveg=document.getElementById('szabadszoveg').value.trim();
   A.szabadszoveg=szabadszoveg;
   A.iranyitoszam=(document.getElementById('iranyitoszam')||{}).value.trim();
@@ -1459,10 +1780,13 @@ Nem: ${A.nem||'nem adott meg'}
 Kor: ${A.kor||'nem adott meg'}
 Testsúly: ${A.suly||'nem adott meg'} kg
 Lakhely irányítószáma: ${A.iranyitoszam||'nem adott meg'}
+Állapot (a felhasználó viszonya a saját helyzetéhez): ${A.allapot||'A'}
+Zóna (biztonsági réteg): ${S.zona}
 Panasz területek: ${A.terület||'nem meghatározott'}${A.megjegyzes_terulet?' | Kiegészítés: '+A.megjegyzes_terulet:''}
 Konkrét tünetek: ${A.tunetek||'nem jelölt meg konkrét tünetet'}${A.megjegyzes_tunet?' | Kiegészítés: '+A.megjegyzes_tunet:''}
-Súlyosság (1-5): ${A.sulyossag||'nem adott meg'}
-Időtartam: ${A.idotartam||'nem adott meg'}
+Súlyosság (1-5): ${A.sulyossag||'nem adott meg'}${A.sulyossag_tetelek?' | Tételenként: '+A.sulyossag_tetelek:''}
+Időtartam: ${A.idotartam||'nem kérdeztük (nincs konkrét panasz)'}${A.valtozas?' | Változás mostanában: '+A.valtozas:''}
+Eddigi kezelés / próbálkozás: ${A.kezeles||'nem kérdeztük'}
 Életmód: ${A.eletmod||'nem adott meg'}
 Ismert betegségek: ${A.betegseg||'nincs'}${A.megjegyzes_betegseg?' | Kiegészítés: '+A.megjegyzes_betegseg:''}
 Mentális állapot: ${A.psziche||'nem jelzett'}${A.megjegyzes_psziche?' | Kiegészítés: '+A.megjegyzes_psziche:''}
@@ -1498,7 +1822,7 @@ Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy m
     const resp=await fetch("/api/analyze",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({prompt:prompt})
+      body:JSON.stringify({prompt:prompt, allapot:(A.allapot||'A')})
     });
     if(!resp.ok){
       const errTxt=await resp.text();

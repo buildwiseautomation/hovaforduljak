@@ -13,10 +13,20 @@ export default async function handler(req, res) {
   }
 
   // A prompt a frontendről jön
-  const { prompt } = req.body || {};
+  const { prompt, allapot } = req.body || {};
   if (!prompt) {
     return res.status(400).json({ error: "Hiányzó prompt" });
   }
+
+  // A kérdőív A/B/C állapota kontextusként az AI-magyarázathoz (hangnem, hangsúly)
+  const ALLAPOT_KONTEXT = {
+    A: 'A felhasznalo "A" allapotban van: nincs konkret panasza, csak felmeri magat. Hangnem: felfedezo, a hangsuly a megelozesen es a kockazati kepen.',
+    B: 'A felhasznalo "B" allapotban van: frissen jelentkezett, uj panasza van. Hangnem: cselekvesre osztonzo, konkret kovetkezo lepessel.',
+    C: 'A felhasznalo "C" allapotban van: regota fennallo, eddig ki nem vizsgalt panasza van. Hangnem: megerosito es batorito, sosem szamonkero.'
+  };
+  const finalPrompt = ALLAPOT_KONTEXT[allapot]
+    ? prompt + "\n\nALLAPOT-KONTEXTUS: " + ALLAPOT_KONTEXT[allapot]
+    : prompt;
 
   try {
     const apiResp = await fetch("https://api.anthropic.com/v1/messages", {
@@ -30,7 +40,7 @@ export default async function handler(req, res) {
         model: "claude-sonnet-4-6",
         max_tokens: 3000,
         system: "Kizárólag valid, TELJES JSON objektummal válaszolj a kért struktúra szerint. Semmi más szöveg, magyarázat vagy markdown. FONTOS: tartsd tömören a szövegmezőket (összefoglaló max 3 mondat, leírások max 2 mondat), hogy a JSON biztosan befejeződjön és valid maradjon.",
-        messages: [{ role: "user", content: prompt }]
+        messages: [{ role: "user", content: finalPrompt }]
       })
     });
 
