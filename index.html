@@ -1224,7 +1224,25 @@ const RED_FLAGS={
 
 // Krízis-kulcsszavak a szabad szöveges mezőkhöz.
 // NYITOTT PONT: a pontos triggerlista klinikai jóváhagyást igényel (doksi 11-es pont).
-const CRISIS_WORDS=['öngyilkos','ongyilkos','önsért','onsert','nem akarok élni','nem akarok elni','véget vetnék','veget vetnek','végezni magammal','vegezni magammal','bántani magam','bantani magam','megölöm magam','megolom magam'];
+// Ékezet-független összehasonlításhoz (hogy ne kelljen minden szót ékezetes/ékezet nélküli
+// változatban is felsorolni, és a helyesírási eltérések se csússzanak át a szűrésen).
+function foldHuCrisis(s){
+  return (s||'').toLowerCase()
+    .replace(/[áàâ]/g,'a').replace(/é/g,'e').replace(/[íì]/g,'i')
+    .replace(/[óòôö]/g,'o').replace(/ő/g,'o').replace(/[úùûü]/g,'u').replace(/ű/g,'u');
+}
+// Krízis-kulcskifejezések (ékezet nélkül, mert a foldHuCrisis már levágja az ékezeteket).
+// NYITOTT PONT: a pontos triggerlista klinikai jóváhagyást igényel (doksi 11-es pont) —
+// ez egy szélesebb, de továbbra sem kimerítő lista, több természetes megfogalmazást lefedve.
+const CRISIS_WORDS=[
+  'ongyilkos','onsert','oncsonkit',
+  'nem akarok elni','nem akarok tovabb elni','nem birom tovabb az eletet','nem birom az eletet',
+  'nem lennek itt tobbe','nem lennek mar itt','jobb lenne ha nem lennek','jobb lenne ha meghalnek',
+  'jobb lenne meghalni','nincs ertelme elni','nincs ertelme az eletemnek','vege akarok vetni',
+  'veget vetni','veget vetnek','vegezni magammal','bantani magam','artani magamnak',
+  'megolom magam','eltunnek szivesen','szeretnek eltunni','szeretnek meghalni','ne ebredjek fel',
+  'nem akarok felebredni','nem akarok mar elni','feladnam az eletet'
+];
 
 // ── Állapotfüggő kérdésváltozatok ──
 const DUR_OPTS={
@@ -1726,11 +1744,20 @@ function rfPick(el,area,i){
   if(rf.crisis){showCrisis();return}
   showRedZone(area,rf.t);
 }
+// Rugalmasabb minták, ahol 1-2 szó közbeékelődhet két kulcsszó közé
+// (pl. "véget kellene vetnem" — nem csak a szó szerinti "véget vetni").
+const CRISIS_PATTERNS=[
+  /veget\s+\w*\s*vetn/,
+  /nem\s+\w*\s*akarok\s+\w*\s*elni/,
+  /jobb\s+lenne\s+\w*\s*(ha\s+)?\w*\s*(meghal|nem\s+\w*\s*len)/
+];
 function scanCrisis(){
   const ids=['szabadszoveg','cm-tunet','cm-psziche','cm-terulet','cm-betegseg','cm-elozmeny'];
-  const txt=ids.map(id=>((document.getElementById(id)||{}).value)||'').join(' ').toLowerCase();
-  if(!txt.trim())return false;
-  return CRISIS_WORDS.some(w=>txt.indexOf(w)!==-1);
+  const raw=ids.map(id=>((document.getElementById(id)||{}).value)||'').join(' ');
+  if(!raw.trim())return false;
+  const txt=foldHuCrisis(raw);
+  if(CRISIS_WORDS.some(w=>txt.indexOf(w)!==-1))return true;
+  return CRISIS_PATTERNS.some(re=>re.test(txt));
 }
 function showRedZone(area,tetel){
   S.megszakitva=true;
