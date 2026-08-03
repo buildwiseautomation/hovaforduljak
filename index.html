@@ -1527,7 +1527,16 @@ function goSymptoms(){
     shake(3);
     return;
   }
-  const areas=selected.filter(a=>SYMPTOMS[a]);
+  let areas=selected.filter(a=>SYMPTOMS[a]);
+  // Szűrés-Megelőzés: önálló belépési pont — több testrendszert átfogó checklist.
+  // A doksi (09. szekció, "szures" AREA) szerint mind a 9 rendszer (szív-ér,
+  // légzőszervi, anyagcsere, alvás, mozgásszervi, emésztés, bőr-haj, neurológiai,
+  // pszichés) külön blokkban jelenik meg, és minden pozitív tételre ugyanaz a
+  // light-B követő kérdés + piros zászló mechanizmus fut, mint közvetlen
+  // terület-választásnál (S.allapot === 'A' marad).
+  if(selected.includes('Szűrés-Megelőzés')){
+    areas=Object.keys(SYMPTOMS);
+  }
   if(areas.length===0){
     // Kizárólag olyan terület(ek) vannak kijelölve, amikhez nincs konkrét
     // tünetlista (pl. "Szűrés, megelőzés" — "Nem érzek különös panaszt").
@@ -1773,6 +1782,8 @@ FONTOS SZABÁLYOK:
 - Magyar egészségügyi rendszer keretein belül gondolkodj
 - Légy empatikus, de konkrét és cselekvésre ösztönző
 - Ha súlyos tüneteket látsz, ne bagatellizálj
+- Ha a felhasználó TÖBB testrendszerben (több panasz-területen) is jelölt pozitív tételt — ezt a "Konkrét tünetek" és a tételenkénti súlyosság adatokból látod —, akkor a primary_specialty-t a LEGMAGASABB súlyosságú, illetve piros-zászlós (sürgős jelzésű) tétel rendszere alapján válaszd ki, NE a felsorolás vagy a kitöltés sorrendje, és NE ábécérend alapján. A második legsúlyosabb rendszer legyen a secondary_specialty.
+- Ha a felhasználó bármelyik szabad szöveges mezőben (Saját szavakkal / Kiegészítés) konkrét, tartalmas információt adott meg, ezt kifejezetten tükrözd vissza a summary és explanation mezőkben — ne hagyd figyelmen kívül és ne csak általánosságban válaszolj.
 - Ha van megadott irányítószám: jelenleg a partnerhálózatunk elsősorban budapesti — ha a felhasználó nem Budapesten él (irányítószám nem 1xxx), ezt őszintén jelezd az explanation mezőben, és ne állíts pontos helyi egyezést amit nem tudsz garantálni
 
 A FELHASZNÁLÓ ADATAI:
@@ -1810,7 +1821,7 @@ Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy m
     {"icon": "2️⃣", "type": "t", "title": "Második lépés", "desc": "A következő tennivaló — párhuzamosan vagy az első után."},
     {"icon": "3️⃣", "type": "w", "title": "Hosszú távon", "desc": "Ami a jövőben fontos lesz az egészség fenntartásához ezzel a profillal."}
   ],
-  "primary_specialty": "KIZÁRÓLAG az alábbi 10 névből PONTOSAN egyet írj ide, SZÓ SZERINT másolva, semmi mást hozzá ne fűzz: Mentális-Pszichés / Alvás / Anyagcsere-Hormonális / Mozgásszervi / Gyomor-bél / Szív és keringés / Légzőszervi / Neurológiai / Bőr-Haj / Szűrés-Megelőzés",
+  "primary_specialty": "KIZÁRÓLAG az alábbi 10 névből PONTOSAN egyet írj ide, SZÓ SZERINT másolva, semmi mást hozzá ne fűzz (több érintett rendszer esetén a legmagasabb súlyosságú / piros-zászlós rendszeré az elsőbbség, nem a kitöltési sorrendé): Mentális-Pszichés / Alvás / Anyagcsere-Hormonális / Mozgásszervi / Gyomor-bél / Szív és keringés / Légzőszervi / Neurológiai / Bőr-Haj / Szűrés-Megelőzés",
   "secondary_specialty": "Ugyanabból a 10 névből PONTOSAN egy, szó szerint másolva, vagy null ha nincs másodlagos terület",
   "explanation": "2-3 mondatos magyarázat: milyen adatok alapján jutottál erre a következtetésre? Milyen összefüggéseket láttál? Szakmai de érthető hang.",
   "personal_note": "1 mondatos, személyes, meleg zárómondat kifejezetten ehhez a személyhez szólva."
