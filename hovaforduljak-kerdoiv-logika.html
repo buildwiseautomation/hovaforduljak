@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HovaForduljak — Kérdőív-logikai dokumentum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0F172A;
+    --blue:#2F6FED;
+    --cyan:#16BFC8;
+    --mint:#34C38F;
+    --sky:#8FBFE0;
+    --sky-bg:#EEF5FC;
+    --paper:#F7F9FC;
+    --card:#FFFFFF;
+    --line:#E2E8F0;
+    --ink-soft:#475569;
+    --danger:#DC2626;
+    --danger-bg:#FEF2F2;
+    --amber:#D97706;
+    --amber-bg:#FFFBEB;
+
+    --state-a:#34C38F;
+    --state-a-bg:#EAFAF3;
+    --state-b:#2F6FED;
+    --state-b-bg:#EAF1FE;
+    --state-c:#16BFC8;
+    --state-c-bg:#E7FAFB;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Manrope',system-ui,sans-serif;
+    background:var(--paper);
+    color:var(--navy);
+    line-height:1.6;
+  }
+  code, .mono{font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- Layout shell ---------- */
+  .shell{display:flex; min-height:100vh;}
+  .sidebar{
+    width:280px; flex-shrink:0;
+    background:var(--navy);
+    color:#CBD5E1;
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+    padding:28px 20px 40px;
+  }
+  .sidebar .brand{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:6px;
+  }
+  .sidebar .dot{width:10px;height:10px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 4px rgba(22,191,200,.18);}
+  .sidebar .brand-name{font-weight:800; color:#fff; font-size:15px; letter-spacing:.2px;}
+  .sidebar .brand-sub{font-size:11.5px; color:#94A3B8; margin:0 0 26px 20px;}
+  .sidebar nav{font-size:13.5px;}
+  .sidebar nav a{
+    display:block; color:#CBD5E1; text-decoration:none;
+    padding:7px 10px; border-radius:8px; margin-bottom:2px;
+    border-left:2px solid transparent;
+  }
+  .sidebar nav a:hover{background:rgba(255,255,255,.06); color:#fff;}
+  .sidebar nav .grp{
+    text-transform:uppercase; letter-spacing:.08em; font-size:10.5px;
+    color:#64748B; margin:20px 0 6px 10px; font-weight:700;
+  }
+  .sidebar nav .grp:first-child{margin-top:0;}
+  .sidebar nav a.area-link{padding-left:20px; font-size:12.8px;}
+
+  .main{flex:1; min-width:0;}
+  .content{max-width:920px; margin:0 auto; padding:56px 44px 120px;}
+
+  /* ---------- Header ---------- */
+  .doc-header{
+    padding-bottom:32px; margin-bottom:44px;
+    border-bottom:1px solid var(--line);
+  }
+  .doc-header .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--blue); background:var(--state-b-bg);
+    padding:6px 12px; border-radius:100px; margin-bottom:18px;
+  }
+  .doc-header h1{
+    font-size:34px; font-weight:800; letter-spacing:-.02em; margin:0 0 12px;
+    color:var(--navy);
+  }
+  .doc-header .lede{font-size:16.5px; color:var(--ink-soft); max-width:640px; margin:0 0 22px;}
+  .meta-row{display:flex; flex-wrap:wrap; gap:10px 28px; font-size:12.8px; color:var(--ink-soft);}
+  .meta-row b{color:var(--navy);}
+  .tagline{
+    margin-top:22px; font-family:'JetBrains Mono',monospace; font-size:13px;
+    color:var(--navy); background:var(--sky-bg); display:inline-block;
+    padding:10px 16px; border-radius:8px; border:1px solid var(--sky);
+  }
+
+  /* ---------- Sections ---------- */
+  section{margin-bottom:64px; scroll-margin-top:24px;}
+  .sec-eyebrow{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan); font-weight:600; margin-bottom:8px;}
+  h2{font-size:24px; font-weight:800; letter-spacing:-.01em; margin:0 0 16px; color:var(--navy);}
+  h3{font-size:17px; font-weight:700; margin:28px 0 10px; color:var(--navy);}
+  p{margin:0 0 14px; color:#334155;}
+  ul, ol{margin:0 0 14px; padding-left:20px; color:#334155;}
+  li{margin-bottom:6px;}
+  strong{color:var(--navy);}
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:24px 26px; margin:18px 0;
+  }
+  .principle-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:18px 0;}
+  @media (max-width:720px){.principle-grid{grid-template-columns:1fr;}}
+  .principle{
+    background:var(--card); border:1px solid var(--line); border-left:3px solid var(--blue);
+    border-radius:10px; padding:16px 18px;
+  }
+  .principle .num{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--blue); font-weight:700;}
+  .principle h4{margin:6px 0 4px; font-size:14.5px; color:var(--navy);}
+  .principle p{margin:0; font-size:13.6px; color:var(--ink-soft);}
+
+  /* callouts */
+  .callout{border-radius:10px; padding:16px 18px; margin:16px 0; font-size:14.3px;}
+  .callout.info{background:var(--sky-bg); border:1px solid var(--sky); color:#1e3a5f;}
+  .callout.danger{background:var(--danger-bg); border:1px solid #FCA5A5; color:#7f1d1d;}
+  .callout.danger .title{font-weight:800; color:var(--danger); display:block; margin-bottom:4px; font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.03em;}
+  .callout b{color:inherit;}
+
+  /* state badges */
+  .state-tag{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'JetBrains Mono',monospace; font-weight:600; font-size:12px;
+    padding:4px 10px; border-radius:6px; letter-spacing:.02em;
+  }
+  .state-tag.a{background:var(--state-a-bg); color:#1a7a54;}
+  .state-tag.b{background:var(--state-b-bg); color:#1d4fb0;}
+  .state-tag.c{background:var(--state-c-bg); color:#0e7d84;}
+  .state-tag .sw{width:7px;height:7px;border-radius:50%;}
+  .state-tag.a .sw{background:var(--state-a);}
+  .state-tag.b .sw{background:var(--state-b);}
+  .state-tag.c .sw{background:var(--state-c);}
+
+  /* comparison table */
+  table{width:100%; border-collapse:collapse; margin:18px 0; font-size:13.6px;}
+  th, td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{background:var(--navy); color:#fff; font-weight:700; font-size:12.5px;}
+  th:first-child{border-radius:8px 0 0 0;}
+  th:last-child{border-radius:0 8px 0 0;}
+  tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:var(--sky-bg);}
+  .cell-a{border-left:3px solid var(--state-a);}
+  .cell-b{border-left:3px solid var(--state-b);}
+  .cell-c{border-left:3px solid var(--state-c);}
+  .skip{color:#94A3B8; font-style:italic;}
+  .skip::before{content:"⛔ ";}
+  .ok::before{content:"✓ "; color:var(--mint); font-weight:700;}
+
+  /* logic / pseudocode block — signature element */
+  .logic-block{
+    background:var(--navy); color:#E2E8F0; border-radius:12px;
+    padding:20px 22px; margin:18px 0; font-family:'JetBrains Mono',monospace;
+    font-size:12.8px; line-height:1.8; overflow-x:auto;
+  }
+  .logic-block .k{color:var(--cyan); font-weight:600;}
+  .logic-block .s{color:var(--mint);}
+  .logic-block .c{color:#64748B;}
+  .logic-block .v{color:var(--sky);}
+
+  /* area cards (rendered by JS) */
+  .area{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:0; margin:0 0 28px; overflow:hidden; scroll-margin-top:24px;
+  }
+  .area-head{
+    padding:22px 26px; border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .area-head .id-badge{
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:#94A3B8; font-weight:600;
+  }
+  .area-head h3{margin:2px 0 4px; font-size:19px;}
+  .area-head p{margin:0; font-size:13.4px; color:var(--ink-soft);}
+  .area-body{padding:22px 26px 26px;}
+
+  .redflag-box{
+    background:var(--danger-bg); border:1px solid #FCA5A5; border-radius:10px;
+    padding:14px 18px; margin-bottom:20px;
+  }
+  .redflag-box .title{font-weight:800; color:var(--danger); font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:8px; display:block; font-family:'JetBrains Mono',monospace;}
+  .redflag-box ul{margin:0; padding-left:18px;}
+  .redflag-box li{color:#7f1d1d; font-size:13.4px; margin-bottom:4px;}
+
+  .state-cols{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:18px;}
+  @media (max-width:820px){.state-cols{grid-template-columns:1fr;}}
+  .state-col{border-radius:10px; padding:15px 16px; border:1px solid var(--line);}
+  .state-col.a{background:var(--state-a-bg); border-color:#bfe9d6;}
+  .state-col.b{background:var(--state-b-bg); border-color:#c7d9fb;}
+  .state-col.c{background:var(--state-c-bg); border-color:#bfeef0;}
+  .state-col .goal{font-size:12.6px; font-weight:700; margin-bottom:8px; color:var(--navy);}
+  .state-col ul{margin:0; padding-left:16px;}
+  .state-col li{font-size:12.6px; margin-bottom:5px; color:#334155;}
+
+  .branch-example{
+    background:var(--sky-bg); border:1px dashed var(--sky); border-radius:10px;
+    padding:14px 18px; font-size:13.2px; color:#1e3a5f;
+  }
+  .branch-example b{color:var(--navy);}
+
+  footer{
+    border-top:1px solid var(--line); margin-top:60px; padding-top:26px;
+    font-size:12.6px; color:#94A3B8; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+
+  ::selection{background:var(--state-b-bg); color:var(--navy);}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <div class="brand"><span class="dot"></span><span class="brand-name">HovaForduljak.hu</span></div>
+    <p class="brand-sub">Kérdőív-logikai dokumentum · v1.0</p>
+    <nav id="toc">
+      <div class="grp">Keretrendszer</div>
+      <a href="#bevezeto">Bevezető és cél</a>
+      <a href="#alapelvek">Nem tárgyalható alapelvek</a>
+      <a href="#allapotmodell">A hármas állapotmodell</a>
+      <a href="#ketttos-szint">Terület vs. állapot</a>
+      <a href="#allapot-meghatarozas">Állapot-meghatározás</a>
+      <a href="#matrix">Univerzális kérdés-mátrix</a>
+      <a href="#biztonsag">Biztonsági réteg</a>
+      <div class="grp">Szakterületi logika</div>
+      <a href="#szakteruletek">Áttekintés</a>
+      <a class="area-link" href="#area-sziv">Szív és keringés</a>
+      <a class="area-link" href="#area-legzo">Légzőszervi</a>
+      <a class="area-link" href="#area-mozgas">Mozgásszervi</a>
+      <a class="area-link" href="#area-gyomorbel">Gyomor-bél</a>
+      <a class="area-link" href="#area-mentalis">Mentális-Pszichés</a>
+      <a class="area-link" href="#area-alvas">Alvás</a>
+      <a class="area-link" href="#area-anyagcsere">Anyagcsere-Hormonális</a>
+      <a class="area-link" href="#area-neuro">Neurológiai</a>
+      <a class="area-link" href="#area-bor">Bőr-Haj</a>
+      <a class="area-link" href="#area-szures">Szűrés-Megelőzés</a>
+      <div class="grp">Alkalmazás</div>
+      <a href="#perszonalizacio">Perszonalizációs elvek</a>
+      <a href="#adatkapcsolat">Válaszok közti logika</a>
+      <a href="#implementacio">Implementációs jegyzetek</a>
+      <a href="#nyitott">Nyitott kérdések</a>
+    </nav>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main">
+    <div class="content">
+
+      <header class="doc-header">
+        <span class="eyebrow">Belső specifikáció · a rendszer agya</span>
+        <h1>Kérdőív-logikai dokumentum</h1>
+        <p class="lede">Ez a dokumentum írja le, hogy a HovaForduljak.hu kérdéssora <strong>kinek, mikor, milyen kérdést tesz fel</strong> — és legalább ugyanennyire fontos: <strong>mikor nem</strong>. A meglévő kérdéskészletet nem írjuk újra; erre a logikai réteget építjük rá.</p>
+        <div class="meta-row">
+          <span><b>Verzió:</b> 1.0</span>
+          <span><b>Alapja:</b> Master Strategy 2026-2028 + élő MVP</span>
+          <span><b>Tulajdonos:</b> Misi (technikai implementáció) · Péter jóváhagyása szükséges klinikai tartalomra</span>
+          <span><b>Státusz:</b> Egyeztetésre kész</span>
+        </div>
+        <div class="tagline">"Nem diagnosztizálunk. Utat találunk." — minden kérdés ezt a határt szolgálja.</div>
+      </header>
+
+      <!-- ================= BEVEZETŐ ================= -->
+      <section id="bevezeto">
+        <div class="sec-eyebrow">// 00 — kontextus</div>
+        <h2>Miért kell ez a dokumentum?</h2>
+        <p>A jelenlegi kérdéssor <strong>ugyanazt a logikát</strong> futtatja le mindenkinek, aki egy adott szakterületet választ — függetlenül attól, hogy a felhasználó tudja-e egyáltalán, hogy van-e baja. Ez konkrétan azt jelenti, hogy valaki, aki a <b>„Szűrés, megelőzés”</b> területre lép be pusztán kíváncsiságból, ugyanazokat a panasz-specifikus kérdéseket kapja (pl. <i>„mióta tart?”</i>, <i>„szedsz-e valamit rá?”</i>), mint aki egy hetek óta fennálló, konkrét panasszal érkezik. Ez logikátlan a felhasználó szemszögéből, és rontja a személyes, gondoskodó érzetet, amit a platform adni akar.</p>
+        <p>A cél: a rendszer <strong>tudja, kivel beszél</strong> — nem demográfiailag, hanem abban az értelemben, hogy <i>tud-e a felhasználó a saját problémájáról</i> — és ez alapján válogatja meg, mit kérdez, milyen sorrendben, és milyen hangnemben.</p>
+      </section>
+
+      <!-- ================= ALAPELVEK ================= -->
+      <section id="alapelvek">
+        <div class="sec-eyebrow">// 01 — keretrendszer</div>
+        <h2>Nem tárgyalható alapelvek</h2>
+        <p>A Master Strategy öt alapelvéből közvetlenül levezethető öt szabály a kérdéslogikára:</p>
+        <div class="principle-grid">
+          <div class="principle">
+            <span class="num">01</span>
+            <h4>Ne tegyél fel értelmetlen kérdést</h4>
+            <p>Ha a kérdés előfeltétele (pl. „van egy ismert panaszod, ami tart valamióta”) nem áll fenn, a kérdés nem jelenhet meg — függetlenül attól, hogy máshol a kérdéssorban „elvárt lépés”.</p>
+          </div>
+          <div class="principle">
+            <span class="num">02</span>
+            <h4>Navigáció, nem diagnózis</h4>
+            <p>Egyetlen kérdés vagy eredményszöveg sem fogalmazhat meg úgy dolgot, mintha megállapítást tenne. Mindig lehetőség, irány, javaslat — sosem kijelentés.</p>
+          </div>
+          <div class="principle">
+            <span class="num">03</span>
+            <h4>A biztonsági réteg állapot-független</h4>
+            <p>A red flag-ek felismerése ugyanúgy fut Állapot A-ban (nincs panasz), mint C-ben. Egy „csak szűrnék” felhasználó is jelezhet vészhelyzetet.</p>
+          </div>
+          <div class="principle">
+            <span class="num">04</span>
+            <h4>Az adatok logikailag összefüggenek</h4>
+            <p>Egy korábbi válasz megváltoztathatja a következő kérdést vagy annak hangnemét — sosem kérdezünk vissza olyat, amit már megválaszoltak.</p>
+          </div>
+          <div class="principle">
+            <span class="num">05</span>
+            <h4>A hangnem alkalmazkodik, a határ nem</h4>
+            <p>Empatikusabb, személyesebb megszólítás igen — orvosi ígéret, biztosíték vagy sürgetés soha.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ÁLLAPOTMODELL ================= -->
+      <section id="allapotmodell">
+        <div class="sec-eyebrow">// 02 — a rendszer agya</div>
+        <h2>A hármas állapotmodell</h2>
+        <p>Minden felhasználó — szakterülettől függetlenül — a kérdéssor legelején besorolódik egy <strong>állapotba</strong>. Ez az állapot dönti el, mit kérdezünk, mit hagyunk ki, és milyen hangnemben szólítjuk meg a felhasználót a kiválasztott szakterületen belül.</p>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin:18px 0 22px;">
+          <span class="state-tag a"><span class="sw"></span>ÁLLAPOT A — Nincs ismert panasz</span>
+          <span class="state-tag b"><span class="sw"></span>ÁLLAPOT B — Új panasz</span>
+          <span class="state-tag c"><span class="sw"></span>ÁLLAPOT C — Régóta fennálló, ki nem vizsgált panasz</span>
+        </div>
+
+        <table>
+          <thead>
+            <tr><th style="width:15%">Szempont</th><th class="cell-a" style="width:28%">A · Nincs panasz</th><th class="cell-b" style="width:28%">B · Új panasz</th><th class="cell-c" style="width:29%">C · Régóta fennálló</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Ki ez?</b></td>
+              <td>Kíváncsi, tudatos, megelőzésre nyitott felhasználó</td>
+              <td>Valami most, frissen jelent meg — bizonytalan, mit jelent</td>
+              <td>Hosszabb ideje él együtt valamivel, de sosem nézette meg</td>
+            </tr>
+            <tr>
+              <td><b>Cél</b></td>
+              <td>Kockázati térkép, esetleges rejtett probléma felszínre hozása</td>
+              <td>Gyors, konkrét irány — mi ez, mennyire sürgős, hova forduljak</td>
+              <td>Megerősítés + finom bátorítás a lépésre, empátia a halogatás miatt</td>
+            </tr>
+            <tr>
+              <td><b>„Mióta tart?”</b></td>
+              <td class="skip">nem kérdezzük — nincs „az”, aminek fennállását mérnénk</td>
+              <td class="ok">igen — rövid skála (napok / hetek)</td>
+              <td class="ok">igen — hosszú skála (hónapok / évek) + „változott-e mostanában”</td>
+            </tr>
+            <tr>
+              <td><b>„Szedsz-e valamit rá?”</b></td>
+              <td class="skip">nem kérdezzük</td>
+              <td>„Kezelted-e már valahogy?” — mert lehet, hogy még sehogy</td>
+              <td>„Próbáltál-e már valamit ellene?” — empatikusabb keret</td>
+            </tr>
+            <tr>
+              <td><b>Súlyosság-skála</b></td>
+              <td>csak az igennel jelölt tételekre, checklist-szinten</td>
+              <td class="ok">igen, 1–5 skála a fő panaszra</td>
+              <td class="ok">igen, 1–5 skála + „hogyan hatott ez eddig a mindennapjaidra”</td>
+            </tr>
+            <tr>
+              <td><b>„Miért nem kerested eddig?”</b></td>
+              <td class="skip">nem releváns</td>
+              <td class="skip">nem releváns — még friss</td>
+              <td class="ok">igen — nem-ítélkező opciókkal (ld. lent)</td>
+            </tr>
+            <tr>
+              <td><b>Eredményoldal tónusa</b></td>
+              <td>felfedező: „Ezt érdemes megnézetni”</td>
+              <td>cselekvésre ösztönző: „Ez a következő lépésed”</td>
+              <td>megerősítő: „Jól tetted, hogy most utánanéztél”</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout info">
+          <b>Fontos:</b> az Állapot C „miért nem kerested eddig” kérdésének opciói sosem lehetnek szégyenítőek. Javasolt választható opciók: <i>„nem tudtam, kihez forduljak”</i>, <i>„nem volt rá időm”</i>, <i>„tartottam tőle, mit fognak mondani”</i>, <i>„korábban lekicsinyelték a panaszomat”</i>, <i>„egyszerűen halogattam”</i>. Ez egyben adat is: a leggyakoribb halogatási ok a partnerkommunikációt is formálhatja.
+        </div>
+      </section>
+
+      <!-- ================= KETTŐS SZINT ================= -->
+      <section id="ketttos-szint">
+        <div class="sec-eyebrow">// 03 — struktúra</div>
+        <h2>Kettős szint: belépési terület és állapot</h2>
+        <p>A rendszer két, egymástól független tengelyen szervezi a személyre szabást:</p>
+        <div class="logic-block">
+<span class="c">// 1. tengely — MELYIK TESTRENDSZER</span>
+<span class="k">terulet</span> = egyik a 10 meglévő belépési kategóriából
+  <span class="v">(Szív és keringés, Légzőszervi, Mozgásszervi, Gyomor-bél, Mentális-Pszichés,</span>
+  <span class="v">Alvás, Anyagcsere-Hormonális, Neurológiai, Bőr-Haj, Szűrés-Megelőzés)</span>
+
+<span class="c">// 2. tengely — MENNYIRE TUDATOS A FELHASZNÁLÓ A SAJÁT HELYZETÉVEL</span>
+<span class="k">allapot</span> = <span class="s">"A"</span> <span class="c">| ismeretlen ha nincs konkrét panasz</span>
+        <span class="s">"B"</span> <span class="c">| új panasz</span>
+        <span class="s">"C"</span> <span class="c">| régóta fennálló, ki nem vizsgált panasz</span>
+
+<span class="k">kérdéssor</span> = f(<span class="k">terulet</span>, <span class="k">allapot</span>)  <span class="c">← ez a két érték együtt dönti el a teljes flow-t</span>
+        </div>
+        <p>A <b>„Szűrés, megelőzés”</b> kategória speciális eset: ez nem egy testrendszer, hanem maga az <b>Állapot A</b> önálló belépési pontként, több testrendszert átfogóan. Aki ide lép be, automatikusan Állapot A-t kap — nincs szükség rákérdezni. Aki viszont egy konkrét testrendszert választ (pl. „Szív és keringés”), attól még rákérdezünk, hogy A, B vagy C állapotban van-e <i>azon a területen belül</i> — hiszen valaki simán kíváncsi is lehet a szíve állapotára anélkül, hogy bármi panasza lenne.</p>
+      </section>
+
+      <!-- ================= ÁLLAPOT-MEGHATÁROZÁS ================= -->
+      <section id="allapot-meghatarozas">
+        <div class="sec-eyebrow">// 04 — az első elágazás</div>
+        <h2>Állapot-meghatározás logikája</h2>
+        <p>Közvetlenül a szakterület kiválasztása után — még a tünetlista előtt — egy darab elágazó kérdés dönti el az állapotot, a 9 nem-szűrés kategóriában:</p>
+        <div class="card">
+          <p style="margin-bottom:10px;"><b>„Mi jellemzi jobban a helyzeted ezen a területen?”</b></p>
+          <ul>
+            <li><b>„Csak felmérném magam, nincs konkrét panaszom”</b> → Állapot A</li>
+            <li><b>„Most kezdődött, vagy nemrég vettem észre”</b> → Állapot B</li>
+            <li><b>„Már régebb óta fennáll, de sosem vizsgáltattam ki”</b> → Állapot C</li>
+          </ul>
+        </div>
+        <p>Ez a kérdés a jelenlegi 11 lépésből egyet sem ír felül — a meglévő „panaszterület kiválasztása” lépés <i>után</i>, a dinamikus tünetlista <i>előtt</i> ékelődik be. Innentől a lenti mátrix szabályai szerint fut a kérdéssor.</p>
+        <div class="callout info">Ha valaki a Szűrés-Megelőzés kategóriát választja, ez a kérdés nem jelenik meg — az állapot automatikusan A.</div>
+      </section>
+
+      <!-- ================= MÁTRIX ================= -->
+      <section id="matrix">
+        <div class="sec-eyebrow">// 05 — a motor</div>
+        <h2>Univerzális kérdés-mátrix</h2>
+        <p>A meglévő 11 lépés mindegyikére vonatkozó szabály, állapotonként. Ez a tábla a logikai réteg gerince — a fejlesztésnél soronként ez dönti el, mi jelenik meg.</p>
+        <table>
+          <thead><tr><th style="width:22%">Lépés (meglévő)</th><th class="cell-a">A · Nincs panasz</th><th class="cell-b">B · Új panasz</th><th class="cell-c">C · Régóta fennálló</th></tr></thead>
+          <tbody>
+            <tr><td>Biológiai nem, életkor, testsúly</td><td class="ok">változatlan</td><td class="ok">változatlan</td><td class="ok">változatlan</td></tr>
+            <tr><td>Panaszterület kiválasztása</td><td class="ok">változatlan</td><td class="ok">változatlan</td><td class="ok">változatlan</td></tr>
+            <tr><td>Dinamikus tünetlista</td><td>checklist-jelleg, „van-e” szinten, súlyosság nélkül</td><td class="ok">panasz-specifikus, a kiválasztott fő tünet köré épül</td><td class="ok">panasz-specifikus + „ez idővel változott-e”</td></tr>
+            <tr><td>Súlyosság (1–5)</td><td>csak az igennel jelölt checklist-tételekre, halkabb változatban</td><td class="ok">a fő panaszra, teljes súllyal</td><td class="ok">a fő panaszra + „mennyire szoktad meg”</td></tr>
+            <tr><td>Fennállás időtartama</td><td class="skip">kihagyva</td><td class="ok">rövid skála: napok / 1–2 hét / 2–4 hét / 1 hónapnál régebb</td><td class="ok">hosszú skála: hónapok / 1 éven belül / 1–3 év / 3 évnél régebb</td></tr>
+            <tr><td>Életmód-kérdések</td><td class="ok">hangsúlyos — ez itt az elsődleges információforrás</td><td>rövidített, csak a panaszhoz kapcsolódó tételek</td><td>rövidített, csak a panaszhoz kapcsolódó tételek</td></tr>
+            <tr><td>Ismert betegségek, gyógyszerek</td><td class="ok">változatlan — biztonsági relevancia miatt mindig kérdezzük</td><td class="ok">változatlan</td><td class="ok">változatlan</td></tr>
+            <tr><td>Mentális állapot rövid checklist</td><td class="ok">változatlan</td><td class="ok">változatlan</td><td class="ok">változatlan</td></tr>
+            <tr><td>„Szedsz-e valamit rá / kezelted-e már?”</td><td class="skip">kihagyva</td><td>átfogalmazva: „Kezelted-e már valahogy?”</td><td>átfogalmazva: „Próbáltál-e már valamit ellene?”</td></tr>
+            <tr><td>Korábbi szakember / kivizsgálás</td><td class="skip">kihagyva</td><td>egyszerű igen/nem: „Fordultál-e már ezzel orvoshoz?”</td><td class="ok">kulcskérdés: „Miért nem vizsgáltattad ki eddig?” (nem-ítélkező opciók)</td></tr>
+            <tr><td>Szabad szöveges kiegészítés</td><td class="ok">változatlan</td><td class="ok">változatlan</td><td class="ok">változatlan</td></tr>
+            <tr><td>Eredményoldal</td><td>felfedező tónus, tartalmi hangsúly a megelőzésen</td><td>cselekvésre ösztönző, konkrét következő lépés</td><td>megerősítő + bátorító tónus</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ================= BIZTONSÁG ================= -->
+      <section id="biztonsag">
+        <div class="sec-eyebrow">// 06 — állapot-független réteg</div>
+        <h2>Biztonsági réteg (safety envelope)</h2>
+        <p>A Master Strategy zöld/sárga/piros zóna-modellje <b>minden állapotban és minden szakterületen</b> párhuzamosan fut a fenti logikával — egy Állapot A-s, „csak szűrnék” felhasználó ugyanúgy piros zónába kerülhet egyetlen checklist-tétel bejelölésével.</p>
+        <table>
+          <thead><tr><th style="width:14%">Zóna</th><th style="width:40%">Mit jelent</th><th>Rendszerviselkedés</th></tr></thead>
+          <tbody>
+            <tr><td><span style="color:var(--mint); font-weight:700;">🟢 Zöld</span></td><td>Nem akut, alacsony kockázatú, jól navigálható helyzet</td><td>önkiszolgáló irány, partneropció megjelenik</td></tr>
+            <tr><td><span style="color:var(--amber); font-weight:700;">🟡 Sárga</span></td><td>Bizonytalan, összetett, vagy a felhasználó több rendszert is jelölt egyszerre</td><td>humán review / orvosi konzultáció felajánlása; fizetős partner mellett kötelező semleges alternatíva is</td></tr>
+            <tr><td><span style="color:var(--danger); font-weight:700;">🔴 Piros</span></td><td>Sürgősségi jel, red flag bejelölve — állapottól függetlenül</td><td>azonnali vészút megjelenítése, <b>kérdéssor megszakítása</b>, nincs kereskedelmi ajánlat</td></tr>
+          </tbody>
+        </table>
+        <div class="callout danger">
+          <span class="title">Krízis-eset — mentális-pszichés terület</span>
+          Ha a felhasználó bármely ponton öngyilkossági gondolatot vagy önsértési szándékot jelez, a kérdéssor <b>azonnal megszakad</b>, minden más logika felülíródik, és a rendszer a <b>116-123</b> (Lelki Elsősegély Telefonszolgálatok Szövetsége, ingyenes, éjjel-nappal) és — közvetlen veszély esetén — a <b>112</b> számot jeleníti meg. Nincs további tünetgyűjtés, nincs partnerajánlat ezen a ponton.
+        </div>
+      </section>
+
+      <!-- ================= SZAKTERÜLETEK ================= -->
+      <section id="szakteruletek">
+        <div class="sec-eyebrow">// 07 — a 10 terület</div>
+        <h2>Szakterületenkénti logika</h2>
+        <p>Mind a 10 belépési terület saját logikát kap — nem egy közös sablon minden területre húzva. Alább mindegyikhez: a terület-specifikus red flag-ek (állapot-függetlenek), majd a három állapot konkrét kérdéslogikája, végül egy perszonalizációs branching-példa.</p>
+      </section>
+
+      <div id="areas-container"><!-- JS tölti fel --></div>
+
+      <!-- ================= PERSZONALIZÁCIÓ ================= -->
+      <section id="perszonalizacio">
+        <div class="sec-eyebrow">// 08 — hangnem</div>
+        <h2>Perszonalizációs és empátiás írási elvek</h2>
+        <div class="principle-grid">
+          <div class="principle">
+            <span class="num">→</span>
+            <h4>Szólítsd meg azt, akivel épp beszélsz</h4>
+            <p>Állapot A-nál kíváncsi, felfedező hang. Állapot C-nél sosem „miért hagytad ennyire elfajulni” — hanem „jó, hogy most ránézünk erre”.</p>
+          </div>
+          <div class="principle">
+            <span class="num">→</span>
+            <h4>Ne kérdezz vissza</h4>
+            <p>Ha a felhasználó már megadta az életkorát, nemét, vagy egy korábbi checklist-tételt bejelölt, egy későbbi kérdés ne kérje ugyanezt újra — hivatkozzon rá.</p>
+          </div>
+          <div class="principle">
+            <span class="num">→</span>
+            <h4>A halogatás nem hiba, hanem adat</h4>
+            <p>Állapot C-nél a „miért nem vizsgáltattad ki eddig” válasza formálja a zárás hangnemét — pl. „tartottam tőle” esetén extra megerősítés a zárásban.</p>
+          </div>
+          <div class="principle">
+            <span class="num">→</span>
+            <h4>A felfedezés ne ijesszen meg</h4>
+            <p>Állapot A-ban, ha egy checklist-tétel piros zónát vált ki, a hangnem maradjon nyugodt és konkrét — a felfedezés ténye önmagában már nem vészhelyzet.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ADATKAPCSOLAT ================= -->
+      <section id="adatkapcsolat">
+        <div class="sec-eyebrow">// 09 — a válaszok egymásra épülnek</div>
+        <h2>Logika a válaszok között</h2>
+        <p>A kérdések nem egymástól függetlenül állnak — minden válasz szűkíti vagy módosítja a következő kérdést. Néhány konkrét szabály:</p>
+        <div class="logic-block">
+<span class="c">HA</span> <span class="k">súlyosság</span> ≥ 4 <span class="k">BÁRMELY</span> tételen
+  <span class="c">→</span> automatikus <span class="s">sárga zóna</span> ellenőrzés, függetlenül az állapottól
+
+<span class="c">HA</span> <span class="k">terulet</span> == <span class="s">"Szűrés-Megelőzés"</span> <span class="k">ÉS</span> <span class="k">felhasználó</span> ≥2 rendszerben jelöl tünetet
+  <span class="c">→</span> eredményoldal a <span class="s">legmagasabb súlyosságú / red-flag-gyanús</span> rendszert hozza előre
+     <span class="c">(nem ábécérendben, nem a kitöltés sorrendjében)</span>
+
+<span class="c">HA</span> <span class="k">allapot</span> == <span class="s">"A"</span> <span class="k">ÉS</span> egy adott checklist-tételre <span class="k">"igen"</span>
+  <span class="c">→</span> <span class="s">csak arra a tételre</span> kapcsoljon be egy könnyített B-szintű követő kérdés
+     <span class="c">(pl. "mikor jelentkezik ez?"), a teljes flow NEM vált át B állapotba</span>
+
+<span class="c">HA</span> <span class="k">ismert betegség / gyógyszer</span> már szerepel egy korábbi válaszban
+  <span class="c">→</span> a rendszer <span class="s">hivatkozzon rá</span> a zárásban, ne kérdezzen rá újra máshol
+        </div>
+      </section>
+
+      <!-- ================= IMPLEMENTÁCIÓ ================= -->
+      <section id="implementacio">
+        <div class="sec-eyebrow">// 10 — Misinek</div>
+        <h2>Implementációs jegyzetek</h2>
+        <p>A session-state minimálisan az alábbi mezőket kell hogy hordozza a kérdéssor teljes ideje alatt:</p>
+        <div class="logic-block">
+{
+  <span class="k">"terulet"</span>: <span class="s">"sziv"</span> <span class="c">| egyike a 10 kategória-id-nek</span>,
+  <span class="k">"allapot"</span>: <span class="s">"A"</span> | <span class="s">"B"</span> | <span class="s">"C"</span>,
+  <span class="k">"zona"</span>: <span class="s">"zold"</span> | <span class="s">"sarga"</span> | <span class="s">"piros"</span>,
+  <span class="k">"flaggedItems"</span>: [ <span class="c">// Állapot A-ban bejelölt tételek, amik light-B követést kaptak</span>
+    { <span class="k">"tetel"</span>: <span class="s">"szapora szívverés"</span>, <span class="k">"kovetkezoKerdes"</span>: <span class="s">"mikor_jelentkezik"</span> }
+  ],
+  <span class="k">"korabbanMegadott"</span>: { <span class="k">"kor"</span>: <span class="v">true</span>, <span class="k">"nem"</span>: <span class="v">true</span>, <span class="k">"ismertBetegsegek"</span>: [<span class="s">"..."</span>] }
+}
+        </div>
+        <p>Gyakorlati javaslat: a meglévő 11 lépéses kérdés-komponensek maradjanak érintetlenek — egy <code>kérdésLátható(lépés, allapot)</code> és egy <code>kérdésSzövege(lépés, allapot)</code> függvény elé kötve fusson le a fenti mátrix, komponens-szinten módosítás nélkül.</p>
+        <div class="callout info">Az itteni terület-specifikus red flag-listák és tünet-checklistek <b>UX-vázlatnak</b> minősülnek, nem klinikai protokollnak — a végleges szöveget és a red flag-küszöböket Péternek kell jóváhagynia a Clinical Safety Board keretében, a Master Strategy 14.5-ös pontja szerint.</div>
+      </section>
+
+      <!-- ================= NYITOTT ================= -->
+      <section id="nyitott">
+        <div class="sec-eyebrow">// 11 — mielőtt élesítünk</div>
+        <h2>Nyitott kérdések / döntendő pontok</h2>
+        <ul>
+          <li>Az Állapot A-ban felmerülő „flagged item” light-B követő kérdéseinek pontos szövegezését szakterületenként véglegesíteni kell — ebben a doksiban egy-egy példa szerepel útmutatónak.</li>
+          <li>A „miért nem vizsgáltattad ki eddig” (Állapot C) opciólista végleges, magyar nyelvű, nem-ítélkező megfogalmazását érdemes 3-5 valós felhasználóval tesztelni a 90 napos terv usability-szakaszában.</li>
+          <li>Mentális-pszichés terület: a krízis-küszöb pontos megfogalmazása (mely szavak/válaszok váltják ki az azonnali megszakítást) klinikai jóváhagyást igényel — ez a dokumentum csak a folyamatot írja le, a pontos triggerlistát nem.</li>
+          <li>Szűrés-Megelőzés eredményoldalán a „több rendszer is jelzett” eset rangsorolási logikáját (súlyosság vs. felhasználói választás sorrendje) élesítés előtt A/B tesztelni javasolt.</li>
+        </ul>
+      </section>
+
+      <footer>
+        <span>HovaForduljak.hu — Kérdőív-logikai dokumentum v1.0</span>
+        <span>Nem diagnosztizálunk. Utat találunk.</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+<script>
+const AREAS = [
+  {
+    id: "sziv",
+    nev: "Szív és keringés",
+    leiras: "Kardiovaszkuláris tünetek és kockázati tényezők.",
+    redFlags: [
+      "Szorító, nyomó mellkasi fájdalom, amely a karba, állkapocsba vagy hátba sugárzik, verejtékezéssel vagy légszomjjal együtt",
+      "Hirtelen fellépő, korábban nem tapasztalt szapora szívverés ájulással vagy majdnem-ájulással",
+      "Hirtelen kialakuló, egyoldali lábdagadás bőrelszíneződéssel",
+      "Nyugalmi állapotban is jelentkező, súlyosbodó légszomj"
+    ],
+    a: {
+      cel: "Általános kardiovaszkuláris kockázati térkép — nem panasz-specifikus.",
+      kerdezunk: [
+        "Családi anamnézis: magas vérnyomás, infarktus, stroke a családban",
+        "Ismert-e magas vérnyomás vagy koleszterinszint",
+        "Dohányzási és mozgási szokások",
+        "Rövid checklist: „tapasztaltál-e bármi szokatlant” (súlyosság nélkül, csak igen/nem)"
+      ]
+    },
+    b: {
+      cel: "Gyors, konkrét irány egy frissen jelentkezett tünetre.",
+      kerdezunk: [
+        "Pontos tünet megnevezése (mellkasi fájdalom / szapora szívverés / lábdagadás / légszomj)",
+        "Mióta áll fenn — rövid skála (napok / hetek)",
+        "Mikor jelentkezik: terhelésre vagy nyugalomban is",
+        "Súlyosság 1–5 skálán"
+      ]
+    },
+    c: {
+      cel: "Empatikus megerősítés + a mostani lépés bátorítása.",
+      kerdezunk: [
+        "Mióta van — hosszú skála (hónapok / évek)",
+        "Változott-e mostanában a jellege vagy erőssége",
+        "Miért nem vizsgáltatta ki eddig (nem-ítélkező opciók)",
+        "Hogyan hat ez jelenleg a mindennapi terhelhetőségre"
+      ]
+    },
+    branch: "Ha valaki Állapot A-ban a checklisten bejelöli, hogy „igen, van szapora szívdobogás-érzésem”, a rendszer csak erre az egy tételre kapcsol be egy könnyített követő kérdést (mikor jelentkezik, mennyire gyakori) — a teljes flow nem vált át teljes B állapotba, és a többi checklist-tétel A-szintű marad."
+  },
+  {
+    id: "legzo",
+    nev: "Légzőszervi",
+    leiras: "Légúti és tüdő-panaszok.",
+    redFlags: [
+      "Hirtelen fellépő, súlyos légszomj nyugalomban",
+      "Kék elszíneződés az ajkakon vagy ujjakon",
+      "Véres köhögés",
+      "Magas láz mellkasi fájdalommal és zavartsággal együtt"
+    ],
+    a: {
+      cel: "Kockázati és állapotfelmérés, panasz nélkül.",
+      kerdezunk: [
+        "Dohányzási státusz (jelenlegi/korábbi, IQOS/e-cigaretta is)",
+        "Van-e ismert allergia vagy asztma a családban",
+        "Terhelési tolerancia általánosan (lépcsőn felmenve mennyire fullad ki)",
+        "Horkolás vagy éjszakai légzéskimaradás érzékelése"
+      ]
+    },
+    b: {
+      cel: "Friss légúti tünet gyors tisztázása.",
+      kerdezunk: [
+        "Köhögés vagy nehézlégzés mióta áll fenn (napok)",
+        "Van-e jelenleg láz",
+        "Fertőzésgyanú: volt-e nemrég megfázás/influenza a környezetben",
+        "Mi váltja ki vagy súlyosbítja (hideg levegő, terhelés, fekvő helyzet)"
+      ]
+    },
+    c: {
+      cel: "Krónikus panasz empatikus feltárása.",
+      kerdezunk: [
+        "Mióta visszatérő vagy állandó a köhögés/nehézlégzés",
+        "Dohányzási előzmény hossza, ha releváns",
+        "Változott-e mostanában a súlyossága",
+        "Kapott-e korábban bármilyen magyarázatot, amit nem követett tovább"
+      ]
+    },
+    branch: "Ha a horkolás/légzéskimaradás checklist-tételre Állapot A-ban „igen” érkezik, a rendszer átirányít egy rövid, Alvás területtel közös követő blokkra — a két terület között itt tudatosan összekapcsoljuk az adatokat, mert klinikailag összefüggenek."
+  },
+  {
+    id: "mozgas",
+    nev: "Mozgásszervi",
+    leiras: "Ízületi, hát- és izompanaszok.",
+    redFlags: [
+      "Trauma utáni deformitás vagy nem terhelhető végtag",
+      "Éjszakai, terheléstől független, folyamatosan súlyosbodó fájdalom",
+      "Progresszíven súlyosbodó zsibbadás vagy erőgyengeség",
+      "Lázzal együtt járó, hirtelen ízületi duzzanat"
+    ],
+    a: {
+      cel: "Általános mozgásszervi állapotfelmérés.",
+      kerdezunk: [
+        "Ülőmunka vagy fizikailag aktív életmód",
+        "Voltak-e korábbi sérülések (akár gyerekkoriak)",
+        "Rövid testtartási checklist (nyaki merevség, hátfájás gyakorisága)",
+        "Sportolási szokások"
+      ]
+    },
+    b: {
+      cel: "Friss fájdalom vagy sérülés gyors tisztázása.",
+      kerdezunk: [
+        "Fájdalom helye és mióta áll fenn",
+        "Volt-e konkrét kiváltó esemény (sérülés, új mozgásforma)",
+        "Mozgásra javul vagy romlik",
+        "Súlyosság 1–5 skálán"
+      ]
+    },
+    c: {
+      cel: "Krónikus panasz feltárása, gyulladásos jelek felismerése.",
+      kerdezunk: [
+        "Reggeli merevség mintázata (gyulladásos folyamatra utaló jel)",
+        "Miért nem vizsgáltatta ki eddig",
+        "Hogyan alkalmazkodott hozzá eddig a mindennapokban",
+        "Van-e funkcióvesztés (amit korábban meg tudott csinálni, most nem)"
+      ]
+    },
+    branch: "Ha Állapot C-ben a reggeli merevség „30 percnél tovább tart” választ kap, ez önmagában sárga zónát nyit — gyulladásos ízületi betegségre utaló minta, amit a rendszer a szakmai review mintavételébe is bekerít."
+  },
+  {
+    id: "gyomorbel",
+    nev: "Gyomor-bél",
+    leiras: "Emésztőrendszeri panaszok.",
+    redFlags: [
+      "Fekete, kátrányos vagy véres széklet",
+      "Nem szándékos, jelentős fogyás rövid idő alatt",
+      "Nyelési képtelenség",
+      "Hirtelen, heves hasi fájdalom merev hassal"
+    ],
+    a: {
+      cel: "Emésztési komfort általános felmérése.",
+      kerdezunk: [
+        "Étkezési szokások (rendszeresség, diéta követése)",
+        "Ismert-e ételintolerancia vagy -allergia",
+        "Rövid checklist: puffadás, reflux, székelési rendszeresség — igen/nem szinten",
+        "Folyadékfogyasztási szokások"
+      ]
+    },
+    b: {
+      cel: "Friss panasz gyors tisztázása.",
+      kerdezunk: [
+        "Panasz mióta áll fenn (napok)",
+        "Összefügg-e konkrét étkezéssel vagy eseménnyel",
+        "Jellege (görcsös / tompa / szúró / égő)",
+        "Súlyosság 1–5 skálán"
+      ]
+    },
+    c: {
+      cel: "Krónikus panasz mintázatának feltárása.",
+      kerdezunk: [
+        "Székletmintázat hosszabb távon (váltakozó, állandó)",
+        "Kapcsolódó tünetek: fogyás, fáradtság, étvágyváltozás",
+        "Miért nem vizsgáltatta ki eddig",
+        "Volt-e korábban vizsgálat, amit nem folytatott tovább"
+      ]
+    },
+    branch: "Ha bármely állapotban a széklet-tételnél „fekete vagy véres” opció jön be, ez azonnal piros zónát vált ki — a kérdéssor itt megszakad, függetlenül attól, hogy A, B vagy C állapotban volt a felhasználó."
+  },
+  {
+    id: "mentalis",
+    nev: "Mentális-Pszichés",
+    leiras: "Hangulati, szorongásos és lelki terheltségi tünetek — fokozott érzékenységet igénylő terület.",
+    redFlags: [
+      "Öngyilkossági gondolat vagy önsértési szándék kifejezése (bármely ponton, bármely állapotban)",
+      "Kontrollálhatatlan, másra irányuló agresszív késztetés jelzése",
+      "Akut pánikroham-szerű, testi tünetekkel járó epizód leírása felmérés közben"
+    ],
+    a: {
+      cel: "Általános jóllét-felmérés, nem panasz-alapú.",
+      kerdezunk: [
+        "„Hogy vagy mostanában?” jellegű, önkiértékelős hangulat-skála",
+        "Stressz-szint általánosan",
+        "Alvásminőség kapcsolódóan",
+        "Rövid checklist: szorongás, ingerlékenység, kiégés-érzés — igen/nem szinten"
+      ]
+    },
+    b: {
+      cel: "Friss, konkrét változás feltárása.",
+      kerdezunk: [
+        "Mi változott az elmúlt hetekben",
+        "Van-e azonosítható kiváltó esemény",
+        "Mióta érzi ezt a változást",
+        "Hogyan hat ez a napi működésére"
+      ]
+    },
+    c: {
+      cel: "Régóta fennálló teher empatikus, nem-ítélkező feltárása.",
+      kerdezunk: [
+        "Miért nem kért eddig segítséget (szégyen / nem tudta hova / korábban nem segített)",
+        "Van-e jelenleg támogató környezet (család, barátok)",
+        "Hogyan hat ez jelenleg a mindennapi működésre",
+        "Mit remél attól, ha most utánanéz"
+      ]
+    },
+    branch: "A krízis-detekció ezen a területen minden más logika felett áll: ha bármelyik válaszban öngyilkossági gondolat vagy önsértési szándék jelenik meg, a rendszer azonnal megszakítja a kérdéssort, és a 116-123 (LESZ, ingyenes, 0–24) valamint közvetlen veszély esetén a 112 számot jeleníti meg — kereskedelmi ajánlat, további tünetgyűjtés nélkül."
+  },
+  {
+    id: "alvas",
+    nev: "Alvás",
+    leiras: "Elalvási, átalvási és alváshigiéniai panaszok.",
+    redFlags: [
+      "Partner által észlelt légzéskimaradás alvás közben, együtt nappali elalvással vezetés/munka közben",
+      "Hirtelen kialakuló, súlyos álmatlanság jelentős testsúlyváltozással együtt"
+    ],
+    a: {
+      cel: "Általános alváshigiéniai felmérés.",
+      kerdezunk: [
+        "Mikor fekszik le, hány órát alszik átlagosan",
+        "Horkol-e (saját vagy partner általi észlelés)",
+        "Napközbeni fáradtság gyakorisága",
+        "Rövid checklist: elalvási nehézség, éjszakai ébredés — igen/nem szinten"
+      ]
+    },
+    b: {
+      cel: "Friss alvásprobléma gyors tisztázása.",
+      kerdezunk: [
+        "Mióta áll fenn a probléma (napok/hetek)",
+        "Mi változott: stressz, új környezet, gyógyszer",
+        "Típusa: elalvási vagy átalvási nehézség",
+        "Súlyosság 1–5 skálán"
+      ]
+    },
+    c: {
+      cel: "Krónikus alvászavar feltárása.",
+      kerdezunk: [
+        "Mióta áll fenn hosszabb távon",
+        "Hatása a napi működésre (koncentráció, hangulat)",
+        "Próbált-e már valamit korábban (alváshigiéniai lépések, szabadon vásárolt szer)",
+        "Miért nem vizsgáltatta ki eddig"
+      ]
+    },
+    branch: "Ha Állapot A-ban a horkolás checklist-tételre „igen” érkezik és a felhasználó a Légzőszervi területről is aktivált egy hasonló tételt, a rendszer a két adatot összekapcsolja egy közös, alvási apnoéra rákérdező könnyített blokkban, ahelyett hogy két külön, egymást átfedő kérdéssort futtatna le."
+  },
+  {
+    id: "anyagcsere",
+    nev: "Anyagcsere-Hormonális",
+    leiras: "Testsúly-, energiaszint- és hormonális panaszok.",
+    redFlags: [
+      "Hirtelen, nem szándékos, jelentős testsúlyváltozás rövid idő alatt",
+      "Extrém szomjúság és gyakori vizelés súlyos fáradtsággal (cukorbetegség-gyanú jelek)",
+      "Szapora szívverés, remegés és hőintolerancia együttes, hirtelen fellépése"
+    ],
+    a: {
+      cel: "Általános anyagcsere-checklist, panasz nélkül.",
+      kerdezunk: [
+        "Testsúly-mintázat az elmúlt évben (stabil / ingadozó)",
+        "Energiaszint napközben",
+        "Hideg- vagy melegérzékenység",
+        "Családi anamnézis: pajzsmirigy, cukorbetegség"
+      ]
+    },
+    b: {
+      cel: "Friss tünet gyors tisztázása.",
+      kerdezunk: [
+        "Mi történt (pl. hirtelen fogyás/hízás) és mióta",
+        "Mennyi idő alatt következett be a változás",
+        "Változott-e közben az életmód (étkezés, mozgás, stressz)",
+        "Súlyosság / mennyire zavaró"
+      ]
+    },
+    c: {
+      cel: "Régóta ingadozó vagy fennálló panasz feltárása.",
+      kerdezunk: [
+        "Mióta ingadozik vagy áll fenn (évek)",
+        "Családi anamnézis részletesebben",
+        "Miért nem vizsgáltatta ki eddig",
+        "Jelenlegi hatás a mindennapi energiaszintre és hangulatra"
+      ]
+    },
+    branch: "Ha Állapot A-ban valaki a „gyakori vizelés” és „túlzott szomjúság” tételeket együtt jelöli be, a rendszer ezt a kombinációt külön súlyozza — a két, önmagában enyhének tűnő tétel együtt magasabb prioritású light-B követést kap, mint bármelyik külön-külön."
+  },
+  {
+    id: "neuro",
+    nev: "Neurológiai",
+    leiras: "Fejfájás, szédülés és egyéb idegrendszeri tünetek.",
+    redFlags: [
+      "Hirtelen fellépő féloldali gyengeség, zsibbadás vagy beszédzavar",
+      "Az eddigi legerősebb, hirtelen kialakuló fejfájás",
+      "Első alkalommal jelentkező eszméletvesztés",
+      "Hirtelen kialakuló látászavar"
+    ],
+    a: {
+      cel: "Általános idegrendszeri állapotfelmérés.",
+      kerdezunk: [
+        "Fejfájás gyakorisága általánosan",
+        "Koncentráció, memória — rövid önértékelés",
+        "Szédülés előfordulása",
+        "Családi anamnézis: migrén, neurológiai betegség"
+      ]
+    },
+    b: {
+      cel: "Friss tünet gyors tisztázása.",
+      kerdezunk: [
+        "Milyen jellegű a tünet és mióta áll fenn",
+        "Van-e azonosítható kiváltó tényező",
+        "Kísérő tünetek (fényérzékenység, hányinger)",
+        "Súlyosság 1–5 skálán"
+      ]
+    },
+    c: {
+      cel: "Krónikus, visszatérő panasz feltárása.",
+      kerdezunk: [
+        "Mióta visszatérő (pl. évek óta migrén)",
+        "Gyakoriság alakulása az idők során",
+        "Mi segített eddig, ha bármi",
+        "Miért nem vizsgáltatta ki eddig"
+      ]
+    },
+    branch: "A „féloldali gyengeség vagy beszédzavar” tétel bejelölése — Állapot A, B vagy C esetén egyaránt — azonnal piros zónát vált ki és megszakítja a kérdéssort, stroke-gyanú miatt."
+  },
+  {
+    id: "bor",
+    nev: "Bőr-Haj",
+    leiras: "Bőr-, haj- és köröm-elváltozások.",
+    redFlags: [
+      "Gyorsan növekvő, alakot vagy színt váltó anyajegy",
+      "Hetek óta nem gyógyuló seb",
+      "Kiterjedt, lázzal együtt járó bőrgyulladás"
+    ],
+    a: {
+      cel: "Általános bőr- és hajállapot felmérése.",
+      kerdezunk: [
+        "Bőrtípus (száraz / zsíros / kombinált)",
+        "Ismert allergia vagy érzékenység",
+        "Rövid checklist: akné, hajhullás, korpásodás — igen/nem szinten",
+        "Napozási szokások"
+      ]
+    },
+    b: {
+      cel: "Friss bőrtünet gyors tisztázása.",
+      kerdezunk: [
+        "Tünet mióta áll fenn",
+        "Összefügg-e új termékkel, étellel vagy expozícióval",
+        "Helye és jellege",
+        "Súlyosság 1–5 skálán"
+      ]
+    },
+    c: {
+      cel: "Krónikus bőr-/hajprobléma feltárása.",
+      kerdezunk: [
+        "Mióta áll fenn, hogyan hullámzott",
+        "Eddigi kezelési kísérletek",
+        "Miért nem vizsgáltatta ki eddig",
+        "Jelenlegi hatás az önbizalomra / mindennapokra"
+      ]
+    },
+    branch: "Ha egy anyajegyre vonatkozó tétel „változott mostanában” választ kap bármely állapotban, a rendszer sárga zónába emeli, és a súlyosság-kérdés helyett közvetlenül a bőrgyógyászati továbblépési opciókat hozza előre."
+  },
+  {
+    id: "szures",
+    nev: "Szűrés-Megelőzés",
+    leiras: "Önálló belépési pont Állapot A-ban lévő felhasználóknak — több testrendszert átfogó, checklist-alapú felmérés.",
+    redFlags: [
+      "Ugyanazok a terület-specifikus red flag-ek érvényesek, mint a fenti 9 kategóriában — csak itt egyszerre, több rendszerre kiterjedően futnak"
+    ],
+    a: {
+      cel: "Ez a terület maga az Állapot A — nincs B/C változata.",
+      kerdezunk: [
+        "Rövid, több testrendszert átfogó checklist (a MedSoulYou általános teszthez hasonló felépítésben): szív-ér, légzőszervi, anyagcsere, alvás, mozgásszervi, emésztés, bőr-haj, neurológiai, pszichés — mindegyik 1 blokkban, „van-e” szinten",
+        "Nincs „mióta tart” és „szedsz-e rá valamit” kérdés egyik blokkban sem",
+        "Minden pozitív (igen) tételre light-B követő kérdés kapcsolódik be — lásd a fenti terület-specifikus branching-példákat"
+      ]
+    },
+    b: null,
+    c: null,
+    branch: "Ha valaki itt 2 vagy több rendszerben is jelöl tételt, az eredményoldal nem ábécérendben vagy a checklist sorrendjében listázza őket — a legmagasabb súlyosságú / red-flag-gyanús rendszer kerül előre, a többi alatta, mint „érdemes lehet ezt is megnézetni”."
+  }
+];
+
+const container = document.getElementById("areas-container");
+
+function stateBlock(label, cls, data){
+  if(!data) return "";
+  return `
+    <div class="state-col ${cls}">
+      <div class="goal"><span class="state-tag ${cls}"><span class="sw"></span>${label}</span></div>
+      <div class="goal" style="margin-top:8px; font-weight:600;">${data.cel}</div>
+      <ul>${data.kerdezunk.map(k=>`<li>${k}</li>`).join("")}</ul>
+    </div>`;
+}
+
+AREAS.forEach(area=>{
+  const el = document.createElement("div");
+  el.className = "area";
+  el.id = "area-" + area.id;
+  el.innerHTML = `
+    <div class="area-head">
+      <div>
+        <div class="id-badge">TERÜLET · ${area.id}</div>
+        <h3>${area.nev}</h3>
+        <p>${area.leiras}</p>
+      </div>
+    </div>
+    <div class="area-body">
+      <div class="redflag-box">
+        <span class="title">🔴 Piros zászlók — állapot-függetlenek</span>
+        <ul>${area.redFlags.map(r=>`<li>${r}</li>`).join("")}</ul>
+      </div>
+      <div class="state-cols">
+        ${stateBlock("Állapot A", "a", area.a)}
+        ${stateBlock("Állapot B", "b", area.b)}
+        ${stateBlock("Állapot C", "c", area.c)}
+      </div>
+      <div class="branch-example"><b>Branching-példa:</b> ${area.branch}</div>
+    </div>
+  `;
+  container.appendChild(el);
+});
+</script>
+
+</body>
+</html>
