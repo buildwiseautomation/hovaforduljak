@@ -857,7 +857,7 @@ input[type=range]::-webkit-slider-thumb {
       <h2 class="q-title">Néhány szám rólad</h2>
       <p class="q-sub has-why">Kor és testsúly — segítenek a kockázatbecslésben.</p>
       <p class="q-why">Az életkor és a testsúly több szűrési és kockázati küszöbérték alapja, így pontosabb ajánlást tudunk adni.</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px">
         <div>
           <div style="font-size:.78rem;color:var(--text3);margin-bottom:6px">Életkor</div>
           <input id="kor" type="number" min="10" max="99" placeholder="pl. 34" style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:12px 14px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
@@ -865,6 +865,10 @@ input[type=range]::-webkit-slider-thumb {
         <div>
           <div style="font-size:.78rem;color:var(--text3);margin-bottom:6px">Testsúly (kg)</div>
           <input id="suly" type="number" min="30" max="250" placeholder="pl. 72" style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:12px 14px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div>
+          <div style="font-size:.78rem;color:var(--text3);margin-bottom:6px">Testmagasság (cm)</div>
+          <input id="magassag" type="number" min="100" max="230" placeholder="pl. 170" style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:12px 14px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
         </div>
       </div>
       <div class="q-nav"><button class="btn-back" onclick="prv(1)">← Vissza</button><button class="btn-p" onclick="nxt(3)">Tovább →</button></div>
@@ -922,6 +926,54 @@ input[type=range]::-webkit-slider-thumb {
         <textarea class="mc-input" id="cm-tunet" placeholder="Pl. egy tünet, ami fontos, de nem szerepelt a fenti listákban..."></textarea>
       </div>
       <div class="q-nav"><button class="btn-back" onclick="backFromSym()">← Vissza</button><button class="btn-p" onclick="afterSymptoms()">Tovább →</button></div>
+    </div>
+
+    <!-- QSCR-A: Szűrés-Megelőzés alapadat — dohányzás -->
+    <div class="qstep" id="qscr-a">
+      <div class="q-meta"><span class="q-dot"></span>Szűrés-Megelőzés · Alapadat</div>
+      <h2 class="q-title">Dohányzol jelenleg (vagy leszoktál kevesebb, mint 1 éve)?</h2>
+      <p class="q-sub">Ez több szűrési kockázat becslésénél is alapadat.</p>
+      <div class="opts solo" id="qscr-a-opts">
+        <div class="opt" onclick="pick(this,'dohanyzas','Igen')"><div class="oi">🚬</div><div><div class="ol">Igen</div></div></div>
+        <div class="opt" onclick="pick(this,'dohanyzas','Nem')"><div class="oi">◎</div><div><div class="ol">Nem</div></div></div>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="backFromScrA()">← Vissza</button><button class="btn-p" onclick="afterScrA()">Tovább →</button></div>
+    </div>
+
+    <!-- QSCR-B: Szűrés-Megelőzés alapadat — ismert koleszterin -->
+    <div class="qstep" id="qscr-b">
+      <div class="q-meta"><span class="q-dot"></span>Szűrés-Megelőzés · Alapadat</div>
+      <h2 class="q-title">Van ismert magas koleszterinszinted?</h2>
+      <div class="opts solo" id="qscr-b-opts">
+        <div class="opt" onclick="pick(this,'koleszterin','Igen')"><div class="oi">🩸</div><div><div class="ol">Igen</div></div></div>
+        <div class="opt" onclick="pick(this,'koleszterin','Nem')"><div class="oi">◎</div><div><div class="ol">Nem</div></div></div>
+        <div class="opt" onclick="pick(this,'koleszterin','Nem tudom')"><div class="oi">❓</div><div><div class="ol">Nem tudom</div></div></div>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="showStep('qscr-a','42%')">← Vissza</button><button class="btn-p" onclick="afterScrB()">Tovább →</button></div>
+    </div>
+
+    <!-- QSCR-C: Szűrés-Megelőzés alapadat — családi anamnézis -->
+    <div class="qstep" id="qscr-c">
+      <div class="q-meta"><span class="q-dot"></span>Szűrés-Megelőzés · Alapadat</div>
+      <h2 class="q-title">Előfordul-e a közeli családodban (szülő, testvér) az alábbiak közül valamelyik?</h2>
+      <p class="q-sub">Több is megjelölhető.</p>
+      <div class="multi-hint">Jelölhetsz többet is</div>
+      <div class="opts" id="qscr-c-opts">
+        <div class="opt" onclick="mpick(this,'csaladi','Cukorbetegség')"><div class="oi">🩸</div><div><div class="ol">Cukorbetegség</div></div></div>
+        <div class="opt" onclick="mpick(this,'csaladi','Vastagbélrák vagy egyéb bélrendszeri daganat')"><div class="oi">🎗️</div><div><div class="ol">Vastagbélrák vagy egyéb bélrendszeri daganat</div></div></div>
+        <div class="opt" onclick="mpick(this,'csaladi','Migrén vagy stroke')"><div class="oi">⚡</div><div><div class="ol">Migrén vagy stroke (agyi érkatasztrófa)</div></div></div>
+        <div class="opt" onclick="mpick(this,'csaladi','Egyik sem')"><div class="oi">✓</div><div><div class="ol">Egyik sem</div></div></div>
+      </div>
+      <div class="q-nav"><button class="btn-back" onclick="showStep('qscr-b','44%')">← Vissza</button><button class="btn-p" onclick="afterScrC()">Tovább →</button></div>
+    </div>
+
+    <!-- QSCR-MOD: Szűrés-Megelőzés — 9 rendszerenkénti modul kérdései -->
+    <div class="qstep" id="qscr-mod">
+      <div class="q-meta"><span class="q-dot"></span>Szűrés-Megelőzés · Rendszerenkénti kérdések</div>
+      <h2 class="q-title">Néhány gyors kérdés rendszerenként</h2>
+      <p class="q-sub">Ezek validált szűrő-kérdőívek mintájára épülnek — jelöld be, ami rád igaz.</p>
+      <div id="scr-mod-container"></div>
+      <div class="q-nav"><button class="btn-back" onclick="showQ(7)">← Vissza</button><button class="btn-p" onclick="afterScreeningModules()">Tovább →</button></div>
     </div>
 
     <!-- Q4: Súlyosság -->
@@ -993,7 +1045,7 @@ input[type=range]::-webkit-slider-thumb {
         <label class="mc-label" for="cm-betegseg">+ Van más betegséged vagy gyógyszered, ami nincs a listában? (opcionális)</label>
         <textarea class="mc-input" id="cm-betegseg" placeholder="Pl. egy diagnózis vagy gyógyszer neve, ami fontos lehet..."></textarea>
       </div>
-      <div class="q-nav"><button class="btn-back" onclick="prv(6)">← Vissza</button><button class="btn-p" onclick="nxt(8)">Tovább →</button></div>
+      <div class="q-nav"><button class="btn-back" onclick="prv(6)">← Vissza</button><button class="btn-p" onclick="q7Next()">Tovább →</button></div>
     </div>
 
     <!-- Q8: Psziché gyors -->
@@ -1420,7 +1472,7 @@ function goQuiz(){
   }
   go('s-quiz');showQ(1);
 }
-function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
+function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
 
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('on',window.scrollY>10));
 
@@ -1474,7 +1526,7 @@ function nxt(n){
   const cur=n-1;
   if(req[cur]&&!A[req[cur]]){shake(cur);return}
   // save numeric inputs when leaving step 2
-  if(cur===2){A.kor=document.getElementById('kor').value||'nem adott meg';A.suly=document.getElementById('suly').value||'nem adott meg'}
+  if(cur===2){A.kor=document.getElementById('kor').value||'nem adott meg';A.suly=document.getElementById('suly').value||'nem adott meg';A.magassag=document.getElementById('magassag').value||'nem adott meg'}
   showQ(n);
 }
 function prv(n){showQ(n)}
@@ -1536,7 +1588,256 @@ const SYMPTOMS={
   'Neurológiai':{ic:'⚡',list:['Fejfájás, migrén','Szédülés, egyensúlyzavar','Zsibbadás, érzészavar','Memóriazavar, feledékenység','Fülzúgás, fülcsengés','Fény- vagy hangérzékenység','Izomrángás, görcs']}
 };
 
-// ── Dinamikus tünet-képernyő ──
+// ══════════════════════════════════════════════════════════════
+//  Szűrés-Megelőzés — kockázati tényező alapú 3-réteg logika (Phase 3)
+//  1. réteg = alapadat (kor, nem, testsúly, testmagasság, dohányzás,
+//     ismert vérnyomás, ismert koleszterin, mozgásszint, családi anamnézis)
+//  2. réteg = 9 rendszerenkénti modul, saját triggerrel
+//  3. réteg = kor/nem-alapú "tudtad-e" felvezetők (mindig megjelennek)
+// ══════════════════════════════════════════════════════════════
+function isScreeningFlow(){
+  return (MULTI['terület']||[]).includes('Szűrés-Megelőzés');
+}
+// Élő állapot: a Szűrés-Megelőzés-specifikus új kérdésekre adott válaszok +
+// a belőlük számolt modul-jelzések és tudtad-e tételek.
+const SCR = {answers:{}, flags:[], tudtad:[]};
+const FREQ_OPTS=['Egyáltalán nem','Néhány napon','A napok többségén','Szinte minden nap'];
+function freqIdx(val){return FREQ_OPTS.indexOf(val);}
+// 2. réteg — a 9 modul saját (alapadatból nem levezethető) új kérdései.
+// A kérdésszöveg szó szerint a specifikációból való — ne fogalmazd át.
+const SCR_MODULES=[
+  {key:'sziv',title:'Szív és keringés',ic:'❤️',qs:[
+    {id:'csaladi_mi',label:'Van-e a családban 55 év alatt bekövetkezett szívinfarktus vagy stroke?',type:'yn'}
+  ]},
+  {key:'alvas',title:'Alvás',ic:'🌙',qs:[
+    {id:'horkolas',label:'Szoktál hangosan horkolni (vagy mondták már neked)?',type:'yn'},
+    {id:'legzeskimaradas',label:'Észlelt már valaki légzéskimaradást alvás közben nálad?',type:'yn'},
+    {id:'nappali_faradtsag',label:'Napközben szokatlanul fáradtnak érzed magad, annak ellenére, hogy eleget alszol?',type:'yn'}
+  ]},
+  {key:'anyagcsere',title:'Anyagcsere-Hormonális',ic:'⚗️',qs:[
+    {id:'derekbo',label:'Derékbőség kategória (szűk / átlagos / szoros öv alapján)',type:'choice',choices:['Szűk','Átlagos','Szoros öv']},
+    {id:'zoldseg',label:'Milyen gyakran fogyasztasz zöldséget/gyümölcsöt?',type:'choice',choices:['Ritkán','Néhányszor hetente','Szinte naponta']},
+    {id:'vercukor',label:'Volt-e valaha magas vércukrod mérve (akár terhesség alatt is)?',type:'yn'}
+  ]},
+  {key:'mentalis',title:'Mentális-Pszichés',ic:'🧠',qs:[
+    {id:'phq1',label:'Az elmúlt 2 hétben mennyire zavart, hogy levertnek, reménytelennek érezted magad?',type:'freq'},
+    {id:'phq2',label:'Az elmúlt 2 hétben mennyire zavart, hogy keveset érdekelt vagy örültél a dolgoknak?',type:'freq'},
+    {id:'gad1',label:'Az elmúlt 2 hétben mennyire zavart, hogy szorongást, feszültséget éreztél?',type:'freq'},
+    {id:'gad2',label:'Az elmúlt 2 hétben mennyire zavart, hogy nem tudtad abbahagyni az aggódást?',type:'freq'}
+  ]},
+  {key:'mozgasszervi',title:'Mozgásszervi',ic:'🦴',qs:[
+    {id:'ulomunka',label:'Van ülőmunkád (napi 6+ óra ülés)?',type:'yn'},
+    {id:'reggeli_merevseg',label:'Van reggeli ízületi merevséged, ami több mint fél óráig tart?',type:'yn'}
+  ]},
+  {key:'gyomorbel',title:'Gyomor-bél',ic:'🫃',qs:[
+    {id:'rendszertelen_szekeles',label:'Van rendszertelen székelési szokásod (váltakozó hasmenés/székrekedés) az elmúlt hónapokban?',type:'yn'}
+  ]},
+  {key:'legzo',title:'Légzőszervi',ic:'🫁',qs:[
+    {id:'kifulladas',label:'Kifulladsz szokatlanul könnyen olyasminél, ami korábban nem okozott gondot?',type:'yn'}
+  ]},
+  {key:'neuro',title:'Neurológiai',ic:'⚡',qs:[
+    {id:'fejfajas',label:'Van rendszeres, visszatérő fejfájásod, amit eddig nem néztél meg?',type:'yn'}
+  ]},
+  {key:'borhaj',title:'Bőr-Haj',ic:'✨',qs:[
+    {id:'nap_leeges',label:'Könnyen leégsz a napon, fényes bőrtípusú vagy?',type:'yn'},
+    {id:'csaladi_borrak',label:'Van a családban ismert bőrrák/melanoma?',type:'yn'},
+    {id:'anyajegy_valtozas',label:'Van olyan anyajegyed, ami az elmúlt hónapokban változott (méret, szín, forma)?',type:'yn'}
+  ]}
+];
+
+function goScreeningAlap(){
+  showStep('qscr-a','40%');
+}
+function backFromScrA(){
+  if(document.getElementById('qstate')&&(MULTI['terület']||[]).filter(a=>a!=='Szűrés-Megelőzés').length>0){showStep('qstate','30%');return}
+  showQ(3);
+}
+function afterScrA(){
+  if(!A.dohanyzas){shakeEl('qscr-a');return}
+  showStep('qscr-b','44%');
+}
+function afterScrB(){
+  if(!A.koleszterin){shakeEl('qscr-b');return}
+  showStep('qscr-c','48%');
+}
+function afterScrC(){
+  showQ(6);
+}
+// Q7 (betegségek) utáni elágazás: Szűrés-Megelőzésnél a 9 modul kérdései
+// jönnek, egyébként változatlanul Q8 (psziché gyorskérdés).
+function q7Next(){
+  if(isScreeningFlow()){renderScreeningModules();return}
+  nxt(8);
+}
+function renderScrQuestion(q){
+  let choices;
+  if(q.type==='yn')choices=['Igen','Nem'];
+  else if(q.type==='freq')choices=FREQ_OPTS;
+  else choices=q.choices;
+  const cur=SCR.answers[q.id];
+  const opts=choices.map(c=>{
+    const sel=cur===c?' sel':'';
+    const safe=c.replace(/'/g,"\\'");
+    return `<div class="opt${sel}" onclick="scrPick(this,'${q.id}','${safe}')"><div class="ol">${c}</div></div>`;
+  }).join('');
+  return `<div class="scr-qblock" style="margin:14px 0"><p class="q-sub" style="margin-bottom:8px">${q.label}</p><div class="opts solo">${opts}</div></div>`;
+}
+function scrPick(el,qid,val){
+  const scope=el.closest('.scr-qblock');
+  if(scope)scope.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  SCR.answers[qid]=val;
+}
+function renderScreeningModules(){
+  const cont=document.getElementById('scr-mod-container');
+  if(!cont)return;
+  cont.innerHTML='';
+  SCR_MODULES.forEach(mod=>{
+    const group=document.createElement('div');
+    group.className='sym-group';
+    const qHtml=mod.qs.map(renderScrQuestion).join('');
+    const rfHtml=(RED_FLAGS[mod.title]||[]).map((rf,i)=>{
+      const areaSafe=mod.title.replace(/'/g,"\\'");
+      return `<div class="sym-opt" onclick="rfPick(this,'${areaSafe}',${i})"><span class="sym-check">✓</span><span>${rf.t}</span></div>`;
+    }).join('');
+    group.innerHTML=`<div class="sym-group-title"><span class="gi">${mod.ic}</span>${mod.title}</div>${qHtml}`+
+      (rfHtml?`<div class="sym-opts">${rfHtml}</div>`:'');
+    cont.appendChild(group);
+  });
+  showStep('qscr-mod','70%');
+}
+// BMI = testsúly / testmagasság(m)^2 — KIZÁRÓLAG belső trigger-logikához,
+// a nyers számérték soha nem kerülhet ki a felhasználó felé (MDR-szabály).
+function computeBMI(){
+  const w=parseFloat(A.suly), hcm=parseFloat(A.magassag);
+  if(!w||!hcm)return null;
+  const hm=hcm/100;
+  if(!hm)return null;
+  return w/(hm*hm);
+}
+// 2. réteg — a 9 modul trigger-szabálya, szó szerint a specifikáció alapján.
+function computeScreeningFlags(){
+  const ans=SCR.answers||{};
+  const bmi=computeBMI();
+  const highBMI=bmi!==null&&bmi>=30;
+  const kor=parseInt(A.kor,10);
+  const korValid=!isNaN(kor);
+  const dohanyzik=A.dohanyzas==='Igen';
+  const ismertVernyomas=(MULTI['betegseg']||[]).includes('Magas vérnyomás');
+  const ismertKoleszterin=A.koleszterin==='Igen';
+  const csaladi=(MULTI['csaladi']||[]);
+  const eletmodUlo=A.eletmod==='Ülő, kevés mozgás';
+  const flags=[];
+
+  // 1. Szív és keringés (Framingham/QRISK mintájára): 2+ kockázati tényező
+  {
+    const factors=[dohanyzik,ismertVernyomas,ismertKoleszterin,ans.csaladi_mi==='Igen'];
+    if(factors.filter(Boolean).length>=2){
+      flags.push({area:'Szív és keringés',hard:false,reason:'több szív-érrendszeri kockázati tényező áll fenn egyszerre (pl. dohányzás, ismert magas vérnyomás vagy koleszterin, korai családi szívinfarktus/stroke)'});
+    }
+  }
+  // 2. Alvás (STOP-BANG mintájára): 2+ pozitív jelzés, a magas BMI is számít
+  {
+    const signals=[ans.horkolas==='Igen',ans.legzeskimaradas==='Igen',ans.nappali_faradtsag==='Igen',highBMI];
+    if(signals.filter(Boolean).length>=2){
+      flags.push({area:'Alvás',hard:false,reason:'több alvással összefüggő jelzés áll fenn együtt (pl. horkolás, észlelt légzéskimaradás, nappali fáradtság, magasabb testtömegindex)'});
+    }
+  }
+  // 3. Anyagcsere-Hormonális (FINDRISC mintájára): magas BMI/derékbőség +
+  //    mozgásszegény életmód + családi anamnézis közül 2+ egyszerre
+  {
+    const factors=[(highBMI||ans.derekbo==='Szoros öv'),eletmodUlo,csaladi.includes('Cukorbetegség')];
+    if(factors.filter(Boolean).length>=2){
+      flags.push({area:'Anyagcsere-Hormonális',hard:false,reason:'együtt van jelen a magasabb testtömeg/derékbőség, a mozgásszegény életmód és a családi cukorbetegség-érintettség közül legalább kettő'});
+    }
+  }
+  // 4. Mentális-Pszichés (PHQ-2/GAD-2 mintájára): bármelyik pár tétel
+  //    "a napok többségén" vagy gyakoribb — a krízis-ág ettől független
+  {
+    const items=['phq1','phq2','gad1','gad2'].map(k=>freqIdx(ans[k]));
+    if(items.some(v=>v>=2)){
+      flags.push({area:'Mentális-Pszichés',hard:false,reason:'a hangulati/szorongásos gyorskérdések közül legalább egy a napok többségén vagy annál gyakrabban fordul elő'});
+    }
+  }
+  // 5. Mozgásszervi: a reggeli ízületi merevség önmagában is elég (klinikai jel)
+  {
+    if(ans.reggeli_merevseg==='Igen'){
+      flags.push({area:'Mozgásszervi',hard:true,reason:'félóránál hosszabb reggeli ízületi merevség — ez önmagában is figyelmet érdemlő, gyulladásos folyamatra utaló klinikai jel'});
+    }
+  }
+  // 6. Gyomor-bél (USPSTF kor-alapú ajánlás): 45 felett VAGY családi
+  //    vastagbélrák VAGY rendszertelen székelés
+  {
+    const overAge=korValid&&kor>45;
+    const famColon=csaladi.includes('Vastagbélrák vagy egyéb bélrendszeri daganat');
+    const irregul=ans.rendszertelen_szekeles==='Igen';
+    if(overAge||famColon||irregul){
+      flags.push({area:'Gyomor-bél',hard:false,reason:'a kor (45 felett), a családi vastagbélrák-érintettség vagy a rendszertelen székelési szokás közül legalább egy fennáll'});
+    }
+  }
+  // 7. Légzőszervi: dohányzás + kifulladás együtt
+  {
+    if(dohanyzik&&ans.kifulladas==='Igen'){
+      flags.push({area:'Légzőszervi',hard:false,reason:'a dohányzás és a szokatlanul könnyű kifulladás együtt jelentkezik'});
+    }
+  }
+  // 8. Neurológiai: visszatérő, ki nem vizsgált fejfájás VAGY erős családi
+  //    migrén/stroke-anamnézis
+  {
+    const famNeuro=csaladi.includes('Migrén vagy stroke');
+    if(ans.fejfajas==='Igen'||famNeuro){
+      flags.push({area:'Neurológiai',hard:false,reason:'rendszeres, eddig ki nem vizsgált fejfájás áll fenn, vagy erős családi migrén/stroke-érintettség van'});
+    }
+  }
+  // 9. Bőr-Haj: az anyajegy-változás önmagában is elég — piros zászló szintű
+  {
+    if(ans.anyajegy_valtozas==='Igen'){
+      flags.push({area:'Bőr-Haj',hard:true,reason:'az elmúlt hónapokban változó anyajegy (méret, szín, forma) — ez önmagában is piros-zászló-szintű, azonnali figyelmet érdemlő jel'});
+    }
+  }
+  return flags;
+}
+// 3. réteg — kor/nem-alapú "tudtad-e" felvezetők, mindig megjelennek,
+//    a checklist eredményétől függetlenül.
+function computeTudtadE(){
+  const items=[];
+  const kor=parseInt(A.kor,10);
+  const korValid=!isNaN(kor);
+  const nem=A.nem||'';
+  if(nem==='Nő'&&korValid&&kor>40)items.push('Tudtad, hogy 40 éves kortól ajánlott a rendszeres emlőszűrés, akkor is, ha nincs panaszod?');
+  if(korValid&&kor>45)items.push('Tudtad, hogy 45 éves kortól ajánlott a vastagbélszűrés, akkor is, ha nincs panaszod?');
+  if(korValid&&kor<40)items.push('A vérnyomást panaszmentesen is érdemes kb. 2 évente ellenőrizni.');
+  items.push('A hangulati jóllét rendszeres, tünetmentes átgondolása is bevett, ajánlott gyakorlat — nem csak akkor van létjogosultsága, ha már baj van.');
+  return items;
+}
+function buildScreeningResult(){
+  SCR.flags=computeScreeningFlags();
+  SCR.tudtad=computeTudtadE();
+}
+function afterScreeningModules(){
+  buildScreeningResult();
+  goTreat();
+}
+
+// ── Kliens-oldali defenzív szűrő: numerikus/százalékos kockázati minták ──
+// (ugyanaz a kettős-védelmi elv, mint a krízis-detektálásnál: prompt + kód).
+const RISK_NUMBER_RE=/\d+(?:[.,]\d+)?\s*%|\d+(?:[.,]\d+)?\s*\/\s*10\b|\d+(?:[.,]\d+)?\s*pont\w*/gi;
+function stripNumericRisk(str){
+  if(typeof str!=='string')return str;
+  return str.replace(RISK_NUMBER_RE,'').replace(/\s{2,}/g,' ').replace(/\s+([,.!?])/g,'$1').trim();
+}
+function sanitizeResultNumbers(d){
+  if(!d||typeof d!=='object')return d;
+  ['title','summary','explanation','personal_note','urgency_reason'].forEach(f=>{
+    if(typeof d[f]==='string')d[f]=stripNumericRisk(d[f]);
+  });
+  if(Array.isArray(d.next_steps)){
+    d.next_steps.forEach(s=>{if(s&&typeof s.desc==='string')s.desc=stripNumericRisk(s.desc);});
+  }
+  return d;
+}
+
+// ── Dinamikus tünet-képernyő (a 9 "hagyományos" szakterülethez) ──
 function goSymptoms(){
   const selected=(MULTI['terület']||[]);
   S.terulet=selected.slice();
@@ -1545,16 +1846,14 @@ function goSymptoms(){
     shake(3);
     return;
   }
-  let areas=selected.filter(a=>SYMPTOMS[a]);
-  // Szűrés-Megelőzés: önálló belépési pont — több testrendszert átfogó checklist.
-  // A doksi (09. szekció, "szures" AREA) szerint mind a 9 rendszer (szív-ér,
-  // légzőszervi, anyagcsere, alvás, mozgásszervi, emésztés, bőr-haj, neurológiai,
-  // pszichés) külön blokkban jelenik meg, és minden pozitív tételre ugyanaz a
-  // light-B követő kérdés + piros zászló mechanizmus fut, mint közvetlen
-  // terület-választásnál (S.allapot === 'A' marad).
+  // Szűrés-Megelőzés: önálló, kockázati tényező alapú belépési pont —
+  // felülírja (supersede-eli) a hagyományos tünet-checklist ágat, ugyanúgy,
+  // ahogy a korábbi fázisban is tette (S.allapot === 'A' marad).
   if(selected.includes('Szűrés-Megelőzés')){
-    areas=Object.keys(SYMPTOMS);
+    goScreeningAlap();
+    return;
   }
+  let areas=selected.filter(a=>SYMPTOMS[a]);
   if(areas.length===0){
     // Kizárólag olyan terület(ek) vannak kijelölve, amikhez nincs konkrét
     // tünetlista (pl. "Szűrés, megelőzés" — "Nem érzek különös panaszt").
@@ -1594,6 +1893,7 @@ function goSymptoms(){
   window.scrollTo(0,0);
 }
 function backFromQ6(){
+  if(isScreeningFlow()){showStep('qscr-c','48%');return}
   if(symptomsSkipped){showQ(3);return}
   if(isAllapot('A')){
     if((MULTI['tunet']||[]).length===0){goSymptoms();return}
@@ -1786,6 +2086,75 @@ function symPick(el,sym){
 }
 
 
+// ── Szűrés-Megelőzés: dedikált prompt-építő (a 10-alapos legacy sablon
+//    érintetlen marad, ez egy teljesen külön ág — ugyanaz a JSON-séma). ──
+function buildScreeningPrompt(){
+  const bmi=computeBMI();
+  const bmiHint=bmi===null?'nem számítható (hiányzó adat)':(bmi>=30?'a magasabb tartományban van':(bmi<18.5?'az alacsonyabb tartományban van':'átlagos tartományban van'));
+  const flags=(SCR.flags||[]).slice().sort((a,b)=>(b.hard?1:0)-(a.hard?1:0));
+  const branch=flags.length>0?'VAN_MIRE_FIGYELNI':'NINCS_JEL';
+  const flagLines=flags.length
+    ? flags.map(f=>`- ${f.area}${f.hard?' [KIEMELT, piros-zászló-szintű tétel — ez önmagában is elég a "van mire figyelni" ághoz]':''}: ${f.reason}`).join('\n')
+    : '(egyik modul sem jelzett — a checklist-alapú eredmény szerint "nincs jel" ág fut le)';
+  const tudtadLines=(SCR.tudtad||[]).map(t=>'- '+t).join('\n');
+  const csaladi=(MULTI['csaladi']||[]).join(', ')||'nincs jelzett családi érintettség';
+
+  return `Te a HovaForduljak Szűrés-Megelőzés moduljának AI asszisztense vagy. A felhasználó NEM jelzett konkrét panaszt — kockázati tényező alapú, megelőzési célú felmérést töltött ki. A modul-jelzéseket és az ágválasztást (lásd lent) egy kliens-oldali, szabály alapú logika már kiszámolta neked — a te feladatod ezt jó stílusban, emberi hangon megfogalmazni, NEM újraszámolni és NEM felülbírálni.
+
+KRITIKUS, NEM ALKUKÉPES SZABÁLY (orvostechnikai-eszköz-minősítési, MDR-kockázat, NEM stiláris kérés):
+- SEHOL, SEMMILYEN FORMÁBAN nem jelenhet meg numerikus kockázati érték vagy százalékjel — se szám/10 formátum, se "X pont" formátum, se számmal kifejezett százalékos arány, se "X esély", se semmilyen egyéb számszerűsített kockázati mérőszám, EGYETLEN mezőben SEM (title, summary, urgency_reason, explanation, next_steps[].desc, personal_note).
+- Kizárólag MINŐSÉGI megfogalmazást használj: "érdemes lehet erre rákérdezni", "van mire figyelned", "jelenleg nem találtunk figyelmeztető jelet" — SOHA nem konkrét szám vagy százalék.
+- SOHA nem állítod ki nyíltan, hogy "egészséges vagy" — mindig maradjon meg a szűrésre való emlékeztető árnyalat, akkor is, ha egyetlen modul sem jelzett.
+- Ha 2+ modul jelez egyszerre, mindegyiket említsd meg — a KIEMELT (piros-zászló-szintű) tételek kerüljenek előre a sima kockázati jelzésekhez képest (lásd a sorrendet lent, már úgy van rendezve).
+- A hangnem mindig felfedező, összekötő, SOHA nem "ez a bajod" jellegű kijelentés.
+
+A FELHASZNÁLÓ ALAPADATAI:
+Nem: ${A.nem||'nem adott meg'}
+Kor: ${A.kor||'nem adott meg'}
+Testtömeg-index tartomány (kizárólag belső, minőségi jelzés — SOHA ne írj ki számot): ${bmiHint}
+Dohányzás: ${A.dohanyzas||'nem adott meg'}
+Ismert magas vérnyomás: ${(MULTI['betegseg']||[]).includes('Magas vérnyomás')?'igen':'nem jelzett'}
+Ismert magas koleszterin: ${A.koleszterin||'nem adott meg'}
+Mozgásszint: ${A.eletmod||'nem adott meg'}
+Családi anamnézis: ${csaladi}
+Lakhely irányítószáma: ${A.iranyitoszam||'nem adott meg'}
+
+MODULEREDMÉNYEK (kliens oldalon, szabály alapján SZÁMOLVA — ne változtass rajtuk, csak fogalmazd meg jó stílusban):
+Eredmény-ág: ${branch==='VAN_MIRE_FIGYELNI'?'"Van mire figyelni" — legalább egy modul jelzett':'"Nincs jel" — egyik modul sem jelzett'}
+Jelzett modulok (a KIEMELT tételek elöl):
+${flagLines}
+
+TUDTAD-E TARTALMAK (3. réteg — ezeket MINDIG sződ bele természetesen a válaszba, az ágtól függetlenül, kor/nem alapján már előszűrve neked):
+${tudtadLines}
+
+FELADATOD ÁGANKÉNT:
+- Ha az eredmény-ág "VAN_MIRE_FIGYELNI": felfedező, összekötő tónusban mutasd be, mely modulok jeleztek és miért érdemes rájuk figyelni — SOHA nem "ez a bajod" jelleggel, hanem "érdemes lehet erre rákérdezni" jelleggel. Példa stílus (ne szó szerint másold, csak a tónust kövesd): "Azt jelölted, hogy gyakran fázol, fáradékony vagy, és ingadozik a súlyod — ezek külön-külön apróságnak tűnhetnek, de együtt érdemes lehet rájuk ránézni."
+- Ha az eredmény-ág "NINCS_JEL": bátorító tónusban, de legalább 1 személyre szabott tippel a megadott válaszokból (pl. ha ülőmunkát jelzett, adj mozgás-tippet), MINDIG zárd azzal, hogy ez nem helyettesíti a rendszeres szűrővizsgálatokat, és fűzd hozzá a fenti tudtad-e tartalmakat. Példa stílus (ne szó szerint másold): "A válaszaid alapján most nem találtunk olyan jelet, amire azonnal figyelned kéne — szép munka. Ettől függetlenül [személyre szabott tipp]. Ez nem helyettesíti a rendszeres szűrővizsgálatokat."
+
+Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy markdown:
+{
+  "title": "Személyre szabott, 5-8 szavas cím, SOHA szám vagy százalék nélkül",
+  "summary": "3-4 mondatos, empatikus, felfedező hangú összefoglaló a fenti ágnak megfelelően — szám és százalék nélkül",
+  "urgency": "low|medium|high",
+  "urgency_label": "Magyar szöveg, pl. 'Nem sürgős, de érdemes megnézetni' — szám nélkül",
+  "urgency_reason": "1 mondatos magyarázat, szám és százalék nélkül",
+  "profile_chips": [
+    {"label": "Típus", "value": "pl. Kockázati tényező alapú felmérés"},
+    {"label": "Eredmény-ág", "value": "pl. Van mire figyelni"},
+    {"label": "Érintett rendszerek", "value": "pl. Légzőszervi"}
+  ],
+  "next_steps": [
+    {"icon": "1️⃣", "type": "p", "title": "Legfontosabb lépés", "desc": "Konkrét, cselekvésre ösztönző leírás, szám és százalék nélkül."},
+    {"icon": "2️⃣", "type": "t", "title": "Következő lépés", "desc": "A következő tennivaló, szám és százalék nélkül."},
+    {"icon": "3️⃣", "type": "w", "title": "Hosszú távon", "desc": "Amit érdemes szem előtt tartani, beleértve a tudtad-e tartalmakat, szám és százalék nélkül."}
+  ],
+  "primary_specialty": "KIZÁRÓLAG az alábbi 10 névből PONTOSAN egyet írj ide, SZÓ SZERINT másolva: Mentális-Pszichés / Alvás / Anyagcsere-Hormonális / Mozgásszervi / Gyomor-bél / Szív és keringés / Légzőszervi / Neurológiai / Bőr-Haj / Szűrés-Megelőzés (ha egy modul sem jelzett, ide 'Szűrés-Megelőzés' kerüljön; ha jelzett modul(ok) vannak, a KIEMELT / legtöbbet nyomó modul rendszere)",
+  "secondary_specialty": "Ugyanabból a 10 névből PONTOSAN egy, szó szerint másolva, vagy null ha nincs másodlagos jelzett modul",
+  "explanation": "2-3 mondatos magyarázat arról, milyen adatok alapján jutottál erre — szám és százalék nélkül",
+  "personal_note": "1 mondatos, személyes, meleg zárómondat — szám és százalék nélkül"
+}`;
+}
+
 // ── Submit ──
 async function submit(){
   document.getElementById('errbox').classList.remove('on');
@@ -1802,7 +2171,7 @@ async function submit(){
     if(el)A['megjegyzes_'+key]=el.value.trim();
   });
 
-  const prompt=`Te a HovaForduljak betegút-navigációs platform AI asszisztense vagy. Feladatod: a felhasználó adatai alapján személyre szabott, empatikus, de határozott egészségügyi eligazítást adni.
+  const prompt=isScreeningFlow()?buildScreeningPrompt():`Te a HovaForduljak betegút-navigációs platform AI asszisztense vagy. Feladatod: a felhasználó adatai alapján személyre szabott, empatikus, de határozott egészségügyi eligazítást adni.
 
 FONTOS SZABÁLYOK:
 - NEM diagnosztizálsz, CSAK irányt mutatsz
@@ -1866,7 +2235,7 @@ Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy m
       const errTxt=await resp.text();
       throw new Error('Szerver '+resp.status+': '+errTxt.substring(0,200));
     }
-    const result=await resp.json();
+    const result=sanitizeResultNumbers(await resp.json());
     // a backend mar kesz JSON objektumot ad vissza
     renderResult(result);
   }catch(e){
@@ -2103,6 +2472,26 @@ function closeBooking(){
     document.getElementById('booking-body').style.display='block';
     document.getElementById('booking-success').style.display='none';
   },300);
+}
+
+// ── Test hook (additive only, no behavior change) ──────────────────────
+// index.html has no bundler/module system: A, MULTI, S, SCR, ... are all
+// declared with const/let at the top of this <script>, so they live in the
+// script's lexical scope, NOT as window properties. This block exposes
+// references to that internal state (and a few pure helper functions) so
+// the headless jsdom test harness in /tmp/work/test can assert on them
+// directly, without needing to scrape rendered DOM/CSS for every check.
+// Nothing here is read by the app itself at runtime.
+if(typeof window!=='undefined'){
+  window.__APP__={
+    A,MULTI,S,SCR,SEVITEMS,
+    RED_FLAGS,SYMPTOMS,SCR_MODULES,FREQ_OPTS,
+    CRISIS_WORDS,CRISIS_PATTERNS,foldHuCrisis,scanCrisis,
+    getRegion,REGIONS,
+    isScreeningFlow,computeBMI,computeScreeningFlags,computeTudtadE,
+    RISK_NUMBER_RE,stripNumericRisk,sanitizeResultNumbers,
+    buildScreeningPrompt
+  };
 }
 </script>
 <script src="/medsoulyou-widget.js"></script>
