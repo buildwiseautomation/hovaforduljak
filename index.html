@@ -982,17 +982,22 @@ input[type=range]::-webkit-slider-thumb {
       <div class="q-nav"><button class="btn-back" onclick="showStep('qscr-a','42%')">← Vissza</button><button class="btn-p" onclick="afterScrB()">Tovább →</button></div>
     </div>
 
-    <!-- QSCR-C: Szűrés-Megelőzés alapadat — családi anamnézis -->
+    <!-- QSCR-C: Szűrés-Megelőzés alapadat — EGYETLEN, opcionális, közös
+         családi anamnézis kérdés (Phase 5). Ez az egyetlen hely az egész
+         Szűrés-Megelőzés flow-ban, ahol családi háttérről kérdezünk — a
+         korábbi, modulonként ismétlődő rákérdezéseket (Szív, Bőr-Haj) ez
+         váltja ki, hogy ne hasson tolakodónak/kikérdezősnek. -->
     <div class="qstep" id="qscr-c">
       <div class="q-meta"><span class="q-dot"></span>Szűrés-Megelőzés · Alapadat</div>
-      <h2 class="q-title">Előfordul-e a közeli családodban (szülő, testvér) az alábbiak közül valamelyik?</h2>
-      <p class="q-sub">Több is megjelölhető.</p>
+      <h2 class="q-title">Ha tudod, és szívesen megosztod: van a szűk családodban (szülő, testvér) valamilyen tartós betegség?</h2>
+      <p class="q-sub">Ezt nyugodtan ki is hagyhatod.</p>
       <div class="multi-hint">Jelölhetsz többet is</div>
       <div class="opts" id="qscr-c-opts">
+        <div class="opt" onclick="mpick(this,'csaladi','Szív-érrendszeri probléma')"><div class="oi">❤️</div><div><div class="ol">Szív-érrendszeri probléma</div></div></div>
         <div class="opt" onclick="mpick(this,'csaladi','Cukorbetegség')"><div class="oi">🩸</div><div><div class="ol">Cukorbetegség</div></div></div>
-        <div class="opt" onclick="mpick(this,'csaladi','Vastagbélrák vagy egyéb bélrendszeri daganat')"><div class="oi">🎗️</div><div><div class="ol">Vastagbélrák vagy egyéb bélrendszeri daganat</div></div></div>
-        <div class="opt" onclick="mpick(this,'csaladi','Migrén vagy stroke')"><div class="oi">⚡</div><div><div class="ol">Migrén vagy stroke (agyi érkatasztrófa)</div></div></div>
-        <div class="opt" onclick="mpick(this,'csaladi','Egyik sem')"><div class="oi">✓</div><div><div class="ol">Egyik sem</div></div></div>
+        <div class="opt" onclick="mpick(this,'csaladi','Daganatos betegség')"><div class="oi">🎗️</div><div><div class="ol">Daganatos betegség</div></div></div>
+        <div class="opt" onclick="mpick(this,'csaladi','Pajzsmirigy-probléma')"><div class="oi">🦋</div><div><div class="ol">Pajzsmirigy-probléma</div></div></div>
+        <div class="opt" onclick="mpick(this,'csaladi','Inkább nem válaszolok')"><div class="oi">✓</div><div><div class="ol">Inkább nem válaszolok</div></div></div>
       </div>
       <div class="q-nav"><button class="btn-back" onclick="showStep('qscr-b','44%')">← Vissza</button><button class="btn-p" onclick="afterScrC()">Tovább →</button></div>
     </div>
@@ -1653,15 +1658,23 @@ function freqIdx(val){return FREQ_OPTS.indexOf(val);}
 // A modulok MEGJELENÉSI SORRENDJE is szándékosan összekevert (nem követi az
 // életmód-checklist/A/B/C sorrendet), hogy ne érződjön nyomozásnak.
 const SCR_MODULES=[
-  {key:'sziv',title:'Szív és keringés',ic:'❤️',qs:[
-    {id:'csaladi_mi',label:'Van-e a családban 55 év alatt bekövetkezett szívinfarktus vagy stroke?',type:'yn'}
-  ]},
+  // Phase 5: a Szívnek mostantól NINCS saját kérdése — a korábbi
+  // "Van-e a családban 55 év alatt bekövetkezett szívinfarktus vagy
+  // stroke?" saját nyitókérdést kivettük, mert a családi anamnézisre az
+  // egész flow-ban egyetlen közös, opcionális kérdés (qscr-c) kérdez rá.
+  // A modul-cím (és a hozzá tartozó piros zászlók) továbbra is megjelenik
+  // a modul-képernyőn, csendben, kérdés nélkül dolgozik a bázisadatokból
+  // (kor, dohányzás, ismert vérnyomás/koleszterin + a megosztott családi
+  // válasz, ha van) — ld. computeScreeningFlags().
+  {key:'sziv',title:'Szív és keringés',ic:'❤️',qs:[]},
   {key:'borhaj',title:'Bőr-Haj',ic:'✨',qs:[
     {id:'nap_leeges',label:'Könnyen leégsz a napon, fényes bőrtípusú vagy?',type:'yn'},
-    {id:'csaladi_borrak',label:'Van a családban ismert bőrrák/melanoma?',type:'yn'},
     {id:'anyajegy_valtozas',label:'Van olyan anyajegyed, ami az elmúlt hónapokban változott (méret, szín, forma)?',type:'yn'}
-  ]}, // szándékosan NINCS followupGate: az anyajegy-kérdés önmagában is
-      // piros-zászló-szintű, ezért mindig, elrejtés nélkül látszik (ld. jelentés)
+  ]}, // Phase 5: a családi melanoma-anamnézisre rákérdező mélyítő kérdést
+      // (csaladi_borrak) törölve — az anyajegy-változás önmagában is elég
+      // trigger, nincs mélyítés. Szándékosan továbbra sincs followupGate:
+      // az anyajegy-kérdés önmagában is piros-zászló-szintű, ezért mindig,
+      // elrejtés nélkül látszik (ld. jelentés)
   {key:'gyomorbel',title:'Gyomor-bél',ic:'🫃',qs:[
     {id:'rendszertelen_szekeles',label:'Van rendszertelen székelési szokásod (váltakozó hasmenés/székrekedés) az elmúlt hónapokban?',type:'yn'}
   ]},
@@ -1798,11 +1811,16 @@ function computeScreeningFlags(){
   const eletmodUlo=A.eletmod==='Ülő, kevés mozgás';
   const flags=[];
 
-  // 1. Szív és keringés (Framingham/QRISK mintájára): 2+ kockázati tényező
+  // 1. Szív és keringés (Framingham/QRISK mintájára): 2+ kockázati tényező.
+  // Phase 5: nincs saját kérdése — a modul kizárólag a bázisadatokból (kor
+  // helyett itt: dohányzás, ismert vérnyomás/koleszterin) + a megosztott,
+  // egyetlen családi anamnézis-kérdés "Szív-érrendszeri probléma" válaszából
+  // dolgozik, kérdés nélkül.
   {
-    const factors=[dohanyzik,ismertVernyomas,ismertKoleszterin,ans.csaladi_mi==='Igen'];
+    const famCardio=csaladi.includes('Szív-érrendszeri probléma');
+    const factors=[dohanyzik,ismertVernyomas,ismertKoleszterin,famCardio];
     if(factors.filter(Boolean).length>=2){
-      flags.push({area:'Szív és keringés',hard:false,reason:'több szív-érrendszeri kockázati tényező áll fenn egyszerre (pl. dohányzás, ismert magas vérnyomás vagy koleszterin, korai családi szívinfarktus/stroke)'});
+      flags.push({area:'Szív és keringés',hard:false,reason:'több szív-érrendszeri kockázati tényező áll fenn egyszerre (pl. dohányzás, ismert magas vérnyomás vagy koleszterin, családi szív-érrendszeri érintettség)'});
     }
   }
   // 2. Alvás (STOP-BANG mintájára): 2+ pozitív jelzés, a magas BMI is számít
@@ -1838,7 +1856,10 @@ function computeScreeningFlags(){
   //    vastagbélrák VAGY rendszertelen székelés
   {
     const overAge=korValid&&kor>45;
-    const famColon=csaladi.includes('Vastagbélrák vagy egyéb bélrendszeri daganat');
+    // Phase 5: a régi, kifejezetten vastagbélrák-specifikus csaladi opciót az
+    // új, összevont "Daganatos betegség" opció váltja (szélesebb kategória —
+    // ld. jelentés a szemantikai eltolódásról).
+    const famColon=csaladi.includes('Daganatos betegség');
     const irregul=ans.rendszertelen_szekeles==='Igen';
     if(overAge||famColon||irregul){
       flags.push({area:'Gyomor-bél',hard:false,reason:'a kor (45 felett), a családi vastagbélrák-érintettség vagy a rendszertelen székelési szokás közül legalább egy fennáll'});
@@ -1853,7 +1874,11 @@ function computeScreeningFlags(){
   // 8. Neurológiai: visszatérő, ki nem vizsgált fejfájás VAGY erős családi
   //    migrén/stroke-anamnézis
   {
-    const famNeuro=csaladi.includes('Migrén vagy stroke');
+    // Phase 5: a régi "Migrén vagy stroke" csaladi opciónak nincs 1:1
+    // megfelelője az új opciókészletben — a legközelebbi analóg a
+    // "Szív-érrendszeri probléma" (a stroke érrendszeri esemény), ld.
+    // jelentés a szemantikai eltolódásról (a migrén-specifikus jelzés elvész).
+    const famNeuro=csaladi.includes('Szív-érrendszeri probléma');
     if(ans.fejfajas==='Igen'||famNeuro){
       flags.push({area:'Neurológiai',hard:false,reason:'rendszeres, eddig ki nem vizsgált fejfájás áll fenn, vagy erős családi migrén/stroke-érintettség van'});
     }
