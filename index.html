@@ -1512,7 +1512,7 @@ function pickMood(el,val){
   pick(el,'hangulat',val);
   showQ(1);
 }
-function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];SCR.modIndex=0;const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
+function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];SCR.modIndex=0;SCR.rfGateOpen=undefined;const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
 
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('on',window.scrollY>10));
 
@@ -1640,7 +1640,7 @@ function isScreeningFlow(){
 }
 // Élő állapot: a Szűrés-Megelőzés-specifikus új kérdésekre adott válaszok +
 // a belőlük számolt modul-jelzések és tudtad-e tételek.
-const SCR = {answers:{}, flags:[], tudtad:[], modIndex:0};
+const SCR = {answers:{}, flags:[], tudtad:[], modIndex:0, rfGateOpen:undefined};
 const FREQ_OPTS=['Egyáltalán nem','Néhány napon','A napok többségén','Szinte minden nap'];
 function freqIdx(val){return FREQ_OPTS.indexOf(val);}
 // 2. réteg — a 9 modul saját (alapadatból nem levezethető) új kérdései.
@@ -1811,6 +1811,15 @@ function buildScreeningModulesHtml(){
 // Mentális-Pszichés listában) pontosan úgy működik, mint korábban.
 // Verbatim-azonos szöveg nem fordul elő a 9 terület kb. 30 tétele között
 // (ellenőrizve), ezért nincs mit deduplikálni — mind a ~30 tétel megjelenik.
+// Phase 10 (élő visszajelzés: "belezsúfoltad a szűrés végénél azt a sok
+// hosszú marhaságot ... nem szabad hogy ilyen sok szarra választ kérjünk") —
+// a ~30 tételes összevont piros-zászló lista alapból NEM látszik többé.
+// Egyetlen kapu-kérdés jön helyette; a teljes tételes lista (biztonsági
+// réteg, változatlan rfPick()/showRedZone()/showCrisis() logikával) csak
+// akkor tárul fel, ha a felhasználó jelzi, hogy van valami, ami aggasztja.
+// Így annak, akinek nincs ilyen panasza (a többségnek), 1 rövid kérdést kell
+// csak elolvasnia a jelenlegi 30+ helyett — a biztonsági réteg egyetlen
+// tétele sem törölve, csak alapból összecsukva.
 function buildConsolidatedRedFlagsHtml(){
   const itemsHtml=Object.keys(RED_FLAGS).map(area=>{
     const areaSafe=area.replace(/'/g,"\\'");
@@ -1819,10 +1828,23 @@ function buildConsolidatedRedFlagsHtml(){
     ).join('');
   }).join('');
   if(!itemsHtml)return '';
+  const open=SCR.rfGateOpen===true;
+  const gateYes=SCR.rfGateOpen===true?' sel':'';
+  const gateNo=SCR.rfGateOpen===false?' sel':'';
   return `<div class="sym-group" id="scr-redflags-group">`+
-    `<div class="sym-group-title"><span class="gi">⚠️</span>Van bármelyik alábbi, ami rád illik most?</div>`+
-    `<p class="q-sub" style="margin:-4px 0 8px;font-size:.78rem">Ezek azonnali odafigyelést igénylő jelek — a fenti válaszaidtól függetlenül jelöld meg, ha van köztük ismerős.</p>`+
-    `<div class="sym-opts">${itemsHtml}</div></div>`;
+    `<div class="sym-group-title"><span class="gi">⚠️</span>Van bármi hirtelen kialakult vagy szokatlanul erős tüneted, ami most aggaszt?</div>`+
+    `<p class="q-sub" style="margin:-4px 0 8px;font-size:.78rem">Ha nem vagy benne biztos, inkább válaszd az "Igen"-t — utána kiválaszthatod, pontosan mi az.</p>`+
+    `<div class="opts solo">`+
+      `<div class="opt${gateYes}" onclick="scrRfGate(true)"><div class="ol">Igen, van ilyen</div></div>`+
+      `<div class="opt${gateNo}" onclick="scrRfGate(false)"><div class="ol">Nincs ilyen</div></div>`+
+    `</div>`+
+    `<div id="scr-rf-list" style="display:${open?'block':'none'};margin-top:10px">`+
+      `<p class="q-sub" style="margin-bottom:8px;font-size:.78rem">Jelöld meg, ami rád illik:</p>`+
+      `<div class="sym-opts">${itemsHtml}</div></div></div>`;
+}
+function scrRfGate(positive){
+  SCR.rfGateOpen=positive;
+  buildScreeningModulesHtml();
 }
 function renderScreeningModules(){
   buildScreeningModulesHtml();
