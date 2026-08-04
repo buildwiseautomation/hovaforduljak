@@ -952,7 +952,12 @@ input[type=range]::-webkit-slider-thumb {
          semleges multi-select checklist, ami a korábbi nyers "Dohányzol?"
          igen/nem kérdést váltja ki; a dohányzás mezőt a "Dohányzom" jelölésből
          vezetjük le. A koleszterin/családi anamnézis/Q6/Q7 kérdéseket EZ NEM
-         helyettesíti, azok változatlanul, külön lépésként jönnek utána. -->
+         helyettesíti, azok változatlanul, külön lépésként jönnek utána.
+         Phase 8: a "Rendszeres mozgás" opciót kivettük innen — ütközött
+         (duplikálta) a később úgyis feltett, sokkal pontosabb Q6 "Milyen az
+         életmódod?" kérdéssel (Ülő/Könnyű aktivitás/Rendszeres sport/Aktív
+         sportoló), és sehol a kódban nem volt beolvasva/hasznosítva —
+         semmilyen trigger/prompt nem nézte, csak a MULTI-ban gyűlt. -->
     <div class="qstep" id="qscr-a">
       <div class="q-meta"><span class="q-dot"></span>Szűrés-Megelőzés · Életmód</div>
       <h2 class="q-title">Most néhány gyors kérdés jön az életmódodról</h2>
@@ -960,7 +965,6 @@ input[type=range]::-webkit-slider-thumb {
       <p class="q-sub" style="margin-top:-10px">Melyik jellemez most rád?</p>
       <div class="multi-hint">Jelölhetsz többet is</div>
       <div class="opts" id="qscr-a-opts">
-        <div class="opt" onclick="mpick(this,'eletmod_check','Rendszeres mozgás')"><div class="oi">🏃</div><div><div class="ol">Rendszeres mozgás</div></div></div>
         <div class="opt" onclick="mpick(this,'eletmod_check','Dohányzom')"><div class="oi">🚬</div><div><div class="ol">Dohányzom</div></div></div>
         <div class="opt" onclick="mpick(this,'eletmod_check','Keveset alszom')"><div class="oi">🌙</div><div><div class="ol">Keveset alszom</div></div></div>
         <div class="opt" onclick="mpick(this,'eletmod_check','Sok stressz ér mostanában')"><div class="oi">🌪️</div><div><div class="ol">Sok stressz ér mostanában</div></div></div>
@@ -982,7 +986,22 @@ input[type=range]::-webkit-slider-thumb {
       <div class="q-nav"><button class="btn-back" onclick="showStep('qscr-a','42%')">← Vissza</button><button class="btn-p" onclick="afterScrB()">Tovább →</button></div>
     </div>
 
-    <!-- QSCR-MOD: Szűrés-Megelőzés — 9 rendszerenkénti modul kérdései -->
+    <!-- QSCR-MOD: Szűrés-Megelőzés — rendszerenkénti modul kérdései.
+         Phase 8 (élő demó visszajelzés nyomán — a Phase 7-es, modulonként
+         KÜLÖN képernyős lapozás ("9 külön oldal") ÉS a "mindent egy hosszú
+         oldalra" is elutasításra került: "nem kell egy oldal egy kérdés és
+         nem kell akkor több oldalt behozni"). Vissza egyetlen, nem lapozott
+         képernyőre: a 9 modul saját kérdése EGYÜTT jelenik meg itt, ld.
+         buildScreeningModulesHtml(). A képernyő azért maradhat rövid, mert
+         (a) minden modul kérdése már korábban (Phase 6) 1 rövid kérdésre lett
+         összevonva, és (b) a 9 külön, modulonként megismételt piros-zászló
+         blokk (kb. 30+ checkbox sor) helyett most EGYETLEN, összevont "sürgős
+         jelek" lista jelenik meg a kérdések alatt — ld.
+         buildConsolidatedRedFlagsHtml(). Minden egyes piros-zászló tétel
+         (mind a ~30, mind a 9 területről) megmaradt és pontosan ugyanazt a
+         rfPick(el, terület, index) hívást használja, mint korábban — csak a
+         megjelenítés lett tömörebb, a biztonsági réteg logikája nem
+         változott (ld. rfPick()/showRedZone()/showCrisis()). -->
     <div class="qstep" id="qscr-mod">
       <div class="q-meta"><span class="q-dot"></span>Szűrés-Megelőzés · Rendszerenkénti kérdések</div>
       <h2 class="q-title">Néhány gyors kérdés rendszerenként</h2>
@@ -1239,53 +1258,53 @@ const SEVITEMS = {};
 // FIGYELEM: ezek UX-vázlatok, NEM klinikailag validált triázs-küszöbök.
 const RED_FLAGS={
   'Szív és keringés':[
-    {t:'Szorító, nyomó mellkasi fájdalom, amely a karba, állkapocsba vagy hátba sugárzik, verejtékezéssel vagy légszomjjal együtt'},
-    {t:'Hirtelen fellépő, korábban nem tapasztalt szapora szívverés ájulással vagy majdnem-ájulással'},
-    {t:'Hirtelen kialakuló, egyoldali lábdagadás bőrelszíneződéssel'},
-    {t:'Nyugalmi állapotban is jelentkező, súlyosbodó légszomj'}
+    {t:'Szorító mellkasi fájdalom + karba/állkapocsba sugárzás vagy verejtékezés'},
+    {t:'Hirtelen szapora szívverés + ájulás vagy majdnem-ájulás'},
+    {t:'Hirtelen egyoldali lábdagadás + bőrelszíneződés'},
+    {t:'Légszomj nyugalomban is, egyre rosszabb'}
   ],
   'Légzőszervi':[
-    {t:'Hirtelen fellépő, súlyos légszomj nyugalomban'},
-    {t:'Kék elszíneződés az ajkakon vagy ujjakon'},
+    {t:'Hirtelen, súlyos légszomj nyugalomban'},
+    {t:'Kék elszíneződés ajkakon/ujjakon'},
     {t:'Véres köhögés'},
-    {t:'Magas láz mellkasi fájdalommal és zavartsággal együtt'}
+    {t:'Magas láz + mellkasi fájdalom + zavartság'}
   ],
   'Mozgásszervi':[
-    {t:'Trauma utáni deformitás vagy nem terhelhető végtag'},
-    {t:'Éjszakai, terheléstől független, folyamatosan súlyosbodó fájdalom'},
-    {t:'Progresszíven súlyosbodó zsibbadás vagy erőgyengeség'},
-    {t:'Lázzal együtt járó, hirtelen ízületi duzzanat'}
+    {t:'Sérülés utáni deformitás vagy nem terhelhető végtag'},
+    {t:'Éjszakai, egyre erősödő fájdalom'},
+    {t:'Egyre súlyosbodó zsibbadás vagy erőgyengeség'},
+    {t:'Hirtelen ízületi duzzanat + láz'}
   ],
   'Gyomor-bél':[
-    {t:'Fekete, kátrányos vagy véres széklet'},
-    {t:'Nem szándékos, jelentős fogyás rövid idő alatt'},
+    {t:'Fekete vagy véres széklet'},
+    {t:'Gyors, nem szándékos fogyás'},
     {t:'Nyelési képtelenség'},
-    {t:'Hirtelen, heves hasi fájdalom merev hassal'}
+    {t:'Hirtelen, heves hasi fájdalom + merev has'}
   ],
   'Mentális-Pszichés':[
     {t:'Öngyilkossági gondolat vagy önsértési szándék', crisis:true},
-    {t:'Kontrollálhatatlan, másra irányuló agresszív késztetés'},
-    {t:'Akut, pánikroham-szerű, testi tünetekkel járó epizód'}
+    {t:'Kontrollálhatatlan agresszív késztetés mások felé'},
+    {t:'Hirtelen pánikroham testi tünetekkel'}
   ],
   'Alvás':[
-    {t:'Partner által észlelt légzéskimaradás alvás közben, nappali elalvással vezetés vagy munka közben'},
-    {t:'Hirtelen kialakuló, súlyos álmatlanság jelentős testsúlyváltozással együtt'}
+    {t:'Légzéskimaradás alvás közben + elalvás vezetés/munka közben'},
+    {t:'Hirtelen, súlyos álmatlanság + testsúlyváltozás'}
   ],
   'Anyagcsere-Hormonális':[
-    {t:'Hirtelen, nem szándékos, jelentős testsúlyváltozás rövid idő alatt'},
-    {t:'Extrém szomjúság és gyakori vizelés súlyos fáradtsággal'},
-    {t:'Szapora szívverés, remegés és hőintolerancia együttes, hirtelen fellépése'}
+    {t:'Hirtelen, nagy testsúlyváltozás rövid idő alatt'},
+    {t:'Extrém szomjúság + gyakori vizelés + fáradtság'},
+    {t:'Hirtelen szapora szívverés + remegés + hőérzékenység'}
   ],
   'Neurológiai':[
-    {t:'Hirtelen fellépő féloldali gyengeség, zsibbadás vagy beszédzavar'},
-    {t:'Az eddigi legerősebb, hirtelen kialakuló fejfájás'},
+    {t:'Hirtelen féloldali gyengeség, zsibbadás vagy beszédzavar'},
+    {t:'Eddigi legerősebb, hirtelen fejfájás'},
     {t:'Első alkalommal jelentkező eszméletvesztés'},
     {t:'Hirtelen kialakuló látászavar'}
   ],
   'Bőr-Haj':[
     {t:'Gyorsan növekvő, alakot vagy színt váltó anyajegy'},
     {t:'Hetek óta nem gyógyuló seb'},
-    {t:'Kiterjedt, lázzal együtt járó bőrgyulladás'}
+    {t:'Kiterjedt bőrgyulladás + láz'}
   ]
 };
 
@@ -1493,7 +1512,7 @@ function pickMood(el,val){
   pick(el,'hangulat',val);
   showQ(1);
 }
-function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
+function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];SCR.modIndex=0;const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
 
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('on',window.scrollY>10));
 
@@ -1621,7 +1640,7 @@ function isScreeningFlow(){
 }
 // Élő állapot: a Szűrés-Megelőzés-specifikus új kérdésekre adott válaszok +
 // a belőlük számolt modul-jelzések és tudtad-e tételek.
-const SCR = {answers:{}, flags:[], tudtad:[]};
+const SCR = {answers:{}, flags:[], tudtad:[], modIndex:0};
 const FREQ_OPTS=['Egyáltalán nem','Néhány napon','A napok többségén','Szinte minden nap'];
 function freqIdx(val){return FREQ_OPTS.indexOf(val);}
 // 2. réteg — a 9 modul saját (alapadatból nem levezethető) új kérdései.
@@ -1761,22 +1780,49 @@ function scrPick(el,qid,val){
   // vissza a felhasználót a lap tetejére minden egyes koppintásnál.
   buildScreeningModulesHtml();
 }
+// Phase 8: EGY, nem lapozott képernyő — a 9 modul saját kérdése (ld.
+// visibleScrQs()) most EGYÜTT jelenik meg, modulonként egy-egy rövid
+// sym-group-blokkban (cím + ikon + a modul saját kérdése/kérdései). A
+// Szívnek nincs saját kérdése (qs:[]) — annak a modulnak nem jelenik meg
+// külön blokkja itt (üres cím, kérdés nélkül nem tenne hozzá semmit; a
+// Szív modul a bázisadatokból csendben, kérdés nélkül dolgozik, ld.
+// computeScreeningFlags()). A 9 modulra korábban KÜLÖN-KÜLÖN megismételt
+// piros-zászló blokkokat (Phase 7: 9x, kb. 30+ checkbox sor) EGYETLEN,
+// összevont "sürgős jelek" blokk váltja fel a kérdések alatt — ld.
+// buildConsolidatedRedFlagsHtml().
 function buildScreeningModulesHtml(){
   const cont=document.getElementById('scr-mod-container');
   if(!cont)return;
-  cont.innerHTML='';
-  SCR_MODULES.forEach(mod=>{
-    const group=document.createElement('div');
-    group.className='sym-group';
+  const modsHtml=SCR_MODULES.map(mod=>{
     const qHtml=visibleScrQs(mod).map(renderScrQuestion).join('');
-    const rfHtml=(RED_FLAGS[mod.title]||[]).map((rf,i)=>{
-      const areaSafe=mod.title.replace(/'/g,"\\'");
-      return `<div class="sym-opt" onclick="rfPick(this,'${areaSafe}',${i})"><span class="sym-check">✓</span><span>${rf.t}</span></div>`;
-    }).join('');
-    group.innerHTML=`<div class="sym-group-title"><span class="gi">${mod.ic}</span>${mod.title}</div>${qHtml}`+
-      (rfHtml?`<div class="sym-opts">${rfHtml}</div>`:'');
-    cont.appendChild(group);
-  });
+    if(!qHtml)return ''; // pl. Szív — nincs saját kérdése, nincs blokkja itt
+    return `<div class="sym-group"><div class="sym-group-title"><span class="gi">${mod.ic}</span>${mod.title}</div>${qHtml}</div>`;
+  }).join('');
+  cont.innerHTML=modsHtml+buildConsolidatedRedFlagsHtml();
+}
+// Phase 8: a 9, modulonként megismételt piros-zászló blokk helyett EGY,
+// összevont "sürgős jelek" lista — a RED_FLAGS mind a 9 területének MINDEN
+// tétele (kb. 30) benne marad, csak egyszer, egyetlen cím alatt, tömören
+// felsorolva (nem 9x, 9 külön piros dobozban). Minden tétel változatlanul a
+// saját rfPick(el, terület, index) hívását tartja meg — ugyanaz a terület-
+// kulcs és index, mint a RED_FLAGS-ben és a másik 8 szakterület saját
+// (érintetlenül hagyott) piros-zászló megjelenítésében (ld. goSymptoms()) —
+// így a showRedZone()/showCrisis() interrupt-mechanizmus (crisis:true a
+// Mentális-Pszichés listában) pontosan úgy működik, mint korábban.
+// Verbatim-azonos szöveg nem fordul elő a 9 terület kb. 30 tétele között
+// (ellenőrizve), ezért nincs mit deduplikálni — mind a ~30 tétel megjelenik.
+function buildConsolidatedRedFlagsHtml(){
+  const itemsHtml=Object.keys(RED_FLAGS).map(area=>{
+    const areaSafe=area.replace(/'/g,"\\'");
+    return (RED_FLAGS[area]||[]).map((rf,i)=>
+      `<div class="sym-opt" onclick="rfPick(this,'${areaSafe}',${i})"><span class="sym-check">✓</span><span>${rf.t}</span></div>`
+    ).join('');
+  }).join('');
+  if(!itemsHtml)return '';
+  return `<div class="sym-group" id="scr-redflags-group">`+
+    `<div class="sym-group-title"><span class="gi">⚠️</span>Van bármelyik alábbi, ami rád illik most?</div>`+
+    `<p class="q-sub" style="margin:-4px 0 8px;font-size:.78rem">Ezek azonnali odafigyelést igénylő jelek — a fenti válaszaidtól függetlenül jelöld meg, ha van köztük ismerős.</p>`+
+    `<div class="sym-opts">${itemsHtml}</div></div>`;
 }
 function renderScreeningModules(){
   buildScreeningModulesHtml();
