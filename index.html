@@ -848,13 +848,22 @@ input[type=range]::-webkit-slider-thumb {
       <div class="q-meta"><span class="q-dot"></span>Kezdésként</div>
       <h2 class="q-title">Hogy érzed magad mostanában, összességében?</h2>
       <p class="q-sub">Csak egy gyors benyomás — nincs jó vagy rossz válasz.</p>
+      <!-- v1.6: 5 opcióból 4 (a "Nagyon jól" fokozat kikerült — max. 4
+           válaszlehetőség szabály minden Szűrés-Megelőzés-előtti/-beli
+           kérdésen). Emellett a válasz már nem lép tovább automatikusan —
+           opcionális szabad szöveg mező is tartozik hozzá, ezért explicit
+           "Tovább" gomb kell, hogy legyen idő beírni. -->
       <div class="opts solo" id="qmood-opts">
-        <div class="opt" onclick="pickMood(this,'Nagyon jól')"><div class="oi">😄</div><div><div class="ol">Nagyon jól</div></div></div>
         <div class="opt" onclick="pickMood(this,'Jól')"><div class="oi">🙂</div><div><div class="ol">Jól</div></div></div>
         <div class="opt" onclick="pickMood(this,'Átlagosan')"><div class="oi">😐</div><div><div class="ol">Átlagosan</div></div></div>
         <div class="opt" onclick="pickMood(this,'Nem túl jól')"><div class="oi">🙁</div><div><div class="ol">Nem túl jól</div></div></div>
         <div class="opt" onclick="pickMood(this,'Rosszul')"><div class="oi">😞</div><div><div class="ol">Rosszul</div></div></div>
       </div>
+      <div class="mini-comment">
+        <label class="mc-label" for="cm-mood">+ Ha szeretnéd, pár szóban leírhatod, mi van veled — nem kötelező.</label>
+        <textarea class="mc-input" id="cm-mood" placeholder="Nem kötelező, csak ha szeretnéd."></textarea>
+      </div>
+      <div class="q-nav"><button class="btn-p" onclick="afterMood()">Tovább →</button></div>
     </div>
 
     <!-- Q1: Nem -->
@@ -964,12 +973,17 @@ input[type=range]::-webkit-slider-thumb {
       <p class="q-sub">Ez segít abban, hogy a folytatás jobban hozzád igazodjon.</p>
       <p class="q-sub" style="margin-top:-10px">Melyik jellemez most rád?</p>
       <div class="multi-hint">Jelölhetsz többet is</div>
+      <!-- v1.6: max. 4 opció — "Igyekszem odafigyelni az étkezésre" és
+           "Egyik sem különösebben jellemző" kikerült (ha senki semmit nem
+           jelöl be, az már önmagában "egyik sem"); a "Rendszeres mozgás"
+           visszakerült (Phase 8-ban emiatt még kivettük, mert duplikálta a
+           Q6 kérdést és nem volt beolvasva sehol — ez v1.6 explicit
+           döntésével felülírva). -->
       <div class="opts" id="qscr-a-opts">
+        <div class="opt" onclick="mpick(this,'eletmod_check','Rendszeres mozgás')"><div class="oi">🏃</div><div><div class="ol">Rendszeres mozgás</div></div></div>
         <div class="opt" onclick="mpick(this,'eletmod_check','Dohányzom')"><div class="oi">🚬</div><div><div class="ol">Dohányzom</div></div></div>
         <div class="opt" onclick="mpick(this,'eletmod_check','Keveset alszom')"><div class="oi">🌙</div><div><div class="ol">Keveset alszom</div></div></div>
         <div class="opt" onclick="mpick(this,'eletmod_check','Sok stressz ér mostanában')"><div class="oi">🌪️</div><div><div class="ol">Sok stressz ér mostanában</div></div></div>
-        <div class="opt" onclick="mpick(this,'eletmod_check','Igyekszem odafigyelni az étkezésre')"><div class="oi">🥗</div><div><div class="ol">Igyekszem odafigyelni az étkezésre</div></div></div>
-        <div class="opt" onclick="mpick(this,'eletmod_check','Egyik sem különösebben jellemző')"><div class="oi">◎</div><div><div class="ol">Egyik sem különösebben jellemző</div></div></div>
       </div>
       <div class="q-nav"><button class="btn-back" onclick="backFromScrA()">← Vissza</button><button class="btn-p" onclick="afterScrA()">Tovább →</button></div>
     </div>
@@ -1510,6 +1524,15 @@ function goQuiz(){
 // Nem táplál trigger-logikát, kizárólag hangnem-lágyítás / prompt-kontextus.
 function pickMood(el,val){
   pick(el,'hangulat',val);
+}
+// v1.6: a hangulat-valasztas mar nem lep tovabb automatikusan (opcionalis
+// szabad szoveg mezo is tartozik hozza, ideje kell legyen beirni) — explicit
+// "Tovabb" gomb (afterMood()) olvassa be a szoveget A.megjegyzes_mood-ba,
+// majd lep Q1-re.
+function afterMood(){
+  if(!A.hangulat){shakeEl('qmood-opts');return}
+  const cm=document.getElementById('cm-mood');
+  if(cm)A.megjegyzes_mood=cm.value.trim();
   showQ(1);
 }
 function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];SCR.modIndex=0;SCR.rfGateOpen=undefined;SCR.wizStack=[];SCR.wizCur=null;const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
@@ -1828,6 +1851,11 @@ function scrWizRender(){
   }else if(step.type==='mentalis-intro'){
     scrWizSetChrome('Szűrés-Megelőzés · Mentális-Pszichés','Most néhány kérdés jön arról, hogy érezted magad mostanában','Ez egy rövid, validált (PHQ-2/GAD-2 mintájú) kérdéspár — nem diagnózis, csak jelzés.',true);
     cont.innerHTML='';
+  }else if(step.type==='mentalis-freetext'){
+    scrWizSetChrome('Szűrés-Megelőzés · Mentális-Pszichés','Van még valami, amit hozzátennél?',null,true);
+    cont.innerHTML=`<div class="mini-comment" style="border-top:none;padding-top:0">`+
+      `<label class="mc-label" for="cm-mentalis-scr">Ha szeretnéd, pár szóban leírhatod, mi jár a fejedben — nem kötelező.</label>`+
+      `<textarea class="mc-input" id="cm-mentalis-scr" placeholder="Nem kötelező, csak ha szeretnéd."></textarea></div>`;
   }else if(step.type==='rfgate'){
     scrWizSetChrome('Szűrés-Megelőzés · Biztonsági kérdés','Van bármi hirtelen kialakult vagy szokatlanul erős tüneted, ami most aggaszt?','Ha nem vagy benne biztos, inkább válaszd az "Igen"-t — utána kiválaszthatod, pontosan mi az.',false);
     cont.innerHTML=`<div class="opts solo">`+
@@ -1875,8 +1903,9 @@ function scrWizAnswer(qid,val){
     scrWizGoto({type:'mentalis-intro'});
     return;
   }
-  // step.type==='mentalis' vége -> piros zászló kapu
-  scrWizGoto({type:'rfgate'});
+  // step.type==='mentalis' vege -> sajat, opcionalis szabad szoveg lepes,
+  // majd onnan a piros zaszlo kapu (ld. scrWizManualNext()).
+  scrWizGoto({type:'mentalis-freetext'});
 }
 function scrWizRfGate(positive){
   if(!positive){afterScreeningModules();return}
@@ -1887,6 +1916,12 @@ function scrWizRfGate(positive){
 function scrWizManualNext(){
   const step=SCR.wizCur;
   if(step.type==='mentalis-intro'){scrWizGoto({type:'mentalis',qIdx:0});return}
+  if(step.type==='mentalis-freetext'){
+    const cm=document.getElementById('cm-mentalis-scr');
+    if(cm)A.megjegyzes_mentalis_scr=cm.value.trim();
+    scrWizGoto({type:'rfgate'});
+    return;
+  }
   if(step.type==='rflist'){afterScreeningModules();return}
 }
 function renderScreeningModules(){
@@ -2252,7 +2287,7 @@ const CRISIS_PATTERNS=[
   /jobb\s+lenne\s+\w*\s*(ha\s+)?\w*\s*(meghal|nem\s+\w*\s*len)/
 ];
 function scanCrisis(){
-  const ids=['szabadszoveg','cm-tunet','cm-psziche','cm-terulet','cm-betegseg','cm-elozmeny'];
+  const ids=['szabadszoveg','cm-tunet','cm-psziche','cm-terulet','cm-betegseg','cm-elozmeny','cm-mood','cm-mentalis-scr'];
   const raw=ids.map(id=>((document.getElementById(id)||{}).value)||'').join(' ');
   if(!raw.trim())return false;
   const txt=foldHuCrisis(raw);
@@ -2306,6 +2341,7 @@ KRITIKUS, NEM ALKUKÉPES SZABÁLY (orvostechnikai-eszköz-minősítési, MDR-koc
 - SOHA nem állítod ki nyíltan, hogy "egészséges vagy" — mindig maradjon meg a szűrésre való emlékeztető árnyalat, akkor is, ha egyetlen modul sem jelzett.
 - Ha 2+ modul jelez egyszerre, mindegyiket említsd meg — a KIEMELT (piros-zászló-szintű) tételek kerüljenek előre a sima kockázati jelzésekhez képest (lásd a sorrendet lent, már úgy van rendezve).
 - A hangnem mindig felfedező, összekötő, SOHA nem "ez a bajod" jellegű kijelentés.
+- Ha a felhasználó a hangulati vagy a Mentális-Pszichés blokk utáni szabad szöveges mezőbe konkrét, tartalmas szöveget írt, ezt KIFEJEZETTEN tükrözd vissza a summary és/vagy personal_note mezőben — ne hagyd figyelmen kívül, és ne csak általánosságban reagálj rá. Ha üresen hagyta, ne hivatkozz rá.
 
 A FELHASZNÁLÓ ALAPADATAI:
 Aktuális hangulati benyomás (Phase 4, csak tónus-kontextus a hangnemhez — NE építs rá triggert, NE hivatkozz rá számszerűen): ${A.hangulat||'nem adott meg'}
@@ -2317,6 +2353,8 @@ Ismert magas vérnyomás: ${(MULTI['betegseg']||[]).includes('Magas vérnyomás'
 Ismert magas koleszterin: ${A.koleszterin||'nem adott meg'}
 Mozgásszint: ${A.eletmod||'nem adott meg'}
 Lakhely irányítószáma: ${A.iranyitoszam||'nem adott meg'}
+Hangulati szabad szöveg (kezdésnél írt, opcionális): ${A.megjegyzes_mood||'nem írt semmit'}
+Mentális-Pszichés blokk utáni szabad szöveg (opcionális): ${A.megjegyzes_mentalis_scr||'nem írt semmit'}
 Megjegyzés: családi/háztartási kórtörténetről szándékosan NEM kérdeztünk (magánszféra-védelem) — ne feltételezz és ne kérdezz rá ilyesmire a válaszban.
 
 MODULEREDMÉNYEK (kliens oldalon, szabály alapján SZÁMOLVA — ne változtass rajtuk, csak fogalmazd meg jó stílusban):
@@ -2379,7 +2417,7 @@ FONTOS SZABÁLYOK:
 - Légy empatikus, de konkrét és cselekvésre ösztönző
 - Ha súlyos tüneteket látsz, ne bagatellizálj
 - Ha a felhasználó TÖBB testrendszerben (több panasz-területen) is jelölt pozitív tételt — ezt a "Konkrét tünetek" és a tételenkénti súlyosság adatokból látod —, akkor a primary_specialty-t a LEGMAGASABB súlyosságú, illetve piros-zászlós (sürgős jelzésű) tétel rendszere alapján válaszd ki, NE a felsorolás vagy a kitöltés sorrendje, és NE ábécérend alapján. A második legsúlyosabb rendszer legyen a secondary_specialty.
-- Ha a felhasználó bármelyik szabad szöveges mezőben (Saját szavakkal / Kiegészítés) konkrét, tartalmas információt adott meg, ezt kifejezetten tükrözd vissza a summary és explanation mezőkben — ne hagyd figyelmen kívül és ne csak általánosságban válaszolj.
+- Ha a felhasználó bármelyik szabad szöveges mezőben (Saját szavakkal / Kiegészítés / Hangulati megjegyzés) konkrét, tartalmas információt adott meg, ezt kifejezetten tükrözd vissza a summary és explanation mezőkben — ne hagyd figyelmen kívül és ne csak általánosságban válaszolj.
 - Ha van megadott irányítószám: jelenleg a partnerhálózatunk elsősorban budapesti — ha a felhasználó nem Budapesten él (irányítószám nem 1xxx), ezt őszintén jelezd az explanation mezőben, és ne állíts pontos helyi egyezést amit nem tudsz garantálni
 
 A FELHASZNÁLÓ ADATAI:
@@ -2399,6 +2437,7 @@ Ismert betegségek: ${A.betegseg||'nincs'}${A.megjegyzes_betegseg?' | Kiegészí
 Mentális állapot: ${A.psziche||'nem jelzett'}${A.megjegyzes_psziche?' | Kiegészítés: '+A.megjegyzes_psziche:''}
 Korábbi szakember: ${A.elozmeny||'nem adott meg'}${A.megjegyzes_elozmeny?' | Kiegészítés: '+A.megjegyzes_elozmeny:''}
 Saját szavakkal: ${A.szabadszoveg||'nem írt semmit'}
+Hangulati megjegyzés (kezdésnél írt, opcionális): ${A.megjegyzes_mood||'nem írt semmit'}
 
 Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy markdown:
 {
