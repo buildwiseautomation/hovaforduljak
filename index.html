@@ -982,26 +982,6 @@ input[type=range]::-webkit-slider-thumb {
       <div class="q-nav"><button class="btn-back" onclick="showStep('qscr-a','42%')">← Vissza</button><button class="btn-p" onclick="afterScrB()">Tovább →</button></div>
     </div>
 
-    <!-- QSCR-C: Szűrés-Megelőzés alapadat — EGYETLEN, opcionális, közös
-         családi anamnézis kérdés (Phase 5). Ez az egyetlen hely az egész
-         Szűrés-Megelőzés flow-ban, ahol családi háttérről kérdezünk — a
-         korábbi, modulonként ismétlődő rákérdezéseket (Szív, Bőr-Haj) ez
-         váltja ki, hogy ne hasson tolakodónak/kikérdezősnek. -->
-    <div class="qstep" id="qscr-c">
-      <div class="q-meta"><span class="q-dot"></span>Szűrés-Megelőzés · Alapadat</div>
-      <h2 class="q-title">Ha tudod, és szívesen megosztod: van a szűk családodban (szülő, testvér) valamilyen tartós betegség?</h2>
-      <p class="q-sub">Ezt nyugodtan ki is hagyhatod.</p>
-      <div class="multi-hint">Jelölhetsz többet is</div>
-      <div class="opts" id="qscr-c-opts">
-        <div class="opt" onclick="mpick(this,'csaladi','Szív-érrendszeri probléma')"><div class="oi">❤️</div><div><div class="ol">Szív-érrendszeri probléma</div></div></div>
-        <div class="opt" onclick="mpick(this,'csaladi','Cukorbetegség')"><div class="oi">🩸</div><div><div class="ol">Cukorbetegség</div></div></div>
-        <div class="opt" onclick="mpick(this,'csaladi','Daganatos betegség')"><div class="oi">🎗️</div><div><div class="ol">Daganatos betegség</div></div></div>
-        <div class="opt" onclick="mpick(this,'csaladi','Pajzsmirigy-probléma')"><div class="oi">🦋</div><div><div class="ol">Pajzsmirigy-probléma</div></div></div>
-        <div class="opt" onclick="mpick(this,'csaladi','Inkább nem válaszolok')"><div class="oi">✓</div><div><div class="ol">Inkább nem válaszolok</div></div></div>
-      </div>
-      <div class="q-nav"><button class="btn-back" onclick="showStep('qscr-b','44%')">← Vissza</button><button class="btn-p" onclick="afterScrC()">Tovább →</button></div>
-    </div>
-
     <!-- QSCR-MOD: Szűrés-Megelőzés — 9 rendszerenkénti modul kérdései -->
     <div class="qstep" id="qscr-mod">
       <div class="q-meta"><span class="q-dot"></span>Szűrés-Megelőzés · Rendszerenkénti kérdések</div>
@@ -1645,64 +1625,77 @@ const SCR = {answers:{}, flags:[], tudtad:[]};
 const FREQ_OPTS=['Egyáltalán nem','Néhány napon','A napok többségén','Szinte minden nap'];
 function freqIdx(val){return FREQ_OPTS.indexOf(val);}
 // 2. réteg — a 9 modul saját (alapadatból nem levezethető) új kérdései.
-// A kérdésszöveg szó szerint a specifikációból való — ne fogalmazd át.
-// Phase 4: minden modul adaptív, kétlépcsős — csak a nyitókérdés jelenik meg
-// elsőre, a mélyítő kérdés(ek) csak pozitív nyitóválasz esetén (followupGate).
-// followupStart = hányadik indextől kezdődnek a mélyítő kérdések a qs[] tömbben
-// (a korábbiak mindig nyitókérdésként/openerként jelennek meg).
-// Ha egy modulnak nincs followupGate-je, MINDEN kérdése mindig látszik —
-// ez szándékos két esetben: (1) a modulnak csak 1 kérdése van, nincs mit
-// mélyíteni (Szív, Gyomor-bél, Légzőszervi, Neurológiai); (2) a mélyítés
-// elrejtése klinikai detektálási kockázatot jelentene (Mozgásszervi,
-// Bőr-Haj — ld. jelentés a döntés indoklásával).
-// A modulok MEGJELENÉSI SORRENDJE is szándékosan összekevert (nem követi az
-// életmód-checklist/A/B/C sorrendet), hogy ne érződjön nyomozásnak.
+// Phase 6 (élő demó visszajelzés nyomán — "senki se fogja kitölteni, olyan
+// hosszú"): minden modult egyetlen, tömören megfogalmazott kérdésre vontunk
+// össze, ahol ez klinikailag még védhető volt. A Phase 5-ben bevezetett,
+// közös családi anamnézis-kérdést (qscr-c) TELJESEN kivettük — ez magánszféra-
+// túllépés, nem csak UX-teher ("nem szabad a privát szférában kutatni").
+// A kieső családi jelzés miatt az érintett modulok (Szív, Anyagcsere,
+// Gyomor-bél, Neurológiai) trigger-szabályát a maradék, bázisadatból + saját
+// (immár összevont) kérdésből álló jelekre írtuk át — ld. computeScreeningFlags().
+// Ahol egy összevont kérdés fogalma nem magától értetődő, egy rövid "sub"
+// magyarázó mondatot adtunk hozzá (q.sub — ld. renderScrQuestion()).
+//
+// Kivételek, ahol MARADT 2+ kérdés / adaptív mélyítés:
+// - Bőr-Haj: 2 kérdés, mindkettő önálló klinikai jelzés (napégés-hajlam +
+//   anyajegy-változás) — az anyajegy-változás önmagában is piros-zászló-
+//   szintű, összevonásuk elmosná a jelentésüket.
+// - Mentális-Pszichés: PHQ-2 (2 kérdés, mindig látszik) + GAD-2 (2 kérdés,
+//   csak pozitív PHQ-2 esetén tárul fel) — validált, már eddig is rövid
+//   szűrőeszköz-pár, és közvetlenül a krízis-biztonsági réteghez kapcsolódik,
+//   ezért itt szándékosan NEM egyszerűsítettünk tovább.
+// Minden más modulnak most már pontosan 1 (a Szívnek 0) kérdése van, ezért
+// followupStart/followupGate sincs rájuk értelmezve — csak a Mentális-
+// Pszichés tartja meg ezt a mechanizmust.
+// A modulok MEGJELENÉSI SORRENDJE szándékosan összekevert (nem követi az
+// életmód-checklist/A/B sorrendet), hogy ne érződjön nyomozásnak.
 const SCR_MODULES=[
-  // Phase 5: a Szívnek mostantól NINCS saját kérdése — a korábbi
-  // "Van-e a családban 55 év alatt bekövetkezett szívinfarktus vagy
-  // stroke?" saját nyitókérdést kivettük, mert a családi anamnézisre az
-  // egész flow-ban egyetlen közös, opcionális kérdés (qscr-c) kérdez rá.
-  // A modul-cím (és a hozzá tartozó piros zászlók) továbbra is megjelenik
-  // a modul-képernyőn, csendben, kérdés nélkül dolgozik a bázisadatokból
-  // (kor, dohányzás, ismert vérnyomás/koleszterin + a megosztott családi
-  // válasz, ha van) — ld. computeScreeningFlags().
+  // A Szívnek NINCS saját kérdése — csendben, kérdés nélkül dolgozik a
+  // bázisadatokból (dohányzás, ismert vérnyomás/koleszterin) — ld.
+  // computeScreeningFlags(). A modul-cím (és a hozzá tartozó piros zászlók)
+  // továbbra is megjelenik a modul-képernyőn.
   {key:'sziv',title:'Szív és keringés',ic:'❤️',qs:[]},
   {key:'borhaj',title:'Bőr-Haj',ic:'✨',qs:[
     {id:'nap_leeges',label:'Könnyen leégsz a napon, fényes bőrtípusú vagy?',type:'yn'},
     {id:'anyajegy_valtozas',label:'Van olyan anyajegyed, ami az elmúlt hónapokban változott (méret, szín, forma)?',type:'yn'}
-  ]}, // Phase 5: a családi melanoma-anamnézisre rákérdező mélyítő kérdést
-      // (csaladi_borrak) törölve — az anyajegy-változás önmagában is elég
-      // trigger, nincs mélyítés. Szándékosan továbbra sincs followupGate:
-      // az anyajegy-kérdés önmagában is piros-zászló-szintű, ezért mindig,
-      // elrejtés nélkül látszik (ld. jelentés)
+  ]}, // az anyajegy-változás önmagában is elég trigger, nincs mélyítés,
+      // nincs családi leg — szándékosan nincs followupGate: mindkét kérdés
+      // mindig, elrejtés nélkül látszik
   {key:'gyomorbel',title:'Gyomor-bél',ic:'🫃',qs:[
     {id:'rendszertelen_szekeles',label:'Van rendszertelen székelési szokásod (váltakozó hasmenés/székrekedés) az elmúlt hónapokban?',type:'yn'}
   ]},
   {key:'alvas',title:'Alvás',ic:'🌙',qs:[
-    {id:'horkolas',label:'Szoktál hangosan horkolni (vagy mondták már neked)?',type:'yn'},
-    {id:'legzeskimaradas',label:'Észlelt már valaki légzéskimaradást alvás közben nálad?',type:'yn'},
-    {id:'nappali_faradtsag',label:'Napközben szokatlanul fáradtnak érzed magad, annak ellenére, hogy eleget alszol?',type:'yn'}
-  ],followupStart:1,followupGate:ans=>ans.horkolas==='Igen'},
+    {id:'horkolas',label:'Szoktak mondani, hogy hangosan horkolsz, vagy néha mintha kihagyna a légzésed alvás közben?',type:'yn',
+     sub:'Ez — a testtömeg-indexeddel együtt — az alvási légzészavar (alvási apnoe) egyik legjobb korai jelzése.'}
+  ]}, // Phase 6: a korábbi 3 tétel (horkolás/légzéskimaradás/nappali
+      // fáradtság) 1 összevont STOP-BANG-jellegű kérdésre egyszerűsítve;
+      // followupGate törölve, csak 1 kérdés maradt
   {key:'neuro',title:'Neurológiai',ic:'⚡',qs:[
     {id:'fejfajas',label:'Van rendszeres, visszatérő fejfájásod, amit eddig nem néztél meg?',type:'yn'}
   ]},
   {key:'mozgasszervi',title:'Mozgásszervi',ic:'🦴',qs:[
-    {id:'ulomunka',label:'Van ülőmunkád (napi 6+ óra ülés)?',type:'yn'},
-    {id:'reggeli_merevseg',label:'Van reggeli ízületi merevséged, ami több mint fél óráig tart?',type:'yn'}
-  ]}, // szándékosan NINCS followupGate: a reggeli merevség önmagában is elég
-      // jelzés (hard:true a trigger-logikában), ülőmunka=Nem mögé rejtve
-      // álnegatívot okozna, ezért mindig mindkét kérdés látszik (ld. jelentés)
+    {id:'mozgasszervi_jelzes',label:'Van reggeli, fél óránál tovább tartó ízületi merevséged, vagy sok órát ülsz naponta mozgás nélkül?',type:'choice',
+     choices:['Reggeli, 30 percnél hosszabb ízületi merevségem van','Sokat ülök, kevés mozgással','Mindkettő igaz rám','Egyik sem igaz rám'],
+     sub:'A kettő más-más okból számít: a hosszan tartó reggeli ízületi merevség gyulladásos folyamatra utalhat, a sok mozgás nélküli ülés pedig önmagában is mozgásszervi kockázat.'}
+  ]}, // Phase 6: a korábbi 2 tétel (ülőmunka/reggeli merevség) 1 kétágú,
+      // egy képernyő-blokkban megjelenő kérdésre összevonva; a reggeli
+      // merevség jelzés-értéke (hard:true) a választott opcióból továbbra
+      // is kiolvasható — ld. computeScreeningFlags()
   {key:'anyagcsere',title:'Anyagcsere-Hormonális',ic:'⚗️',qs:[
-    {id:'derekbo',label:'Derékbőség kategória (szűk / átlagos / szoros öv alapján)',type:'choice',choices:['Szűk','Átlagos','Szoros öv']},
-    {id:'zoldseg',label:'Milyen gyakran fogyasztasz zöldséget/gyümölcsöt?',type:'choice',choices:['Ritkán','Néhányszor hetente','Szinte naponta']},
-    {id:'vercukor',label:'Volt-e valaha magas vércukrod mérve (akár terhesség alatt is)?',type:'yn'}
-  ],followupStart:1,followupGate:ans=>ans.derekbo==='Szoros öv'},
+    {id:'anyagcsere_jelzes',label:'Nagyobb lett a derekad, vagy szorosabban áll rajtad az öv, mint korábban — vagy volt már valaha magas vércukrod kimérve (akár terhesség alatt is)?',type:'yn',
+     sub:'A haskörfogat és a vércukor-előzmény együtt az egyik legjobb korai jelzés a 2-es típusú cukorbetegség kockázatára.'}
+  ]}, // Phase 6: a korábbi 3 tétel (derékbőség/zöldség-gyümölcs gyakoriság/
+      // vércukor) 1 összevont kérdésre egyszerűsítve — a zöldség-gyümölcs
+      // gyakoriság kérdés (nem vett részt a trigger-számításban, csak
+      // kontextus volt) elhagyva, followupGate törölve
   {key:'mentalis',title:'Mentális-Pszichés',ic:'🧠',qs:[
     {id:'phq1',label:'Az elmúlt 2 hétben mennyire zavart, hogy levertnek, reménytelennek érezted magad?',type:'freq'},
     {id:'phq2',label:'Az elmúlt 2 hétben mennyire zavart, hogy keveset érdekelt vagy örültél a dolgoknak?',type:'freq'},
     {id:'gad1',label:'Az elmúlt 2 hétben mennyire zavart, hogy szorongást, feszültséget éreztél?',type:'freq'},
     {id:'gad2',label:'Az elmúlt 2 hétben mennyire zavart, hogy nem tudtad abbahagyni az aggódást?',type:'freq'}
-  ],followupStart:2,followupGate:ans=>freqIdx(ans.phq1)>=2||freqIdx(ans.phq2)>=2},
+  ],followupStart:2,followupGate:ans=>freqIdx(ans.phq1)>=2||freqIdx(ans.phq2)>=2}, // Phase 6: szándékosan
+      // VÁLTOZATLAN — validált PHQ-2/GAD-2 pár, közvetlenül a krízis-
+      // biztonsági réteghez kapcsolódik, nem gyűrjük tovább
   {key:'legzo',title:'Légzőszervi',ic:'🫁',qs:[
     {id:'kifulladas',label:'Kifulladsz szokatlanul könnyen olyasminél, ami korábban nem okozott gondot?',type:'yn'}
   ]}
@@ -1726,9 +1719,6 @@ function afterScrA(){
 }
 function afterScrB(){
   if(!A.koleszterin){shakeEl('qscr-b');return}
-  showStep('qscr-c','48%');
-}
-function afterScrC(){
   showQ(6);
 }
 // Q7 (betegségek) utáni elágazás: Szűrés-Megelőzésnél a 9 modul kérdései
@@ -1748,7 +1738,11 @@ function renderScrQuestion(q){
     const safe=c.replace(/'/g,"\\'");
     return `<div class="opt${sel}" onclick="scrPick(this,'${q.id}','${safe}')"><div class="ol">${c}</div></div>`;
   }).join('');
-  return `<div class="scr-qblock" style="margin:14px 0"><p class="q-sub" style="margin-bottom:8px">${q.label}</p><div class="opts solo">${opts}</div></div>`;
+  // Phase 6: opcionális rövid magyarázó alcím (q.sub) az összevont
+  // kérdéseknél, ha egy laikus számára a fogalom nem magától értetődő —
+  // ugyanaz a q-sub/has-why mintázat, mint a fő kérdés-lépéseknél.
+  const subHtml=q.sub?`<p class="q-sub has-why" style="font-size:.78rem;margin:-2px 0 10px">${q.sub}</p>`:'';
+  return `<div class="scr-qblock" style="margin:14px 0"><p class="q-sub" style="margin-bottom:8px">${q.label}</p>${subHtml}<div class="opts solo">${opts}</div></div>`;
 }
 // Phase 4: mely kérdések látszanak most egy adott modulból — a nyitó(k)
 // mindig, a mélyítő kérdés(ek) csak akkor, ha a modul followupGate-je
@@ -1807,35 +1801,37 @@ function computeScreeningFlags(){
   const dohanyzik=A.dohanyzas==='Igen';
   const ismertVernyomas=(MULTI['betegseg']||[]).includes('Magas vérnyomás');
   const ismertKoleszterin=A.koleszterin==='Igen';
-  const csaladi=(MULTI['csaladi']||[]);
   const eletmodUlo=A.eletmod==='Ülő, kevés mozgás';
   const flags=[];
 
-  // 1. Szív és keringés (Framingham/QRISK mintájára): 2+ kockázati tényező.
-  // Phase 5: nincs saját kérdése — a modul kizárólag a bázisadatokból (kor
-  // helyett itt: dohányzás, ismert vérnyomás/koleszterin) + a megosztott,
-  // egyetlen családi anamnézis-kérdés "Szív-érrendszeri probléma" válaszából
-  // dolgozik, kérdés nélkül.
+  // 1. Szív és keringés (Framingham/QRISK mintájára): 2+ kockázati tényező
+  // a maradék bázisadatból. Phase 6: a családi szív-érrendszeri leg
+  // kikerült (nincs többé családi anamnézis-kérdés az egész flow-ban) —
+  // ez valós, szándékos érzékenység-csökkenés, ld. jelentés. Nincs saját
+  // kérdése, csendben dolgozik.
   {
-    const famCardio=csaladi.includes('Szív-érrendszeri probléma');
-    const factors=[dohanyzik,ismertVernyomas,ismertKoleszterin,famCardio];
+    const factors=[dohanyzik,ismertVernyomas,ismertKoleszterin];
     if(factors.filter(Boolean).length>=2){
-      flags.push({area:'Szív és keringés',hard:false,reason:'több szív-érrendszeri kockázati tényező áll fenn egyszerre (pl. dohányzás, ismert magas vérnyomás vagy koleszterin, családi szív-érrendszeri érintettség)'});
+      flags.push({area:'Szív és keringés',hard:false,reason:'több szív-érrendszeri kockázati tényező áll fenn egyszerre (pl. dohányzás, ismert magas vérnyomás vagy koleszterin)'});
     }
   }
-  // 2. Alvás (STOP-BANG mintájára): 2+ pozitív jelzés, a magas BMI is számít
+  // 2. Alvás (STOP-BANG mintájára, Phase 6-ban 1 összevont kérdésre
+  // egyszerűsítve): a horkolás/légzéskimaradás-jelzés ÉS a magas BMI
+  // együtt kell (2 megmaradt jelzésből mindkettő, a korábbi "2+ a 4-ből"
+  // logika szűkített megfelelője).
   {
-    const signals=[ans.horkolas==='Igen',ans.legzeskimaradas==='Igen',ans.nappali_faradtsag==='Igen',highBMI];
-    if(signals.filter(Boolean).length>=2){
-      flags.push({area:'Alvás',hard:false,reason:'több alvással összefüggő jelzés áll fenn együtt (pl. horkolás, észlelt légzéskimaradás, nappali fáradtság, magasabb testtömegindex)'});
+    if(ans.horkolas==='Igen'&&highBMI){
+      flags.push({area:'Alvás',hard:false,reason:'horkolás/légzéskimaradás-jelzés és magasabb testtömegindex áll fenn együtt'});
     }
   }
-  // 3. Anyagcsere-Hormonális (FINDRISC mintájára): magas BMI/derékbőség +
-  //    mozgásszegény életmód + családi anamnézis közül 2+ egyszerre
+  // 3. Anyagcsere-Hormonális (FINDRISC mintájára, Phase 6-ban 1 összevont
+  // kérdésre egyszerűsítve): a haskörfogat/vércukor-jelzés ÉS a
+  // mozgásszegény életmód együtt kell. A családi cukorbetegség-leg
+  // kikerült — valós, szándékos érzékenység-csökkenés, ld. jelentés.
   {
-    const factors=[(highBMI||ans.derekbo==='Szoros öv'),eletmodUlo,csaladi.includes('Cukorbetegség')];
+    const factors=[(highBMI||ans.anyagcsere_jelzes==='Igen'),eletmodUlo];
     if(factors.filter(Boolean).length>=2){
-      flags.push({area:'Anyagcsere-Hormonális',hard:false,reason:'együtt van jelen a magasabb testtömeg/derékbőség, a mozgásszegény életmód és a családi cukorbetegség-érintettség közül legalább kettő'});
+      flags.push({area:'Anyagcsere-Hormonális',hard:false,reason:'együtt van jelen a magasabb testtömeg/haskörfogat vagy a vércukor-előzmény, és a mozgásszegény életmód'});
     }
   }
   // 4. Mentális-Pszichés (PHQ-2/GAD-2 mintájára): bármelyik pár tétel
@@ -1846,23 +1842,23 @@ function computeScreeningFlags(){
       flags.push({area:'Mentális-Pszichés',hard:false,reason:'a hangulati/szorongásos gyorskérdések közül legalább egy a napok többségén vagy annál gyakrabban fordul elő'});
     }
   }
-  // 5. Mozgásszervi: a reggeli ízületi merevség önmagában is elég (klinikai jel)
+  // 5. Mozgásszervi (Phase 6-ban 1, kétágú kérdésre összevonva): a reggeli
+  // ízületi merevség önmagában is elég (klinikai jel), akkor is, ha a
+  // felhasználó a "Mindkettő igaz rám" választ adta.
   {
-    if(ans.reggeli_merevseg==='Igen'){
+    const mozgVal=ans.mozgasszervi_jelzes;
+    if(mozgVal==='Reggeli, 30 percnél hosszabb ízületi merevségem van'||mozgVal==='Mindkettő igaz rám'){
       flags.push({area:'Mozgásszervi',hard:true,reason:'félóránál hosszabb reggeli ízületi merevség — ez önmagában is figyelmet érdemlő, gyulladásos folyamatra utaló klinikai jel'});
     }
   }
-  // 6. Gyomor-bél (USPSTF kor-alapú ajánlás): 45 felett VAGY családi
-  //    vastagbélrák VAGY rendszertelen székelés
+  // 6. Gyomor-bél (USPSTF kor-alapú ajánlás): 45 felett VAGY rendszertelen
+  // székelés. Phase 6: a családi vastagbélrák-leg kikerült — valós,
+  // szándékos érzékenység-csökkenés, ld. jelentés.
   {
     const overAge=korValid&&kor>45;
-    // Phase 5: a régi, kifejezetten vastagbélrák-specifikus csaladi opciót az
-    // új, összevont "Daganatos betegség" opció váltja (szélesebb kategória —
-    // ld. jelentés a szemantikai eltolódásról).
-    const famColon=csaladi.includes('Daganatos betegség');
     const irregul=ans.rendszertelen_szekeles==='Igen';
-    if(overAge||famColon||irregul){
-      flags.push({area:'Gyomor-bél',hard:false,reason:'a kor (45 felett), a családi vastagbélrák-érintettség vagy a rendszertelen székelési szokás közül legalább egy fennáll'});
+    if(overAge||irregul){
+      flags.push({area:'Gyomor-bél',hard:false,reason:'a kor (45 felett) vagy a rendszertelen székelési szokás fennáll'});
     }
   }
   // 7. Légzőszervi: dohányzás + kifulladás együtt
@@ -1871,16 +1867,14 @@ function computeScreeningFlags(){
       flags.push({area:'Légzőszervi',hard:false,reason:'a dohányzás és a szokatlanul könnyű kifulladás együtt jelentkezik'});
     }
   }
-  // 8. Neurológiai: visszatérő, ki nem vizsgált fejfájás VAGY erős családi
-  //    migrén/stroke-anamnézis
+  // 8. Neurológiai: a visszatérő, ki nem vizsgált fejfájás önmagában is
+  // elég — ez volt eddig is a domináns feltétel. Phase 6: a családi
+  // migrén/stroke-leg kikerült (ez korábban is csak egy pontatlan,
+  // "Szív-érrendszeri probléma" opcióra visszavezetett közelítés volt,
+  // valódi elvesztett érzékenység minimális, ld. jelentés).
   {
-    // Phase 5: a régi "Migrén vagy stroke" csaladi opciónak nincs 1:1
-    // megfelelője az új opciókészletben — a legközelebbi analóg a
-    // "Szív-érrendszeri probléma" (a stroke érrendszeri esemény), ld.
-    // jelentés a szemantikai eltolódásról (a migrén-specifikus jelzés elvész).
-    const famNeuro=csaladi.includes('Szív-érrendszeri probléma');
-    if(ans.fejfajas==='Igen'||famNeuro){
-      flags.push({area:'Neurológiai',hard:false,reason:'rendszeres, eddig ki nem vizsgált fejfájás áll fenn, vagy erős családi migrén/stroke-érintettség van'});
+    if(ans.fejfajas==='Igen'){
+      flags.push({area:'Neurológiai',hard:false,reason:'rendszeres, eddig ki nem vizsgált fejfájás áll fenn'});
     }
   }
   // 9. Bőr-Haj: az anyajegy-változás önmagában is elég — piros zászló szintű
@@ -1987,7 +1981,7 @@ function goSymptoms(){
   window.scrollTo(0,0);
 }
 function backFromQ6(){
-  if(isScreeningFlow()){showStep('qscr-c','48%');return}
+  if(isScreeningFlow()){showStep('qscr-b','44%');return}
   if(symptomsSkipped){showQ(3);return}
   if(isAllapot('A')){
     if((MULTI['tunet']||[]).length===0){goSymptoms();return}
@@ -2191,7 +2185,6 @@ function buildScreeningPrompt(){
     ? flags.map(f=>`- ${f.area}${f.hard?' [KIEMELT, piros-zászló-szintű tétel — ez önmagában is elég a "van mire figyelni" ághoz]':''}: ${f.reason}`).join('\n')
     : '(egyik modul sem jelzett — a checklist-alapú eredmény szerint "nincs jel" ág fut le)';
   const tudtadLines=(SCR.tudtad||[]).map(t=>'- '+t).join('\n');
-  const csaladi=(MULTI['csaladi']||[]).join(', ')||'nincs jelzett családi érintettség';
 
   return `Te a HovaForduljak Szűrés-Megelőzés moduljának AI asszisztense vagy. A felhasználó NEM jelzett konkrét panaszt — kockázati tényező alapú, megelőzési célú felmérést töltött ki. A modul-jelzéseket és az ágválasztást (lásd lent) egy kliens-oldali, szabály alapú logika már kiszámolta neked — a te feladatod ezt jó stílusban, emberi hangon megfogalmazni, NEM újraszámolni és NEM felülbírálni.
 
@@ -2211,8 +2204,8 @@ Dohányzás: ${A.dohanyzas||'nem adott meg'}
 Ismert magas vérnyomás: ${(MULTI['betegseg']||[]).includes('Magas vérnyomás')?'igen':'nem jelzett'}
 Ismert magas koleszterin: ${A.koleszterin||'nem adott meg'}
 Mozgásszint: ${A.eletmod||'nem adott meg'}
-Családi anamnézis: ${csaladi}
 Lakhely irányítószáma: ${A.iranyitoszam||'nem adott meg'}
+Megjegyzés: családi/háztartási kórtörténetről szándékosan NEM kérdeztünk (magánszféra-védelem) — ne feltételezz és ne kérdezz rá ilyesmire a válaszban.
 
 MODULEREDMÉNYEK (kliens oldalon, szabály alapján SZÁMOLVA — ne változtass rajtuk, csak fogalmazd meg jó stílusban):
 Eredmény-ág: ${branch==='VAN_MIRE_FIGYELNI'?'"Van mire figyelni" — legalább egy modul jelzett':'"Nincs jel" — egyik modul sem jelzett'}
