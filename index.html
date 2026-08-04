@@ -837,8 +837,28 @@ input[type=range]::-webkit-slider-thumb {
   <div class="wrap">
     <div class="prog-wrap"><div class="prog-fill" id="prog" style="width:8%"></div></div>
 
+    <!-- Q0: Hangulati nyitókérdés (Phase 4) — a Szűrés-Megelőzés flow tapintatosabb
+         nyitása; minden más előtt jön, demográfia előtt is. Egykoppintásos UI:
+         a választás azonnal továbblép, nincs külön "Tovább" gomb.
+         MEGJEGYZÉS: mivel a terület (és így "ez Szűrés-e") csak Q3-nál dől el,
+         ez a lépés architekturálisan csak úgy kerülhet a demográfia (Q1/Q2) elé,
+         ha MINDENKI látja, nem csak a Szűrés-Megelőzés ág — ez szándékos
+         kompromisszum, ld. jelentés. Nem táplál semmilyen trigger-logikát. -->
+    <div class="qstep on" id="qmood">
+      <div class="q-meta"><span class="q-dot"></span>Kezdésként</div>
+      <h2 class="q-title">Hogy érzed magad mostanában, összességében?</h2>
+      <p class="q-sub">Csak egy gyors benyomás — nincs jó vagy rossz válasz.</p>
+      <div class="opts solo" id="qmood-opts">
+        <div class="opt" onclick="pickMood(this,'Nagyon jól')"><div class="oi">😄</div><div><div class="ol">Nagyon jól</div></div></div>
+        <div class="opt" onclick="pickMood(this,'Jól')"><div class="oi">🙂</div><div><div class="ol">Jól</div></div></div>
+        <div class="opt" onclick="pickMood(this,'Átlagosan')"><div class="oi">😐</div><div><div class="ol">Átlagosan</div></div></div>
+        <div class="opt" onclick="pickMood(this,'Nem túl jól')"><div class="oi">🙁</div><div><div class="ol">Nem túl jól</div></div></div>
+        <div class="opt" onclick="pickMood(this,'Rosszul')"><div class="oi">😞</div><div><div class="ol">Rosszul</div></div></div>
+      </div>
+    </div>
+
     <!-- Q1: Nem -->
-    <div class="qstep on" id="q1">
+    <div class="qstep" id="q1">
       <div class="q-meta"><span class="q-dot"></span>Alap információk</div>
       <h2 class="q-title">Biológiai nem</h2>
       <p class="q-sub has-why">Egyes tünetek és kockázatok eltérőek — ez segít pontosabb képet adni.</p>
@@ -848,7 +868,7 @@ input[type=range]::-webkit-slider-thumb {
         <div class="opt" onclick="pick(this,'nem','Nő')"><div class="oi">♀</div><div><div class="ol">Nő</div></div></div>
         <div class="opt" onclick="pick(this,'nem','Egyéb')"><div class="oi">◎</div><div><div class="ol">Nem adom meg</div></div></div>
       </div>
-      <div class="q-nav"><span></span><button class="btn-p" onclick="nxt(2)">Tovább →</button></div>
+      <div class="q-nav"><button class="btn-back" onclick="showStep('qmood','4%')">← Vissza</button><button class="btn-p" onclick="nxt(2)">Tovább →</button></div>
     </div>
 
     <!-- Q2: Kor + testsúly -->
@@ -928,14 +948,24 @@ input[type=range]::-webkit-slider-thumb {
       <div class="q-nav"><button class="btn-back" onclick="backFromSym()">← Vissza</button><button class="btn-p" onclick="afterSymptoms()">Tovább →</button></div>
     </div>
 
-    <!-- QSCR-A: Szűrés-Megelőzés alapadat — dohányzás -->
+    <!-- QSCR-A: Szűrés-Megelőzés — életmód gyorskérdés (Phase 4: egyesített,
+         semleges multi-select checklist, ami a korábbi nyers "Dohányzol?"
+         igen/nem kérdést váltja ki; a dohányzás mezőt a "Dohányzom" jelölésből
+         vezetjük le. A koleszterin/családi anamnézis/Q6/Q7 kérdéseket EZ NEM
+         helyettesíti, azok változatlanul, külön lépésként jönnek utána. -->
     <div class="qstep" id="qscr-a">
-      <div class="q-meta"><span class="q-dot"></span>Szűrés-Megelőzés · Alapadat</div>
-      <h2 class="q-title">Dohányzol jelenleg (vagy leszoktál kevesebb, mint 1 éve)?</h2>
-      <p class="q-sub">Ez több szűrési kockázat becslésénél is alapadat.</p>
-      <div class="opts solo" id="qscr-a-opts">
-        <div class="opt" onclick="pick(this,'dohanyzas','Igen')"><div class="oi">🚬</div><div><div class="ol">Igen</div></div></div>
-        <div class="opt" onclick="pick(this,'dohanyzas','Nem')"><div class="oi">◎</div><div><div class="ol">Nem</div></div></div>
+      <div class="q-meta"><span class="q-dot"></span>Szűrés-Megelőzés · Életmód</div>
+      <h2 class="q-title">Most néhány gyors kérdés jön az életmódodról</h2>
+      <p class="q-sub">Ez segít abban, hogy a folytatás jobban hozzád igazodjon.</p>
+      <p class="q-sub" style="margin-top:-10px">Melyik jellemez most rád?</p>
+      <div class="multi-hint">Jelölhetsz többet is</div>
+      <div class="opts" id="qscr-a-opts">
+        <div class="opt" onclick="mpick(this,'eletmod_check','Rendszeres mozgás')"><div class="oi">🏃</div><div><div class="ol">Rendszeres mozgás</div></div></div>
+        <div class="opt" onclick="mpick(this,'eletmod_check','Dohányzom')"><div class="oi">🚬</div><div><div class="ol">Dohányzom</div></div></div>
+        <div class="opt" onclick="mpick(this,'eletmod_check','Keveset alszom')"><div class="oi">🌙</div><div><div class="ol">Keveset alszom</div></div></div>
+        <div class="opt" onclick="mpick(this,'eletmod_check','Sok stressz ér mostanában')"><div class="oi">🌪️</div><div><div class="ol">Sok stressz ér mostanában</div></div></div>
+        <div class="opt" onclick="mpick(this,'eletmod_check','Igyekszem odafigyelni az étkezésre')"><div class="oi">🥗</div><div><div class="ol">Igyekszem odafigyelni az étkezésre</div></div></div>
+        <div class="opt" onclick="mpick(this,'eletmod_check','Egyik sem különösebben jellemző')"><div class="oi">◎</div><div><div class="ol">Egyik sem különösebben jellemző</div></div></div>
       </div>
       <div class="q-nav"><button class="btn-back" onclick="backFromScrA()">← Vissza</button><button class="btn-p" onclick="afterScrA()">Tovább →</button></div>
     </div>
@@ -1470,7 +1500,13 @@ function goQuiz(){
     setTimeout(()=>row.classList.remove('attn'),2200);
     return;
   }
-  go('s-quiz');showQ(1);
+  go('s-quiz');showStep('qmood','4%');
+}
+// Phase 4: hangulati nyitókérdés — egykoppintásos, azonnal továbblép Q1-re.
+// Nem táplál trigger-logikát, kizárólag hangnem-lágyítás / prompt-kontextus.
+function pickMood(el,val){
+  pick(el,'hangulat',val);
+  showQ(1);
 }
 function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
 
@@ -1605,43 +1641,57 @@ const FREQ_OPTS=['Egyáltalán nem','Néhány napon','A napok többségén','Szi
 function freqIdx(val){return FREQ_OPTS.indexOf(val);}
 // 2. réteg — a 9 modul saját (alapadatból nem levezethető) új kérdései.
 // A kérdésszöveg szó szerint a specifikációból való — ne fogalmazd át.
+// Phase 4: minden modul adaptív, kétlépcsős — csak a nyitókérdés jelenik meg
+// elsőre, a mélyítő kérdés(ek) csak pozitív nyitóválasz esetén (followupGate).
+// followupStart = hányadik indextől kezdődnek a mélyítő kérdések a qs[] tömbben
+// (a korábbiak mindig nyitókérdésként/openerként jelennek meg).
+// Ha egy modulnak nincs followupGate-je, MINDEN kérdése mindig látszik —
+// ez szándékos két esetben: (1) a modulnak csak 1 kérdése van, nincs mit
+// mélyíteni (Szív, Gyomor-bél, Légzőszervi, Neurológiai); (2) a mélyítés
+// elrejtése klinikai detektálási kockázatot jelentene (Mozgásszervi,
+// Bőr-Haj — ld. jelentés a döntés indoklásával).
+// A modulok MEGJELENÉSI SORRENDJE is szándékosan összekevert (nem követi az
+// életmód-checklist/A/B/C sorrendet), hogy ne érződjön nyomozásnak.
 const SCR_MODULES=[
   {key:'sziv',title:'Szív és keringés',ic:'❤️',qs:[
     {id:'csaladi_mi',label:'Van-e a családban 55 év alatt bekövetkezett szívinfarktus vagy stroke?',type:'yn'}
-  ]},
-  {key:'alvas',title:'Alvás',ic:'🌙',qs:[
-    {id:'horkolas',label:'Szoktál hangosan horkolni (vagy mondták már neked)?',type:'yn'},
-    {id:'legzeskimaradas',label:'Észlelt már valaki légzéskimaradást alvás közben nálad?',type:'yn'},
-    {id:'nappali_faradtsag',label:'Napközben szokatlanul fáradtnak érzed magad, annak ellenére, hogy eleget alszol?',type:'yn'}
-  ]},
-  {key:'anyagcsere',title:'Anyagcsere-Hormonális',ic:'⚗️',qs:[
-    {id:'derekbo',label:'Derékbőség kategória (szűk / átlagos / szoros öv alapján)',type:'choice',choices:['Szűk','Átlagos','Szoros öv']},
-    {id:'zoldseg',label:'Milyen gyakran fogyasztasz zöldséget/gyümölcsöt?',type:'choice',choices:['Ritkán','Néhányszor hetente','Szinte naponta']},
-    {id:'vercukor',label:'Volt-e valaha magas vércukrod mérve (akár terhesség alatt is)?',type:'yn'}
-  ]},
-  {key:'mentalis',title:'Mentális-Pszichés',ic:'🧠',qs:[
-    {id:'phq1',label:'Az elmúlt 2 hétben mennyire zavart, hogy levertnek, reménytelennek érezted magad?',type:'freq'},
-    {id:'phq2',label:'Az elmúlt 2 hétben mennyire zavart, hogy keveset érdekelt vagy örültél a dolgoknak?',type:'freq'},
-    {id:'gad1',label:'Az elmúlt 2 hétben mennyire zavart, hogy szorongást, feszültséget éreztél?',type:'freq'},
-    {id:'gad2',label:'Az elmúlt 2 hétben mennyire zavart, hogy nem tudtad abbahagyni az aggódást?',type:'freq'}
-  ]},
-  {key:'mozgasszervi',title:'Mozgásszervi',ic:'🦴',qs:[
-    {id:'ulomunka',label:'Van ülőmunkád (napi 6+ óra ülés)?',type:'yn'},
-    {id:'reggeli_merevseg',label:'Van reggeli ízületi merevséged, ami több mint fél óráig tart?',type:'yn'}
-  ]},
-  {key:'gyomorbel',title:'Gyomor-bél',ic:'🫃',qs:[
-    {id:'rendszertelen_szekeles',label:'Van rendszertelen székelési szokásod (váltakozó hasmenés/székrekedés) az elmúlt hónapokban?',type:'yn'}
-  ]},
-  {key:'legzo',title:'Légzőszervi',ic:'🫁',qs:[
-    {id:'kifulladas',label:'Kifulladsz szokatlanul könnyen olyasminél, ami korábban nem okozott gondot?',type:'yn'}
-  ]},
-  {key:'neuro',title:'Neurológiai',ic:'⚡',qs:[
-    {id:'fejfajas',label:'Van rendszeres, visszatérő fejfájásod, amit eddig nem néztél meg?',type:'yn'}
   ]},
   {key:'borhaj',title:'Bőr-Haj',ic:'✨',qs:[
     {id:'nap_leeges',label:'Könnyen leégsz a napon, fényes bőrtípusú vagy?',type:'yn'},
     {id:'csaladi_borrak',label:'Van a családban ismert bőrrák/melanoma?',type:'yn'},
     {id:'anyajegy_valtozas',label:'Van olyan anyajegyed, ami az elmúlt hónapokban változott (méret, szín, forma)?',type:'yn'}
+  ]}, // szándékosan NINCS followupGate: az anyajegy-kérdés önmagában is
+      // piros-zászló-szintű, ezért mindig, elrejtés nélkül látszik (ld. jelentés)
+  {key:'gyomorbel',title:'Gyomor-bél',ic:'🫃',qs:[
+    {id:'rendszertelen_szekeles',label:'Van rendszertelen székelési szokásod (váltakozó hasmenés/székrekedés) az elmúlt hónapokban?',type:'yn'}
+  ]},
+  {key:'alvas',title:'Alvás',ic:'🌙',qs:[
+    {id:'horkolas',label:'Szoktál hangosan horkolni (vagy mondták már neked)?',type:'yn'},
+    {id:'legzeskimaradas',label:'Észlelt már valaki légzéskimaradást alvás közben nálad?',type:'yn'},
+    {id:'nappali_faradtsag',label:'Napközben szokatlanul fáradtnak érzed magad, annak ellenére, hogy eleget alszol?',type:'yn'}
+  ],followupStart:1,followupGate:ans=>ans.horkolas==='Igen'},
+  {key:'neuro',title:'Neurológiai',ic:'⚡',qs:[
+    {id:'fejfajas',label:'Van rendszeres, visszatérő fejfájásod, amit eddig nem néztél meg?',type:'yn'}
+  ]},
+  {key:'mozgasszervi',title:'Mozgásszervi',ic:'🦴',qs:[
+    {id:'ulomunka',label:'Van ülőmunkád (napi 6+ óra ülés)?',type:'yn'},
+    {id:'reggeli_merevseg',label:'Van reggeli ízületi merevséged, ami több mint fél óráig tart?',type:'yn'}
+  ]}, // szándékosan NINCS followupGate: a reggeli merevség önmagában is elég
+      // jelzés (hard:true a trigger-logikában), ülőmunka=Nem mögé rejtve
+      // álnegatívot okozna, ezért mindig mindkét kérdés látszik (ld. jelentés)
+  {key:'anyagcsere',title:'Anyagcsere-Hormonális',ic:'⚗️',qs:[
+    {id:'derekbo',label:'Derékbőség kategória (szűk / átlagos / szoros öv alapján)',type:'choice',choices:['Szűk','Átlagos','Szoros öv']},
+    {id:'zoldseg',label:'Milyen gyakran fogyasztasz zöldséget/gyümölcsöt?',type:'choice',choices:['Ritkán','Néhányszor hetente','Szinte naponta']},
+    {id:'vercukor',label:'Volt-e valaha magas vércukrod mérve (akár terhesség alatt is)?',type:'yn'}
+  ],followupStart:1,followupGate:ans=>ans.derekbo==='Szoros öv'},
+  {key:'mentalis',title:'Mentális-Pszichés',ic:'🧠',qs:[
+    {id:'phq1',label:'Az elmúlt 2 hétben mennyire zavart, hogy levertnek, reménytelennek érezted magad?',type:'freq'},
+    {id:'phq2',label:'Az elmúlt 2 hétben mennyire zavart, hogy keveset érdekelt vagy örültél a dolgoknak?',type:'freq'},
+    {id:'gad1',label:'Az elmúlt 2 hétben mennyire zavart, hogy szorongást, feszültséget éreztél?',type:'freq'},
+    {id:'gad2',label:'Az elmúlt 2 hétben mennyire zavart, hogy nem tudtad abbahagyni az aggódást?',type:'freq'}
+  ],followupStart:2,followupGate:ans=>freqIdx(ans.phq1)>=2||freqIdx(ans.phq2)>=2},
+  {key:'legzo',title:'Légzőszervi',ic:'🫁',qs:[
+    {id:'kifulladas',label:'Kifulladsz szokatlanul könnyen olyasminél, ami korábban nem okozott gondot?',type:'yn'}
   ]}
 ];
 
@@ -1652,8 +1702,13 @@ function backFromScrA(){
   if(document.getElementById('qstate')&&(MULTI['terület']||[]).filter(a=>a!=='Szűrés-Megelőzés').length>0){showStep('qstate','30%');return}
   showQ(3);
 }
+// Phase 4: a dohányzás mezőt az egyesített életmód-checklistből vezetjük le
+// ("Dohányzom" bejelölve = dohányzás igen) — nincs külön validáció/kötelezővé
+// tétel, mert az "Egyik sem különösebben jellemző" (vagy akár a 0 jelölés is)
+// önmagában is érvényes, semleges válasz.
 function afterScrA(){
-  if(!A.dohanyzas){shakeEl('qscr-a');return}
+  const sel=MULTI['eletmod_check']||[];
+  A.dohanyzas=sel.includes('Dohányzom')?'Igen':'Nem';
   showStep('qscr-b','44%');
 }
 function afterScrB(){
@@ -1682,20 +1737,31 @@ function renderScrQuestion(q){
   }).join('');
   return `<div class="scr-qblock" style="margin:14px 0"><p class="q-sub" style="margin-bottom:8px">${q.label}</p><div class="opts solo">${opts}</div></div>`;
 }
-function scrPick(el,qid,val){
-  const scope=el.closest('.scr-qblock');
-  if(scope)scope.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
-  el.classList.add('sel');
-  SCR.answers[qid]=val;
+// Phase 4: mely kérdések látszanak most egy adott modulból — a nyitó(k)
+// mindig, a mélyítő kérdés(ek) csak akkor, ha a modul followupGate-je
+// (a jelenlegi SCR.answers alapján) igazat ad. followupGate hiányában
+// minden kérdés mindig látszik (ld. SCR_MODULES megjegyzései).
+function visibleScrQs(mod){
+  if(!mod.followupGate)return mod.qs;
+  const openers=mod.qs.slice(0,mod.followupStart);
+  const followups=mod.followupGate(SCR.answers)?mod.qs.slice(mod.followupStart):[];
+  return openers.concat(followups);
 }
-function renderScreeningModules(){
+function scrPick(el,qid,val){
+  SCR.answers[qid]=val;
+  // Csak a modul-kérdések + piros zászlók blokkját építjük újra (nincs
+  // showStep/scrollTo hívás), hogy egy mélyítő kérdés felfedése ne ugrassa
+  // vissza a felhasználót a lap tetejére minden egyes koppintásnál.
+  buildScreeningModulesHtml();
+}
+function buildScreeningModulesHtml(){
   const cont=document.getElementById('scr-mod-container');
   if(!cont)return;
   cont.innerHTML='';
   SCR_MODULES.forEach(mod=>{
     const group=document.createElement('div');
     group.className='sym-group';
-    const qHtml=mod.qs.map(renderScrQuestion).join('');
+    const qHtml=visibleScrQs(mod).map(renderScrQuestion).join('');
     const rfHtml=(RED_FLAGS[mod.title]||[]).map((rf,i)=>{
       const areaSafe=mod.title.replace(/'/g,"\\'");
       return `<div class="sym-opt" onclick="rfPick(this,'${areaSafe}',${i})"><span class="sym-check">✓</span><span>${rf.t}</span></div>`;
@@ -1704,6 +1770,9 @@ function renderScreeningModules(){
       (rfHtml?`<div class="sym-opts">${rfHtml}</div>`:'');
     cont.appendChild(group);
   });
+}
+function renderScreeningModules(){
+  buildScreeningModulesHtml();
   showStep('qscr-mod','70%');
 }
 // BMI = testsúly / testmagasság(m)^2 — KIZÁRÓLAG belső trigger-logikához,
@@ -2109,6 +2178,7 @@ KRITIKUS, NEM ALKUKÉPES SZABÁLY (orvostechnikai-eszköz-minősítési, MDR-koc
 - A hangnem mindig felfedező, összekötő, SOHA nem "ez a bajod" jellegű kijelentés.
 
 A FELHASZNÁLÓ ALAPADATAI:
+Aktuális hangulati benyomás (Phase 4, csak tónus-kontextus a hangnemhez — NE építs rá triggert, NE hivatkozz rá számszerűen): ${A.hangulat||'nem adott meg'}
 Nem: ${A.nem||'nem adott meg'}
 Kor: ${A.kor||'nem adott meg'}
 Testtömeg-index tartomány (kizárólag belső, minőségi jelzés — SOHA ne írj ki számot): ${bmiHint}
