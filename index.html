@@ -1723,13 +1723,19 @@ const SCR_MODULES=[
       // egy képernyő-blokkban megjelenő kérdésre összevonva; a reggeli
       // merevség jelzés-értéke (hard:true) a választott opcióból továbbra
       // is kiolvasható — ld. computeScreeningFlags()
+  // v1.7 (SÜRGŐS JAVÍTÁS): a korábbi, egybegyúrt kérdés a MedSoulYou
+  // referencia-dokumentumból másolt "...akár terhesség alatt is?" toldással
+  // NEM-SPECIFIKUS tartalmat tett ki minden felhasználónak, nemtől
+  // fuggetlenul (egy ferfi felhasznalonal is megjelent). Kicserelve
+  // semleges, opener + 2 kulon melyito kerdesre, sex-utalas nelkul.
   {key:'anyagcsere',title:'Anyagcsere-Hormonális',ic:'⚗️',qs:[
-    {id:'anyagcsere_jelzes',label:'Nagyobb lett a derekad, vagy szorosabban áll rajtad az öv, mint korábban — vagy volt már valaha magas vércukrod kimérve (akár terhesség alatt is)?',type:'yn',
-     sub:'A haskörfogat és a vércukor-előzmény együtt az egyik legjobb korai jelzés a 2-es típusú cukorbetegség kockázatára.'}
-  ]}, // Phase 6: a korábbi 3 tétel (derékbőség/zöldség-gyümölcs gyakoriság/
-      // vércukor) 1 összevont kérdésre egyszerűsítve — a zöldség-gyümölcs
-      // gyakoriság kérdés (nem vett részt a trigger-számításban, csak
-      // kontextus volt) elhagyva, followupGate törölve
+    {id:'anyagcsere_opener',label:'Változott mostanában a testsúlyod, vagy szoktál szokatlan éhség- vagy szomjúságérzést tapasztalni?',type:'yn'},
+    {id:'anyagcsere_derek',label:'Szorít az öv derékon, mint korábban nem szokott?',type:'yn'},
+    {id:'anyagcsere_vercukor',label:'Volt már valaha kimérve nálad magas vércukorérték?',type:'yn'}
+  ],followupStart:1,followupGate:ans=>ans.anyagcsere_opener==='Igen'}, // a ket melyito
+      // kerdes csak pozitiv nyito utan, kulon-kulon lepeskent jelenik meg —
+      // egyik sem hivatkozik terhessegre/menstruaciora/nem-specifikus
+      // tartalomra, mindkettő minden nemnel azonosan ertelmezheto
   {key:'mentalis',title:'Mentális-Pszichés',ic:'🧠',qs:[
     {id:'phq1',label:'Az elmúlt 2 hétben mennyire zavart, hogy levertnek, reménytelennek érezted magad?',type:'freq'},
     {id:'phq2',label:'Az elmúlt 2 hétben mennyire zavart, hogy keveset érdekelt vagy örültél a dolgoknak?',type:'freq'},
@@ -1976,7 +1982,8 @@ function computeScreeningFlags(){
   // mozgásszegény életmód együtt kell. A családi cukorbetegség-leg
   // kikerült — valós, szándékos érzékenység-csökkenés, ld. jelentés.
   {
-    const factors=[(highBMI||ans.anyagcsere_jelzes==='Igen'),eletmodUlo];
+    const anyagJelzes=highBMI||ans.anyagcsere_derek==='Igen'||ans.anyagcsere_vercukor==='Igen';
+    const factors=[anyagJelzes,eletmodUlo];
     if(factors.filter(Boolean).length>=2){
       flags.push({area:'Anyagcsere-Hormonális',hard:false,reason:'együtt van jelen a magasabb testtömeg/haskörfogat vagy a vércukor-előzmény, és a mozgásszegény életmód'});
     }
