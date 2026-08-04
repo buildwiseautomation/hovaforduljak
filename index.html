@@ -1003,11 +1003,11 @@ input[type=range]::-webkit-slider-thumb {
          megjelenítés lett tömörebb, a biztonsági réteg logikája nem
          változott (ld. rfPick()/showRedZone()/showCrisis()). -->
     <div class="qstep" id="qscr-mod">
-      <div class="q-meta"><span class="q-dot"></span>Szűrés-Megelőzés · Rendszerenkénti kérdések</div>
-      <h2 class="q-title">Néhány gyors kérdés rendszerenként</h2>
-      <p class="q-sub">Ezek validált szűrő-kérdőívek mintájára épülnek — jelöld be, ami rád igaz.</p>
+      <div class="q-meta"><span class="q-dot"></span><span id="scr-wiz-meta">Szűrés-Megelőzés</span></div>
+      <h2 class="q-title" id="scr-wiz-title"></h2>
+      <p class="q-sub" id="scr-wiz-sub" style="display:none"></p>
       <div id="scr-mod-container"></div>
-      <div class="q-nav"><button class="btn-back" onclick="showQ(7)">← Vissza</button><button class="btn-p" onclick="afterScreeningModules()">Tovább →</button></div>
+      <div class="q-nav"><button class="btn-back" id="scr-wiz-back" onclick="scrWizBack()">← Vissza</button><button class="btn-p" id="scr-wiz-next" style="display:none" onclick="scrWizManualNext()">Tovább →</button></div>
     </div>
 
     <!-- Q4: Súlyosság -->
@@ -1512,7 +1512,7 @@ function pickMood(el,val){
   pick(el,'hangulat',val);
   showQ(1);
 }
-function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];SCR.modIndex=0;SCR.rfGateOpen=undefined;const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
+function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];SCR.modIndex=0;SCR.rfGateOpen=undefined;SCR.wizStack=[];SCR.wizCur=null;const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
 
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('on',window.scrollY>10));
 
@@ -1640,7 +1640,7 @@ function isScreeningFlow(){
 }
 // Élő állapot: a Szűrés-Megelőzés-specifikus új kérdésekre adott válaszok +
 // a belőlük számolt modul-jelzések és tudtad-e tételek.
-const SCR = {answers:{}, flags:[], tudtad:[], modIndex:0, rfGateOpen:undefined};
+const SCR = {answers:{}, flags:[], tudtad:[], modIndex:0, rfGateOpen:undefined, wizStack:[], wizCur:null};
 const FREQ_OPTS=['Egyáltalán nem','Néhány napon','A napok többségén','Szinte minden nap'];
 function freqIdx(val){return FREQ_OPTS.indexOf(val);}
 // 2. réteg — a 9 modul saját (alapadatból nem levezethető) új kérdései.
@@ -1746,6 +1746,45 @@ function q7Next(){
   if(isScreeningFlow()){renderScreeningModules();return}
   nxt(8);
 }
+// Phase 10 (élő visszajelzés: "a Szűrés-Megelőzés jelenleg egy hosszú,
+// letekerős oldal — ez teljesen rossz ... egy képernyőn mindig pontosan egy
+// kérdés van") — a korábbi Phase 8-as, EGY görgethető oldalas
+// buildScreeningModulesHtml()/scrPick() mechanizmust egy valódi,
+// egy-kérdés-egy-képernyő step-wizard váltja fel, UGYANAZT a showStep()
+// mechanizmust és .qstep konténert (id="qscr-mod") használva, mint a másik
+// 9 szakterület saját lépései — nincs új UI-komponens, csak a #qscr-mod
+// belseje épül újra minden lépésnél. A modulok saját kérdés-SZÖVEGE
+// (SCR_MODULES, RED_FLAGS) NEM változott, csak a megjelenítés: egyszerre
+// mindig csak 1 kérdés látszik. A sorrend: a 7 "csendes" modul (Bőr-Haj,
+// Gyomor-bél, Alvás, Neurológiai, Mozgásszervi, Anyagcsere-Hormonális,
+// Légzőszervi — a Phase 4-ben már összekevert sorrendben, hogy a dohányzás
+// kérdés, ami külön, korábbi lépésen van, ne legyen közvetlenül a
+// Légzőszervi modul mellett), utána a Mentális-Pszichés modul SAJÁT
+// bevezető lépéssel (érzékenyebb téma, ezért külön framing-képernyő), végül
+// a piros-zászló biztonsági réteg: 1 kapu-kérdés, és csak pozitív válasz
+// esetén, KÜLÖN lépésként a teljes tételes lista (rfPick()/showRedZone()/
+// showCrisis() logika változatlan). Vissza-navigáció: egyszerű LIFO
+// history-stack (SCR.wizStack) — minden előrelépés push-ol, minden Vissza
+// pop-ol; üres stack esetén Vissza a Q7-re (betegségek) megy, ugyanúgy,
+// mint korábban.
+// FONTOS: a doksi-hivatkozott "családi háttér" opcionális kérdés (v.
+// "v1.5, 07b szekció") NEM került be — a ténylegesen feltöltött doksiban ez
+// a szekció nem létezik, és a Phase 6-ban explicit, nem tárgyalható
+// szabályként rögzített magánszféra-tiltással (soha nem kérdezünk családi/
+// háztartási egészségügyi háttérről a Screeningben) ütközne. Ha ezt
+// valóban vissza kell hozni, ahhoz külön, explicit megerősítés kell.
+const SCR_WIZ_MODULE_ORDER=['borhaj','gyomorbel','alvas','neuro','mozgasszervi','anyagcsere','legzo'];
+function scrWizModByKey(key){return SCR_MODULES.find(m=>m.key===key);}
+// mely kérdések látszanak most egy adott modulból — a nyitó(k) mindig, a
+// mélyítő kérdés(ek) csak akkor, ha a modul followupGate-je (a jelenlegi
+// SCR.answers alapján) igazat ad. followupGate hiányában minden kérdés
+// mindig látszik (ld. SCR_MODULES megjegyzései).
+function visibleScrQs(mod){
+  if(!mod.followupGate)return mod.qs;
+  const openers=mod.qs.slice(0,mod.followupStart);
+  const followups=mod.followupGate(SCR.answers)?mod.qs.slice(mod.followupStart):[];
+  return openers.concat(followups);
+}
 function renderScrQuestion(q){
   let choices;
   if(q.type==='yn')choices=['Igen','Nem'];
@@ -1755,100 +1794,105 @@ function renderScrQuestion(q){
   const opts=choices.map(c=>{
     const sel=cur===c?' sel':'';
     const safe=c.replace(/'/g,"\\'");
-    return `<div class="opt${sel}" onclick="scrPick(this,'${q.id}','${safe}')"><div class="ol">${c}</div></div>`;
+    return `<div class="opt${sel}" onclick="scrWizAnswer('${q.id}','${safe}')"><div class="ol">${c}</div></div>`;
   }).join('');
-  // Phase 6: opcionális rövid magyarázó alcím (q.sub) az összevont
-  // kérdéseknél, ha egy laikus számára a fogalom nem magától értetődő —
-  // ugyanaz a q-sub/has-why mintázat, mint a fő kérdés-lépéseknél.
   const subHtml=q.sub?`<p class="q-sub has-why" style="font-size:.78rem;margin:-2px 0 10px">${q.sub}</p>`:'';
-  return `<div class="scr-qblock" style="margin:14px 0"><p class="q-sub" style="margin-bottom:8px">${q.label}</p>${subHtml}<div class="opts solo">${opts}</div></div>`;
+  return `${subHtml}<div class="opts solo">${opts}</div>`;
 }
-// Phase 4: mely kérdések látszanak most egy adott modulból — a nyitó(k)
-// mindig, a mélyítő kérdés(ek) csak akkor, ha a modul followupGate-je
-// (a jelenlegi SCR.answers alapján) igazat ad. followupGate hiányában
-// minden kérdés mindig látszik (ld. SCR_MODULES megjegyzései).
-function visibleScrQs(mod){
-  if(!mod.followupGate)return mod.qs;
-  const openers=mod.qs.slice(0,mod.followupStart);
-  const followups=mod.followupGate(SCR.answers)?mod.qs.slice(mod.followupStart):[];
-  return openers.concat(followups);
-}
-function scrPick(el,qid,val){
-  SCR.answers[qid]=val;
-  // Csak a modul-kérdések + piros zászlók blokkját építjük újra (nincs
-  // showStep/scrollTo hívás), hogy egy mélyítő kérdés felfedése ne ugrassa
-  // vissza a felhasználót a lap tetejére minden egyes koppintásnál.
-  buildScreeningModulesHtml();
-}
-// Phase 8: EGY, nem lapozott képernyő — a 9 modul saját kérdése (ld.
-// visibleScrQs()) most EGYÜTT jelenik meg, modulonként egy-egy rövid
-// sym-group-blokkban (cím + ikon + a modul saját kérdése/kérdései). A
-// Szívnek nincs saját kérdése (qs:[]) — annak a modulnak nem jelenik meg
-// külön blokkja itt (üres cím, kérdés nélkül nem tenne hozzá semmit; a
-// Szív modul a bázisadatokból csendben, kérdés nélkül dolgozik, ld.
-// computeScreeningFlags()). A 9 modulra korábban KÜLÖN-KÜLÖN megismételt
-// piros-zászló blokkokat (Phase 7: 9x, kb. 30+ checkbox sor) EGYETLEN,
-// összevont "sürgős jelek" blokk váltja fel a kérdések alatt — ld.
-// buildConsolidatedRedFlagsHtml().
-function buildScreeningModulesHtml(){
-  const cont=document.getElementById('scr-mod-container');
-  if(!cont)return;
-  const modsHtml=SCR_MODULES.map(mod=>{
-    const qHtml=visibleScrQs(mod).map(renderScrQuestion).join('');
-    if(!qHtml)return ''; // pl. Szív — nincs saját kérdése, nincs blokkja itt
-    return `<div class="sym-group"><div class="sym-group-title"><span class="gi">${mod.ic}</span>${mod.title}</div>${qHtml}</div>`;
-  }).join('');
-  cont.innerHTML=modsHtml+buildConsolidatedRedFlagsHtml();
-}
-// Phase 8: a 9, modulonként megismételt piros-zászló blokk helyett EGY,
-// összevont "sürgős jelek" lista — a RED_FLAGS mind a 9 területének MINDEN
-// tétele (kb. 30) benne marad, csak egyszer, egyetlen cím alatt, tömören
-// felsorolva (nem 9x, 9 külön piros dobozban). Minden tétel változatlanul a
-// saját rfPick(el, terület, index) hívását tartja meg — ugyanaz a terület-
-// kulcs és index, mint a RED_FLAGS-ben és a másik 8 szakterület saját
-// (érintetlenül hagyott) piros-zászló megjelenítésében (ld. goSymptoms()) —
-// így a showRedZone()/showCrisis() interrupt-mechanizmus (crisis:true a
-// Mentális-Pszichés listában) pontosan úgy működik, mint korábban.
-// Verbatim-azonos szöveg nem fordul elő a 9 terület kb. 30 tétele között
-// (ellenőrizve), ezért nincs mit deduplikálni — mind a ~30 tétel megjelenik.
-// Phase 10 (élő visszajelzés: "belezsúfoltad a szűrés végénél azt a sok
-// hosszú marhaságot ... nem szabad hogy ilyen sok szarra választ kérjünk") —
-// a ~30 tételes összevont piros-zászló lista alapból NEM látszik többé.
-// Egyetlen kapu-kérdés jön helyette; a teljes tételes lista (biztonsági
-// réteg, változatlan rfPick()/showRedZone()/showCrisis() logikával) csak
-// akkor tárul fel, ha a felhasználó jelzi, hogy van valami, ami aggasztja.
-// Így annak, akinek nincs ilyen panasza (a többségnek), 1 rövid kérdést kell
-// csak elolvasnia a jelenlegi 30+ helyett — a biztonsági réteg egyetlen
-// tétele sem törölve, csak alapból összecsukva.
-function buildConsolidatedRedFlagsHtml(){
-  const itemsHtml=Object.keys(RED_FLAGS).map(area=>{
+function buildRedFlagListHtml(){
+  return Object.keys(RED_FLAGS).map(area=>{
     const areaSafe=area.replace(/'/g,"\\'");
     return (RED_FLAGS[area]||[]).map((rf,i)=>
       `<div class="sym-opt" onclick="rfPick(this,'${areaSafe}',${i})"><span class="sym-check">✓</span><span>${rf.t}</span></div>`
     ).join('');
   }).join('');
-  if(!itemsHtml)return '';
-  const open=SCR.rfGateOpen===true;
-  const gateYes=SCR.rfGateOpen===true?' sel':'';
-  const gateNo=SCR.rfGateOpen===false?' sel':'';
-  return `<div class="sym-group" id="scr-redflags-group">`+
-    `<div class="sym-group-title"><span class="gi">⚠️</span>Van bármi hirtelen kialakult vagy szokatlanul erős tüneted, ami most aggaszt?</div>`+
-    `<p class="q-sub" style="margin:-4px 0 8px;font-size:.78rem">Ha nem vagy benne biztos, inkább válaszd az "Igen"-t — utána kiválaszthatod, pontosan mi az.</p>`+
-    `<div class="opts solo">`+
-      `<div class="opt${gateYes}" onclick="scrRfGate(true)"><div class="ol">Igen, van ilyen</div></div>`+
-      `<div class="opt${gateNo}" onclick="scrRfGate(false)"><div class="ol">Nincs ilyen</div></div>`+
-    `</div>`+
-    `<div id="scr-rf-list" style="display:${open?'block':'none'};margin-top:10px">`+
-      `<p class="q-sub" style="margin-bottom:8px;font-size:.78rem">Jelöld meg, ami rád illik:</p>`+
-      `<div class="sym-opts">${itemsHtml}</div></div></div>`;
 }
-function scrRfGate(positive){
-  SCR.rfGateOpen=positive;
-  buildScreeningModulesHtml();
+function scrWizSetChrome(meta,title,sub,showManualNext){
+  document.getElementById('scr-wiz-meta').textContent=meta;
+  document.getElementById('scr-wiz-title').textContent=title;
+  const subEl=document.getElementById('scr-wiz-sub');
+  if(sub){subEl.textContent=sub;subEl.style.display='';}else{subEl.style.display='none';}
+  document.getElementById('scr-wiz-next').style.display=showManualNext?'':'none';
+}
+// Minden lépés egy {type,...} leíró; SCR.wizCur a jelenlegi, SCR.wizStack a
+// már bejárt lépések (Vissza-hoz).
+function scrWizRender(){
+  const step=SCR.wizCur;
+  const cont=document.getElementById('scr-mod-container');
+  if(step.type==='mod'||step.type==='mentalis'){
+    const mod=scrWizModByKey(step.type==='mod'?SCR_WIZ_MODULE_ORDER[step.modIdx]:'mentalis');
+    const qs=visibleScrQs(mod);
+    const q=qs[step.qIdx];
+    scrWizSetChrome('Szűrés-Megelőzés · '+mod.title,q.label,null,false);
+    cont.innerHTML=renderScrQuestion(q);
+  }else if(step.type==='mentalis-intro'){
+    scrWizSetChrome('Szűrés-Megelőzés · Mentális-Pszichés','Most néhány kérdés jön arról, hogy érezted magad mostanában','Ez egy rövid, validált (PHQ-2/GAD-2 mintájú) kérdéspár — nem diagnózis, csak jelzés.',true);
+    cont.innerHTML='';
+  }else if(step.type==='rfgate'){
+    scrWizSetChrome('Szűrés-Megelőzés · Biztonsági kérdés','Van bármi hirtelen kialakult vagy szokatlanul erős tüneted, ami most aggaszt?','Ha nem vagy benne biztos, inkább válaszd az "Igen"-t — utána kiválaszthatod, pontosan mi az.',false);
+    cont.innerHTML=`<div class="opts solo">`+
+      `<div class="opt" onclick="scrWizRfGate(true)"><div class="ol">Igen, van ilyen</div></div>`+
+      `<div class="opt" onclick="scrWizRfGate(false)"><div class="ol">Nincs ilyen</div></div>`+
+    `</div>`;
+  }else if(step.type==='rflist'){
+    scrWizSetChrome('Szűrés-Megelőzés · Biztonsági kérdés','Melyik illik rád az alábbiak közül?','Jelöld meg mindet, ami igaz — bármelyiket választod, azonnal továbbirányítunk.',true);
+    cont.innerHTML=`<div class="sym-opts">${buildRedFlagListHtml()}</div>`;
+  }
+  showStep('qscr-mod',scrWizPct());
+}
+function scrWizPct(){
+  const stackLen=(SCR.wizStack||[]).length;
+  return Math.min(92,70+stackLen*1.6)+'%';
+}
+function scrWizGoto(step){
+  SCR.wizStack.push(SCR.wizCur);
+  SCR.wizCur=step;
+  scrWizRender();
+}
+function scrWizBack(){
+  if(!SCR.wizStack||!SCR.wizStack.length){showQ(7);return}
+  SCR.wizCur=SCR.wizStack.pop();
+  scrWizRender();
+}
+// Egy modul (vagy a mentális blokk) egy kérdésére adott válasz után eldönti
+// a következő lépést: ugyanabban a modulban van-e még látható kérdés
+// (pl. most vált láthatóvá egy mélyítő kérdés, mert a válasz pozitív volt),
+// ha nincs, a következő modulra lép, a modul-lánc végén a mentális
+// bevezetőre, majd a piros-zászló kapu-kérdésre.
+function scrWizAnswer(qid,val){
+  SCR.answers[qid]=val;
+  const step=SCR.wizCur;
+  const mod=scrWizModByKey(step.type==='mod'?SCR_WIZ_MODULE_ORDER[step.modIdx]:'mentalis');
+  const qs=visibleScrQs(mod);
+  const nextQIdx=step.qIdx+1;
+  if(nextQIdx<qs.length){
+    scrWizGoto(step.type==='mod'?{type:'mod',modIdx:step.modIdx,qIdx:nextQIdx}:{type:'mentalis',qIdx:nextQIdx});
+    return;
+  }
+  if(step.type==='mod'){
+    const nextModIdx=step.modIdx+1;
+    if(nextModIdx<SCR_WIZ_MODULE_ORDER.length){scrWizGoto({type:'mod',modIdx:nextModIdx,qIdx:0});return}
+    scrWizGoto({type:'mentalis-intro'});
+    return;
+  }
+  // step.type==='mentalis' vége -> piros zászló kapu
+  scrWizGoto({type:'rfgate'});
+}
+function scrWizRfGate(positive){
+  if(!positive){afterScreeningModules();return}
+  scrWizGoto({type:'rflist'});
+}
+// A mentális bevezető és a piros-zászló lista lépésének saját, kézi
+// "Tovább" gombja van (nincs Igen/Nem választás magán a lépésen).
+function scrWizManualNext(){
+  const step=SCR.wizCur;
+  if(step.type==='mentalis-intro'){scrWizGoto({type:'mentalis',qIdx:0});return}
+  if(step.type==='rflist'){afterScreeningModules();return}
 }
 function renderScreeningModules(){
-  buildScreeningModulesHtml();
-  showStep('qscr-mod','70%');
+  SCR.wizStack=[];
+  SCR.wizCur={type:'mod',modIdx:0,qIdx:0};
+  scrWizRender();
 }
 // BMI = testsúly / testmagasság(m)^2 — KIZÁRÓLAG belső trigger-logikához,
 // a nyers számérték soha nem kerülhet ki a felhasználó felé (MDR-szabály).
@@ -2641,7 +2685,7 @@ function closeBooking(){
 if(typeof window!=='undefined'){
   window.__APP__={
     A,MULTI,S,SCR,SEVITEMS,
-    RED_FLAGS,SYMPTOMS,SCR_MODULES,FREQ_OPTS,
+    RED_FLAGS,SYMPTOMS,SCR_MODULES,FREQ_OPTS,SCR_WIZ_MODULE_ORDER,
     CRISIS_WORDS,CRISIS_PATTERNS,foldHuCrisis,scanCrisis,
     getRegion,REGIONS,
     isScreeningFlow,computeBMI,computeScreeningFlags,computeTudtadE,
