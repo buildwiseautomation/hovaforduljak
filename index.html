@@ -18,6 +18,20 @@
   --warm:#D97706;--warm-soft:rgba(217,119,6,0.10);
   --red:#DC4C4C;--red-soft:rgba(220,76,76,0.10);
   --text:#0F172A;--text2:#475569;--text3:#64748B;
+
+  /* v2.3: Screening eredmenyoldal mockup design-tokenjei -- a Mick altal
+     kuldott hovaforduljak-eredmenyoldal-mockup-v2.html :root blokkjabol,
+     VALTOZATLAN ertekekkel. A legtobb pontosan megegyezik egy mar meglevo
+     app-szintu valtozoval (pl. --color-primary === --text), de a mockup
+     sajat elnevezeseit szo szerint, kulon valtozokent is felvesszuk, hogy
+     a portolt CSS ne terjen el a mockuptol. Csak --color-danger es --ink
+     valoban uj (nincs pontos meglevo megfeleloju). Ez a token-keszlet
+     KIZAROLAG a .scr-v2 alatti (Screening eredmenyoldal) szabalyokban
+     hasznalt -- a tobbi kepernyot nem erinti. */
+  --color-primary:#0F172A;--color-action:#2F6FED;--color-secondary:#16BFC8;
+  --color-success:#34C38F;--color-info:#8FBFE0;--color-surface:#FFFFFF;
+  --color-background:#F8FAFC;--color-border:#E2E8F0;--color-danger:#DC2626;
+  --ink:#334155;--ink-soft:#64748B;
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
 
@@ -914,6 +928,85 @@ input[type=range]::-webkit-slider-thumb {
     scroll-behavior: auto !important;
   }
 }
+
+/* ================= v2.3: Screening eredmenyoldal -- mockup-alapu redesign =================
+   Forras: Mick altal kuldott hovaforduljak-eredmenyoldal-mockup-v2.html, szo szerint portolva.
+   Minden szabaly a .scr-v2 elotag ala van scope-olva, hogy semmilyen meglevo osztallyal
+   (pl. az mar letezo globalis .eyebrow) ne utkozzon. CSAK a Screening eredmenyoldalon
+   hasznalt (renderResult() -> #scr-v2 konteneren belul), a tobbi 9 szakterulet
+   (marketplace/AI-jelentes/Magan-vs-Allami) valtozatlan marad. */
+.scr-v2{font-family:'Manrope',sans-serif;color:var(--ink)}
+.scr-v2 .hero{padding:6px 0 4px}
+.scr-v2 .eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 11px;border-radius:100px;margin-bottom:14px}
+.scr-v2 .eyebrow.flag{background:#E8FAFB;color:#0E7A80}
+.scr-v2 .eyebrow.clear{background:#EAFAF3;color:#1F7A57}
+.scr-v2 .eyebrow .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.scr-v2 .eyebrow.flag .dot{background:var(--color-secondary)}
+.scr-v2 .eyebrow.clear .dot{background:var(--color-success)}
+.scr-v2 h1{font-size:26px;line-height:1.3;font-weight:700;letter-spacing:-.01em;color:var(--color-primary);margin:0 0 12px}
+.scr-v2 .lede{font-size:15px;line-height:1.5;font-weight:500;color:var(--ink);margin:0 0 18px}
+.scr-v2 .lede b{color:var(--color-primary);font-weight:700}
+.scr-v2 .disclaimer{display:flex;gap:10px;background:#EEF5FC;border:1px solid #D6E8F7;border-radius:12px;padding:13px 14px;margin-bottom:22px}
+.scr-v2 .disclaimer svg{flex-shrink:0;margin-top:1px}
+.scr-v2 .disclaimer span{font-size:13px;line-height:1.45;color:#1e3a5f}
+.scr-v2 .sec-head{display:flex;align-items:baseline;justify-content:space-between;margin:26px 0 12px}
+.scr-v2 .sec-head h2{font-size:16px;line-height:1.3;font-weight:700;color:var(--color-primary);margin:0}
+.scr-v2 .sec-head span{font-size:12px;color:var(--ink-soft);font-weight:600}
+.scr-v2 .cat-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:14px;padding:6px 4px;margin-bottom:22px;overflow:hidden}
+.scr-v2 .cat-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--color-border)}
+.scr-v2 .cat-row:last-child{border-bottom:none}
+.scr-v2 .cat-row .icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.scr-v2 .cat-row .icon.lvl-hi{background:#E8FAFB}
+.scr-v2 .cat-row .icon.lvl-ok{background:#EEF5FC}
+.scr-v2 .cat-body{flex:1;min-width:0}
+.scr-v2 .cat-name{font-size:14px;font-weight:700;color:var(--color-primary)}
+.scr-v2 .cat-note{font-size:12px;font-weight:500;color:var(--ink-soft);margin-top:1px}
+.scr-v2 .cat-dots{display:flex;gap:3px;flex-shrink:0}
+.scr-v2 .cat-dots i{width:6px;height:14px;border-radius:3px;background:var(--color-border);display:block}
+.scr-v2 .cat-dots i.on{background:var(--color-secondary)}
+.scr-v2 .cat-dots i.on.ok{background:var(--color-info)}
+.scr-v2 .tip{display:flex;gap:11px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 14px;margin-bottom:10px}
+.scr-v2 .tip .num{width:22px;height:22px;border-radius:7px;background:#EEF5FC;color:var(--color-action);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.scr-v2 .tip p{margin:0;font-size:13px;font-weight:500;color:var(--ink)}
+.scr-v2 .tip b{color:var(--color-primary);font-weight:700}
+.scr-v2 .doc-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:14px;padding:14px;margin-bottom:12px;position:relative}
+.scr-v2 .doc-card.featured{border-color:var(--color-success);box-shadow:0 0 0 1px var(--color-success)}
+.scr-v2 .doc-top{display:flex;gap:11px;align-items:flex-start}
+.scr-v2 .avatar{width:46px;height:46px;border-radius:12px;background:#EEF5FC;color:var(--color-action);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0}
+.scr-v2 .doc-info{flex:1;min-width:0}
+.scr-v2 .doc-name-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.scr-v2 .doc-name{font-size:14.5px;font-weight:700;color:var(--color-primary)}
+.scr-v2 .badge{font-size:10px;font-weight:800;padding:2px 7px;border-radius:100px;white-space:nowrap;letter-spacing:.02em}
+.scr-v2 .badge.partner{background:#EAFAF3;color:#1F7A57;text-transform:uppercase}
+.scr-v2 .badge.pending{background:#F1F5F9;color:var(--ink-soft);font-style:italic}
+/* v2.3 kiegeszites (nem volt a mockupban): valos badge-fajta a NEM igazolt,
+   illusztracios celu partner-peldakhoz -- ld. jelentes a chatben: a mockup
+   demo-kartyaja "Igazolt partner"-t irt egy nem-valos peldaklinikara, ez
+   valos adattal felteve hamis allitas lenne, ezert kulon, oszinte
+   badge-variansot vezetunk be. */
+.scr-v2 .badge.illustrative{background:#F1F5F9;color:var(--ink-soft)}
+.scr-v2 .doc-spec{font-size:12.5px;font-weight:500;color:var(--ink-soft);margin-top:2px}
+.scr-v2 .doc-clinic{font-size:12px;color:var(--ink-soft);margin-top:2px;display:flex;align-items:center;gap:5px}
+.scr-v2 .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.scr-v2 .tags span{font-size:11px;background:var(--color-background);border:1px solid var(--color-border);color:var(--ink-soft);padding:3px 8px;border-radius:100px}
+.scr-v2 .doc-cta{margin-top:12px;width:100%;background:var(--color-action);color:#fff;border:none;border-radius:10px;padding:11px;font-size:13.5px;font-weight:700;cursor:pointer}
+.scr-v2 .match-ring{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--color-success);border:2.5px solid #EAFAF3}
+.scr-v2 .habit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
+.scr-v2 .habit{background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px}
+.scr-v2 .habit .icon{font-size:18px;margin-bottom:6px;display:block}
+.scr-v2 .habit b{font-size:13px;font-weight:700;color:var(--color-primary);display:block;margin-bottom:2px}
+.scr-v2 .habit span{font-size:11.5px;font-weight:500;color:var(--ink-soft)}
+.scr-v2 .trust{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0 8px}
+.scr-v2 .trust div{display:flex;gap:8px;align-items:center;font-size:11px;font-weight:500;color:var(--ink-soft)}
+.scr-v2 .trust svg{flex-shrink:0;color:var(--color-success)}
+.scr-v2 .loc-note-v2{font-size:12px;font-weight:500;color:var(--ink-soft);text-align:center;margin:14px 0 0}
+#scr-v2-sticky{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-top:1px solid var(--color-border);padding:12px 18px calc(12px + env(safe-area-inset-bottom));display:none}
+#scr-v2-sticky .inner{max-width:520px;margin:0 auto}
+#scr-v2-sticky .cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--color-action);color:#fff;border:none;border-radius:13px;padding:15px;font-size:14.5px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px -6px rgba(47,111,237,.35)}
+#scr-v2-sticky .cta-sub{text-align:center;font-size:11px;font-weight:500;color:var(--ink-soft);margin-top:7px}
+.scr-v2-shell{max-width:520px;margin:0 auto;padding-bottom:110px}
+@media(min-width:640px){.scr-v2-shell{padding-bottom:24px}}
+
 </style>
 </head>
 <body>
@@ -1275,7 +1368,7 @@ input[type=range]::-webkit-slider-thumb {
     <p class="res-sum" id="r-sum"></p>
     <div class="urg" id="r-urg"></div>
 
-    <div class="med-disclaimer">⚠️ Ez az eszköz nem helyettesíti az orvosi ellátást és nem ad diagnózist — kizárólag eligazítást nyújt. Sürgős, életveszélyt jelentő tünetek esetén azonnal hívd a <strong>112</strong>-t vagy fordulj sürgősségi ellátáshoz.</div>
+    <div class="med-disclaimer" id="r-top-disclaimer">⚠️ Ez az eszköz nem helyettesíti az orvosi ellátást és nem ad diagnózist — kizárólag eligazítást nyújt. Sürgős, életveszélyt jelentő tünetek esetén azonnal hívd a <strong>112</strong>-t vagy fordulj sürgősségi ellátáshoz.</div>
 
     <!-- v2.0: Szűrés-Megelőzés eredményénél mindkét kimeneti ágon (van jelzés /
          nincs jelzés) megjelenő CTA a részletesebb, tünet-alapú kérdéssorhoz —
@@ -1289,6 +1382,55 @@ input[type=range]::-webkit-slider-thumb {
          "nem helyettesíti a szűrést" záradék, konkrét orvos/klinika-ajánlás
          NÉLKÜL. Ld. renderResult(). Minden más esetben üres/rejtett. -->
     <div id="r-prevention-tips" style="display:none"></div>
+
+    <!-- v2.3: Screening eredmenyoldal -- mockup-alapu redesign (mindket agon:
+         "van mire figyelni" ES "nincs jel"), a Mick altal kuldott
+         hovaforduljak-eredmenyoldal-mockup-v2.html alapjan, szo szerint
+         portolt CSS-szerkezettel (ld. .scr-v2 stiluslap fent). Alapertelmezetten
+         rejtve -- renderResult() mutatja meg Screening eseten, es EKKOR REJTI EL
+         a regi r-title/r-sum/r-urg/r-profile/r-steps-section/r-partners-section
+         elemeket, hogy ne duplikalodjon a tartalom. Nem-Screening (9 hagyomanyos
+         szakterulet) eseten valtozatlanul rejtve marad, azok a v2.2-es
+         marketplace/AI-jelentes/Magan-vs-Allami redesignt hasznaljak tovabbra is. -->
+    <div id="scr-v2" class="scr-v2" style="display:none">
+      <div class="scr-v2-shell">
+        <div class="hero">
+          <span class="eyebrow" id="sv2-eyebrow"><span class="dot"></span> <span id="sv2-eyebrow-txt"></span></span>
+          <h1 id="sv2-headline"></h1>
+          <p class="lede" id="sv2-lede"></p>
+        </div>
+        <div class="disclaimer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+          <span>Ez az eredmény tájékoztató jellegű, nem ad diagnózist és nem méri fel számszerűen az egyéni kockázatodat. Sürgős, életveszélyt jelentő tünet esetén azonnal hívd a <b>112</b>-t.</span>
+        </div>
+        <div class="sec-head"><h2>Hogyan áll össze ez a kép</h2><span>5 kategória</span></div>
+        <div class="cat-card" id="sv2-cat-card"></div>
+        <div class="sec-head" id="sv2-tips-head" style="display:none"><h2>Ajánlott következő lépések</h2></div>
+        <div id="sv2-tips-list"></div>
+        <div id="sv2-habit-section" style="display:none">
+          <div class="sec-head"><h2>Így tartsd ezt fenn</h2></div>
+          <div class="habit-grid" id="sv2-habit-grid"></div>
+        </div>
+        <div id="sv2-doc-section" style="display:none">
+          <div class="sec-head"><h2>Ha szeretnéd, ezek segíthetnek</h2><span>Ajánlott partnerek</span></div>
+          <div id="sv2-doc-list"></div>
+          <p class="loc-note-v2" id="sv2-loc-note"></p>
+        </div>
+        <div class="trust">
+          <div><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Ingyenes és biztonságos</div>
+          <div><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Adataid bizalmasan kezelve</div>
+        </div>
+      </div>
+    </div>
+    <div id="scr-v2-sticky">
+      <div class="inner">
+        <button class="cta-btn" id="sv2-cta-btn" onclick="restartToDetailedQuiz()">
+          <span id="sv2-cta-text"></span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="cta-sub" id="sv2-cta-sub"></p>
+      </div>
+    </div>
 
     <div id="r-steps-section">
       <div class="sec-lbl">Ajánlott következő lépések</div>
@@ -2644,14 +2786,14 @@ function renderResult(d){
   // és NINCS_JEL is) megjelenő CTA a részletesebb, tünet-alapú kérdéssorhoz —
   // a state itt még elérhető (isScreeningFlow() a MULTI['terület']-et nézi,
   // amit restartToDetailedQuiz() csak KATTINTÁSKOR módosít).
+  // v2.3: a regi r-detailed-cta inline gomb a Screeningen mostantol a
+  // #scr-v2-sticky uj, fixen also CTA-javal van kivaltva (ld. lejjebb,
+  // renderScreeningV2()), ezert itt mindig ures marad.
   const ctaWrap=document.getElementById('r-detailed-cta');
-  if(ctaWrap){
-    ctaWrap.innerHTML=isScreeningFlow()
-      ? `<button class="btn-p" style="width:100%;margin:2px 0 24px" onclick="restartToDetailedQuiz()">Szeretnél pontosabb eredményt? Töltsd ki a részletesebb tesztet →</button>`
-      : '';
-  }
+  if(ctaWrap)ctaWrap.innerHTML='';
 
-  // urgency
+  // urgency (a regi elem tovabbra is kap tartalmat, de Screeningnel el
+  // van rejtve -- a mockup-alapu hero eyebrow-ja veszi at a szerepet)
   const urgEl=document.getElementById('r-urg');
   const urgMap={low:{cls:'low',ic:'🟢'},medium:{cls:'mid',ic:'🟡'},high:{cls:'hi',ic:'🔴'}};
   const u=urgMap[d.urgency]||urgMap.low;
@@ -2667,6 +2809,25 @@ function renderResult(d){
     div.innerHTML=`<div class="prof-lbl">${c.label}</div><div class="prof-val">${c.value}</div>`;
     pc.appendChild(div);
   });
+
+  // v2.3: Screening eredmenyoldal -- mockup-alapu redesign. A regi
+  // cim/osszegzes/surgossegi-jelzes/profil-chipsor/altalanos-disclaimer
+  // elemek MOST MAR csak a 9 hagyomanyos (nem Screening) szakteruletnel
+  // lathatok -- Screeningnel a #scr-v2 uj hero/disclaimer veszi at a
+  // szerepuket (a mockup szerkezete szerint), hogy ne legyen tartalmi
+  // duplikacio. A regi elemek tartalma tovabbra is kitoltodik (fentebb),
+  // csak vizualisan el vannak rejtve -- igy semmilyen letezo logika nem
+  // torik el, ha valaha vissza kellene allitani.
+  const isScrFlowForVisibility=isScreeningFlow();
+  const rTitleEl=document.getElementById('r-title');
+  const rSumEl=document.getElementById('r-sum');
+  const rProfileEl=document.getElementById('r-profile');
+  const rTopDisclaimerEl=document.getElementById('r-top-disclaimer');
+  if(rTitleEl)rTitleEl.style.display=isScrFlowForVisibility?'none':'';
+  if(rSumEl)rSumEl.style.display=isScrFlowForVisibility?'none':'';
+  if(urgEl)urgEl.style.display=isScrFlowForVisibility?'none':'';
+  if(rProfileEl)rProfileEl.style.display=isScrFlowForVisibility?'none':'';
+  if(rTopDisclaimerEl)rTopDisclaimerEl.style.display=isScrFlowForVisibility?'none':'';
 
   // v2.1: Screening "nincs jel" ág (SCR.flags üres) — a doksi 07b
   // "v2.1 — pontosítás" kérése szerint ezen az ágon NEM jelenhet meg
@@ -2692,21 +2853,20 @@ function renderResult(d){
     if(aiReportSection)aiReportSection.style.display='none';
     if(ppSection)ppSection.style.display='none';
     if(mkSection)mkSection.style.display='none';
-    const tips=computePreventionTips();
-    const tipsHtml=tips.length
-      ? tips.map(t=>`<div class="step-card"><div class="step-icon p">🌱</div><div class="step-body"><div class="step-head">${t.title}</div><div class="step-txt">${t.tip}</div></div></div>`).join('')
-      : `<div class="step-card"><div class="step-icon p">🌱</div><div class="step-body"><div class="step-head">Szép munka</div><div class="step-txt">A válaszaid alapján jelenleg nem találtunk kiemelt figyelmet igénylő területet.</div></div></div>`;
-    if(tipsWrap){
-      tipsWrap.innerHTML=`<div class="sec-lbl">Amit érdemes szem előtt tartani</div><div class="steps-list">${tipsHtml}</div>`+
-        `<div class="med-disclaimer">✦ Ez az eredmény nem helyettesíti a rendszeres szűrővizsgálatokat — panasz hiányában is érdemes a kornak/nemnek megfelelő szűréseken részt venni.</div>`;
-      tipsWrap.style.display='';
-    }
+    // v2.3: a regi #r-prevention-tips szoveges lista MOSTANTOL nem jelenik
+    // meg -- a tartalmat (computePreventionTips() alapjan) a #scr-v2
+    // mockup-alapu "Igy tartsd ezt fenn" habit-grid+hero valtja fel (ld.
+    // renderScreeningV2('clear', ...) lejjebb). A regi elemet csak
+    // ures/rejtett allapotban tartjuk, nehogy regi tartalom maradjon
+    // benne, ha korabban meg lathato volt.
+    if(tipsWrap){tipsWrap.style.display='none';tipsWrap.innerHTML='';}
     document.getElementById('r-steps').innerHTML='';
     document.getElementById('r-partners').innerHTML='';
     document.getElementById('loc-banner').innerHTML='';
     const bk=document.getElementById('medsoulyou-booking');
     if(bk)bk.innerHTML='';
     window.__partners=[];
+    renderScreeningV2('clear', [], '');
   }else{
     if(tipsWrap){tipsWrap.style.display='none';tipsWrap.innerHTML='';}
 
@@ -2792,12 +2952,15 @@ function renderResult(d){
     const locBanner=document.getElementById(locBannerTarget);
     const postal=(A.iranyitoszam||'').trim();
     let locBannerHtml='';
+    let locNoteTextPlain='';
     if(postal && postal[0]!=='1'){
       const region=getRegion(postal)||'a megadott területen';
       if(regionMatchFound){
         locBannerHtml=`<div class="loc-banner"><span class="li">✓</span><span>A megadott irányítószám alapján <strong>${region}</strong> térségéből mutatjuk elsőként az ajánlást — a budapesti igazolt partnerünk (MedSoulYou) is elérhető, de távolabb esik. (A regionális ajánlás illusztratív, a hálózat bővülésével válik valódivá.)</span></div>`;
+        locNoteTextPlain=`A megadott irányítószám alapján ${region} térségéből mutatjuk elsőként az ajánlást — a budapesti igazolt partnerünk (MedSoulYou) is elérhető, de távolabb esik.`;
       }else{
         locBannerHtml=`<div class="loc-banner"><span class="li">📍</span><span>Az igazolt partnerünk (MedSoulYou) Budapesten érhető el — a megadott irányítószám (${postal}) alapján ez <strong>${region}</strong> térségétől távol esik. A hálózatunk bővül, addig is a lenti ajánlások szakmailag relevánsak, de utazást igényelhetnek.</span></div>`;
+        locNoteTextPlain=`Az igazolt partnerünk (MedSoulYou) Budapesten érhető el — a megadott irányítószám (${postal}) alapján ez ${region} térségétől távol esik. A hálózatunk bővül, addig is a lenti ajánlások szakmailag relevánsak, de utazást igényelhetnek.`;
       }
     }
     if(locBanner)locBanner.innerHTML=locBannerHtml;
@@ -2853,10 +3016,22 @@ function renderResult(d){
         pg.appendChild(div);
       });
       window.__partners=partners;
+      // v2.3: a valos partner-tomb (partners) es a kod-szinten ellenorzott,
+      // oszinte lokacio-szoveg (locNoteTextPlain) atadasa a mockup-alapu
+      // uj Screening eredmenyoldalnak -- ugyanaz az adat, mint a fenti
+      // regi p-card racs kapott, csak a mockup .doc-card szerkezeteben.
+      renderScreeningV2('flag', partners, locNoteTextPlain);
     }else{
       // v2.2: panasz-alapú területek — orvos-first marketplace + AI
       // jelentés + Magán vs. Állami összevetés.
       window.__partners=partners;
+      // v2.3: a mockup-alapu Screening-komponens ezen az agon nem
+      // hasznalt -- biztosra megyunk, hogy rejtve marad (ha korabban egy
+      // Screening render mutatta, ne maradjon lathato).
+      const scr2Hide=document.getElementById('scr-v2');
+      const scr2StickyHide=document.getElementById('scr-v2-sticky');
+      if(scr2Hide)scr2Hide.style.display='none';
+      if(scr2StickyHide)scr2StickyHide.style.display='none';
       renderMarketplace(partners, prim, d);
       renderAiReport(d, partners);
       renderPrivatePublic(d);
@@ -2886,6 +3061,179 @@ function computePreventionTips(){
   const scored=SCR_LIKERT.map(cat=>({cat,lvl:likert[cat.key]||0})).filter(x=>x.lvl>0);
   scored.sort((a,b)=>b.lvl-a.lvl);
   return scored.slice(0,2).map(x=>({title:x.cat.title,tip:SCR_PREVENTION_TIPS[x.cat.key]}));
+}
+
+// v2.3: BMI-jelzeshez nincs SCR_PREVENTION_TIPS bejegyzes (az a kod csak az
+// 5 Likert-kategoriat fedi le) -- kulon, kod-szinten rogzitett tipp, hogy a
+// "van mire figyelni" agon a BMI-flag is kaphasson relevans, nem AI-generalt
+// szoveget a mockup-alapu tippkartya-listaban.
+const SCR_BMI_TIP='A testtömegindexed jelenleg az ajánlott tartományon kívül esik — érdemes háziorvosoddal átbeszélni a lehetséges okokat és a számodra megfelelő következő lépést.';
+
+// v2.3: a flag.area (pl. "Stressz", "Testtömegindex (BMI)") -> termeszetes,
+// kisbetus magyar noi szerkezet, a mockup-alapu hero lede dinamikus
+// felsorolasahoz (pl. "a stressz, az alkoholfogyasztas rendszeressege").
+const SCR_HERO_AREA_PHRASE={
+  mozgas:'a mozgás szintje', dohanyzas:'a dohányzás', alvas:'az alvásminőség',
+  stressz:'a stressz', alkohol:'az alkoholfogyasztás rendszeressége'
+};
+function scrHeroAreaPhrase(f){
+  const cat=SCR_LIKERT.find(c=>c.title===f.area);
+  if(cat)return SCR_HERO_AREA_PHRASE[cat.key]||f.area.toLowerCase();
+  if(f.area==='Testtömegindex (BMI)')return 'a testtömegindexed';
+  return f.area;
+}
+const SCR_HU_COUNT=['','egy','két','három','négy','öt','hat'];
+function scrJoinHu(arr){
+  if(arr.length===0)return '';
+  if(arr.length===1)return arr[0];
+  return arr.slice(0,-1).join(', ')+' és '+arr[arr.length-1];
+}
+
+// v2.3: Screening eredmenyoldal -- mockup-alapu (hovaforduljak-eredmenyoldal-
+// mockup-v2.html) redesign renderelese. MINDKET Screening agon (flag/clear)
+// ezt hivja meg renderResult() -- a regi, egyszerubb r-title/r-urg/r-profile/
+// r-prevention-tips/r-partners-section elemeket renderResult mar elrejtette,
+// ez a fuggveny toltis fel a #scr-v2 uj konteneit valos adattal (SOSEM a
+// mockup statikus demo-adataival). A kategoria-szintu megjelenites
+// VALTOZATLANUL nem-numerikus marad (cat-dots), ld. MDR-megjegyzes a
+// computeScreeningFlags() korul -- ez a fuggveny ezt nem valtoztatja meg,
+// csak vizualisan jeleniti meg ugyanazt a mar meglevo 1-5 szintet pontokkal.
+function renderScreeningV2(mode, partners, locNoteText){
+  const isFlag=mode==='flag';
+  const likert=(SCR.answers&&SCR.answers.likert)||{};
+  const flags=SCR.flags||[];
+
+  // -- kategoria-bontas (5 Likert-kategoria, a mockup "5 kategória"
+  // feliratanak megfeleloen -- a BMI-jelzes itt szandekosan NEM jelenik meg
+  // sajat sorkent, csak a tippek/hero szoveg soroljak fel, ha van).
+  const catsSorted=SCR_LIKERT.map(c=>({key:c.key,title:c.title,ic:c.ic,lvl:likert[c.key]||0}))
+    .sort((a,b)=>b.lvl-a.lvl);
+  let hiSeen=0;
+  const catCardHtml=catsSorted.map(c=>{
+    const hi=c.lvl>=4;
+    let note=null;
+    if(hi){hiSeen++;note=hiSeen===1?'Ez az, amire érdemes figyelni':'Ez is emeli a képet';}
+    const dots=Array.from({length:5},(_,i)=>`<i class="${i<c.lvl?('on'+(hi?'':' ok')):''}"></i>`).join('');
+    return `<div class="cat-row"><div class="icon ${hi?'lvl-hi':'lvl-ok'}">${c.ic}</div>`+
+      `<div class="cat-body"><div class="cat-name">${c.title}</div>${note?`<div class="cat-note">${note}</div>`:''}</div>`+
+      `<div class="cat-dots">${dots}</div></div>`;
+  }).join('');
+  const catCardEl=document.getElementById('sv2-cat-card');
+  if(catCardEl)catCardEl.innerHTML=catCardHtml;
+
+  // -- hero (eyebrow / cimsor / lede) -- kod-szinten generalt, NEM az AI
+  // d.title/d.summary mezoibol, hogy garantaltan a tenyleges jelzett
+  // kategoriakat tukrozze.
+  const eyebrowEl=document.getElementById('sv2-eyebrow');
+  const eyebrowTxtEl=document.getElementById('sv2-eyebrow-txt');
+  const headlineEl=document.getElementById('sv2-headline');
+  const ledeEl=document.getElementById('sv2-lede');
+  if(isFlag){
+    if(eyebrowEl)eyebrowEl.className='eyebrow flag';
+    if(eyebrowTxtEl)eyebrowTxtEl.textContent='Érdemes tudatosabban odanézni';
+    if(headlineEl)headlineEl.textContent='Van mire figyelni — de semmi vészes';
+    const phrases=flags.map(scrHeroAreaPhrase);
+    const n=phrases.length;
+    const countWord=SCR_HU_COUNT[Math.min(n,6)]||String(n);
+    const list=scrJoinHu(phrases);
+    const ledeHtml=n<=1
+      ? `A válaszaid alapján <b>egy terület</b> — ${list} — az, amit érdemes tudatosan szemügyre venned. Nem azért, mert baj van, hanem mert ez a legjobb alkalom a megelőzésre.`
+      : `A válaszaid alapján <b>${countWord} terület</b> — ${list} — együttesen olyan mintázatot rajzol ki, amit érdemes tudatosan szemügyre venni. Nem azért, mert baj van, hanem mert ez a legjobb alkalom a megelőzésre.`;
+    if(ledeEl)ledeEl.innerHTML=ledeHtml;
+  }else{
+    if(eyebrowEl)eyebrowEl.className='eyebrow clear';
+    if(eyebrowTxtEl)eyebrowTxtEl.textContent='Jelenleg nem találtunk figyelmeztető jelet';
+    if(headlineEl)headlineEl.textContent='Szép munka — ez egy erős kiindulópont';
+    if(ledeEl)ledeEl.innerHTML='A válaszaid alapján <b>jelenleg nincs</b> olyan terület, amire azonnal figyelned kéne. Ez nem jelenti azt, hogy "egészséges vagy" — inkább azt, hogy a most megadott adatok alapján nincs figyelmeztető jel. A rendszeres szűrővizsgálatokat ez nem helyettesíti.';
+  }
+
+  const tipsHead=document.getElementById('sv2-tips-head');
+  const tipsList=document.getElementById('sv2-tips-list');
+  const habitSection=document.getElementById('sv2-habit-section');
+  const habitGrid=document.getElementById('sv2-habit-grid');
+  const docSection=document.getElementById('sv2-doc-section');
+  const docList=document.getElementById('sv2-doc-list');
+  const locNoteEl=document.getElementById('sv2-loc-note');
+
+  if(isFlag){
+    if(tipsHead)tipsHead.style.display='';
+    // v2.3: MINDEN jelzett (flagged) kategoriahoz tartozik egy tipp-kartya
+    // (nem csak a top-2, mint a "nincs jel" ag computePreventionTips()-e) --
+    // a feladat explicit kerese szerint a tippek a TENYLEGESEN jelzett
+    // kategoriakhoz igazodjanak.
+    const tipRows=flags.map(f=>{
+      const cat=SCR_LIKERT.find(c=>c.title===f.area);
+      const tipTxt=cat?SCR_PREVENTION_TIPS[cat.key]:SCR_BMI_TIP;
+      return {t:f.area,d:tipTxt};
+    });
+    if(tipsList)tipsList.innerHTML=tipRows.map((t,i)=>`<div class="tip"><div class="num">${i+1}</div><p><b>${t.t}</b><br>${t.d}</p></div>`).join('');
+    if(habitSection)habitSection.style.display='none';
+    if(docSection)docSection.style.display='';
+
+    // v2.3: orvos-elsodleges (doctor-first) kartyalista a mockup .doc-card
+    // szerkezete szerint, VALOS partneradatokkal (ugyanaz a `partners`
+    // tomb, amit a regi p-card grid is hasznalt). Badge-becsuletesseg:
+    // "Igazolt partner" CSAK a tenylegesen p.real=true partnernel jelenik
+    // meg -- a mockup demo-kartyaja ezt egy nem-valos illusztracios
+    // klinikara is ratette, ami valos adattal hamis allitas lenne, ezert
+    // itt kulon "Illusztratív példa" jelzest kap minden nem-valos sor.
+    if(docList){
+      docList.innerHTML=(partners||[]).map((p,idx)=>{
+        const nameForInitials=p.doc||p.nm||'';
+        const initials=nameForInitials.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'??';
+        const displayName=p.doc||(p.real?'MedSoulYou szakorvos':p.nm);
+        const badge=p.real
+          ? (p.doc?'<span class="badge partner">Igazolt partner</span>':'<span class="badge pending">adategyeztetés alatt</span>')
+          : '<span class="badge illustrative">Illusztratív példa</span>';
+        return `<div class="doc-card${idx===0?' featured':''}">`+
+          `<div class="doc-top"><div class="avatar">${initials}</div>`+
+          `<div class="doc-info"><div class="doc-name-row"><span class="doc-name">${displayName}</span>${badge}</div>`+
+          `<div class="doc-spec">${p.sp||''}</div>`+
+          `<div class="doc-clinic">📍 ${p.addr||p.nm||''}</div></div>`+
+          `<div class="match-ring">${p.pct}%</div></div>`+
+          `<div class="tags">${(p.tags||[]).map(t=>`<span>${t}</span>`).join('')}</div>`+
+          `<button class="doc-cta" onclick="openBooking(${idx})">Időpont érdeklődés</button>`+
+          `</div>`;
+      }).join('');
+    }
+    if(locNoteEl)locNoteEl.textContent=locNoteText||'';
+  }else{
+    if(tipsHead)tipsHead.style.display='none';
+    if(tipsList)tipsList.innerHTML='';
+    if(docSection)docSection.style.display='none';
+    if(docList)docList.innerHTML='';
+    if(locNoteEl)locNoteEl.textContent='';
+    if(habitSection)habitSection.style.display='';
+    // v2.3: a "nincs jel" agon NINCS klinika/orvos-ajanlas (ld. v2.1
+    // dontes) -- helyette 4, tenylegesen KERDEZETT kategoriara epulo,
+    // altalanos fenntarto tipp. A mockup eredeti 4. kartyaja ("Étkezés")
+    // olyan temat erintett, amit az app SOHA nem kerdez -- az helyett a
+    // tenylegesen felmert Dohanyzas kategoriat hasznaljuk, hogy ne
+    // legyen olyan allitas, ami nem a valos valaszokon alapul. A Mozgas
+    // kartya szandekosan NEM gratulalo hangvetelu (ld. jelentes a
+        // chatben a Mozgas-skala iranyultsagi kerdojelerol).
+    if(habitGrid)habitGrid.innerHTML=
+      `<div class="habit"><span class="icon">🏃</span><b>Maradj mozgásban</b><span>Heti 2-3 alkalom mozgás is sokat számít hosszú távon.</span></div>`+
+      `<div class="habit"><span class="icon">😴</span><b>Alvásritmus</b><span>A jelenlegi alvásmintád jó jel — érdemes tartani.</span></div>`+
+      `<div class="habit"><span class="icon">🧘</span><b>Stresszkezelés</b><span>Néhány perces napi levezetés sokat számít hosszú távon.</span></div>`+
+      `<div class="habit"><span class="icon">🚭</span><b>Dohányzás</b><span>A jelenlegi szokásaid alapján nincs sürgető teendő.</span></div>`;
+  }
+
+  // -- sticky CTA (mindket agon lathato, mas szoveggel) --
+  const ctaTextEl=document.getElementById('sv2-cta-text');
+  const ctaSubEl=document.getElementById('sv2-cta-sub');
+  if(isFlag){
+    if(ctaTextEl)ctaTextEl.textContent='Szeretnél pontosabb eredményt?';
+    if(ctaSubEl)ctaSubEl.textContent='Töltsd ki a részletesebb tesztet a pontosabb eredményért';
+  }else{
+    if(ctaTextEl)ctaTextEl.textContent='Kíváncsi vagy egy mélyebb képre?';
+    if(ctaSubEl)ctaSubEl.textContent='Bármikor kitöltheted a részletesebb tesztet — nem kötelező';
+  }
+
+  const scr2=document.getElementById('scr-v2');
+  const scr2sticky=document.getElementById('scr-v2-sticky');
+  if(scr2)scr2.style.display='';
+  if(scr2sticky)scr2sticky.style.display='';
 }
 
 // v2.1: a Likert-kategória (és a BMI-jelzés) -> hagyományos, tünet-alapú
