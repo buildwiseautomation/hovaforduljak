@@ -1726,8 +1726,20 @@ const PDATA = {
     {nm:'Székesfehérvár Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'8',addr:'8000 Székesfehérvár, Petőfi Sándor utca 12.',tel:'+36 22 420 315',hours:'H–P: 8:00–17:00'},
     {nm:'Győr Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'9',addr:'9021 Győr, Petőfi Sándor utca 12.',tel:'+36 96 420 315',hours:'H–P: 8:00–17:00'}
   ],
+  // v2.3.3: harom valos MedSoulYou orvos (Mick kozvetlen chat-uzenetebol,
+  // nem fabrikalt) -- ez a kategoria fogadja MOST MAR a Mozgas-jelzest is
+  // (ld. SCR_LIKERT_TO_SPECIALTY frissites) ES a BMI-jelzest is, ezert 3
+  // relevans nev is szerepel. Orosz-Toth Arpad (sportdietetika) all elol,
+  // mert Mick expliciten ot jelolte meg a Mozgas-jelzes helyes talalatakent;
+  // Dr. Salanki Zsuzsanna es Blatniczky Anna a BMI-jelzeshez ajanlott ket
+  // opcio -- Mick megjegyezte, hogy Zsuzsanna a sulyosabb/hormonalisabb
+  // esetekhez illik jobban, de a jelenlegi egy-kategorias PDATA-szerkezet
+  // nem tud sulyossag szerint kulon-kulon valasztani Mozgas es BMI kozott,
+  // ezert mindharman szerepelnek, ez a sorrend -- ld. jelentes a chatben.
   'Anyagcsere-Hormonális': [
-    {nm:'MedSoulYou',sp:'Belgyógyászat, Dietetika · Életmódorvoslás',ic:'💫',tags:['Pajzsmirigy','PCOS','Inzulinrezisztencia','Cukorbetegség'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pajzsmirigy-, PCOS- és inzulinrezisztencia-problémákra szakosodott csapat, laborvizsgálattal és személyre szabott kezelési tervvel.'},
+    {nm:'MedSoulYou',doc:'Orosz-Tóth Árpád',sp:'Dietetika · Sportdietetika',ic:'💫',tags:['Dietoterápia','Táplálkozástan','Sportdietetika'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Dietetikus a MedSoulYou csapatában, dietoterápiára, táplálkozástanra és sportdietetikára specializálódva.'},
+    {nm:'MedSoulYou',doc:'Dr. Salánki Zsuzsanna',sp:'Belgyógyászat, Diabetológia, Endokrinológia',ic:'💫',tags:['Diabetológia','Endokrinológia','Anyagcsere-betegségek'],pct:96,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász-diabetológus, endokrinológus a MedSoulYou csapatában, anyagcsere-betegségekre specializálódva.'},
+    {nm:'MedSoulYou',doc:'Blatniczky Anna',sp:'Dietetika',ic:'💫',tags:['Dietetika'],pct:94,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Dietetikus a MedSoulYou csapatában.'},
     {nm:'NutriBalance Klinika',sp:'Dietetika · Anyagcsere felmérés',ic:'⚗️',tags:['IR','Hormonális','Diéta'],pct:94,top:false,region:'1',addr:'1181 Budapest, XII. Alkotás utca 97.',tel:'+36 1 280 5803',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
     {nm:'Dr. Kovács Petra',sp:'Endokrinológus · Magánrendelő',ic:'🔬',tags:['Pajzsmirigy','PCOS','Cukorbetegség'],pct:89,top:false,region:'1',addr:'1131 Budapest, VIII. Üllői út 12.',tel:'+36 1 877 4733',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
     {nm:'Medicover Endokrinológia',sp:'Komplex hormon kivizsgálás',ic:'🏥',tags:['Labor','Ultrahang','Tanácsadás'],pct:82,top:false,region:'1',addr:'1233 Budapest, VI. Andrássy út 26.',tel:'+36 1 589 5554',hours:'H–P: 9:00–19:00'},
@@ -2948,7 +2960,28 @@ function renderResult(d){
     }
     // elsodleges: AI valasz -> fuzzy -> elso megjelolt terulet -> default
     const firstTerulet=(MULTI['terület']&&MULTI['terület'][0])||null;
-    const prim=matchCat(d.primary_specialty)||matchCat(firstTerulet)||'Szűrés-Megelőzés';
+    // v2.3.3: Screening eseten a partner-egyeztetes MOSTANTOL NEM az AI
+    // szabad-szoveges primary_specialty tippjere tamaszkodik, hanem
+    // determinisztikusan, a mar bevalt SCR_LIKERT_TO_SPECIALTY leképezésen
+    // (scrFlagToSpecialty(), ugyanaz, amit restartToDetailedQuiz() is
+    // hasznal) keresztul a TENYLEGESEN jelzett kategoriabol szamolja ki,
+    // melyik szakteruletet nezze -- igy a valos nevvel ellatott orvosok
+    // (Barta Beatrix, Orosz-Toth Arpad stb.) MINDIG a Mick altal
+    // megerositett, helyes kategoriahoz tartoznak, fuggetlenul az AI
+    // aznapi klasszifikacios talalgatasatol. A legmagasabb (hard) jelzes
+    // elsobbseget elvez, ugyanaz a sorrend, mint a CTA-routingnal.
+    let prim;
+    if(isScreeningFlow()){
+      const flagsSorted=(SCR.flags||[]).slice().sort((a,b)=>(b.hard?1:0)-(a.hard?1:0));
+      let mapped=null;
+      for(const f of flagsSorted){
+        const sp=scrFlagToSpecialty(f);
+        if(sp){mapped=sp;break;}
+      }
+      prim=mapped||'Szűrés-Megelőzés';
+    }else{
+      prim=matchCat(d.primary_specialty)||matchCat(firstTerulet)||'Szűrés-Megelőzés';
+    }
     // v2.3 BUGFIX: Screening eseten a regi #medsoulyou-booking widget celpontja
     // a MOST MAR mindig rejtett #r-partners-section-on belul van -- ha itt is
     // renderelnenk, az a scr-v2 doc-card-javal egyutt (nem lathato, de felesleges
@@ -2981,6 +3014,16 @@ function renderResult(d){
         partners=[regional, ...rest].slice(0,3);
       }
     }
+    // v2.3.3 BUGFIX: ha se a masodlagos-kategoria-kombinacio, se a
+    // regio-egyeztetes nem futott le (ez a leggyakoribb eset -- pl. nincs
+    // AI-masodlagos szakterulet, vagy budapesti/hianyzo iranyitoszam), a
+    // `partners` addig a PDATA[prim] TELJES, nyers tombje maradt -- egyes
+    // kategorianal (pl. Mentális-Pszichés, Anyagcsere-Hormonális) ez akar
+    // 11 kartyat is jelentett a "van mire figyelni" doc-listaban, elrejtve
+    // a valos, nevvel ellatott orvos(oka)t a sok illusztrativ regionalis
+    // pelda kozott. Mindig max. 3-ra vagjuk, konzisztensen a fenti ket
+    // aggal (amik mar ugyis 3-ra vagtak).
+    partners=partners.slice(0,3);
 
     // lokáció-őszinteség: kódszinten ellenőrizzük, nem az AI-ra bízzuk
     const locBannerTarget=isScr?'loc-banner':'loc-banner-mk';
@@ -3245,19 +3288,21 @@ function renderScreeningV2(mode, partners, locNoteText){
   if(scr2sticky)scr2sticky.style.display='';
 }
 
-// v2.1: a Likert-kategória (és a BMI-jelzés) -> hagyományos, tünet-alapú
-// szakterület leképezése, a "pontosabb eredmény" CTA célzott routingjához.
-// Ez egy értelmezési döntés (a doksi nem ad explicit táblázatot) — a
-// legjobban illeszkedő meglévő szakterületet választottuk mindegyikhez;
-// az Alkoholfogyasztás -> Gyomor-bél irány a legkevésbé egyértelmű (nincs
-// dedikált "addiktológia" vagy "hepatológia" szakterület a listán), ld.
-// jelentés a chatben.
+// v2.3.3 FRISSITES (Mick kozvetlen visszajelzese a chatben): a korabbi
+// ertelmezes ket helyen tevedett -- Mozgas (mennyit mozogsz) NEM
+// mozgasszervi/ortopediai panasz, hanem eletmod-tenyezo (a relevans valos
+// MedSoulYou-orvos, Orosz-Toth Arpad, dietetikus/sportdietetikus, nem
+// ortoped); Alkoholfogyasztas eseten Mick kifejezetten a Stresszel azonos
+// pszichologust (Barta Beatrix / Mentalis-Pszsiches) javasolta, mert az
+// alkohol-eletmodtanacsadas inkabb pszichologiai, mint gasztroenterologiai
+// kerdes -- ezt valasztottuk az (a) opciokent felajanlott ket lehetoseg
+// kozul, ahogy Mick javasolta.
 const SCR_LIKERT_TO_SPECIALTY={
-  mozgas:'Mozgásszervi',
+  mozgas:'Anyagcsere-Hormonális',
   dohanyzas:'Légzőszervi',
   alvas:'Alvás',
   stressz:'Mentális-Pszichés',
-  alkohol:'Gyomor-bél'
+  alkohol:'Mentális-Pszichés'
 };
 function scrFlagToSpecialty(f){
   if(f.area==='Testtömegindex (BMI)')return 'Anyagcsere-Hormonális';
