@@ -986,6 +986,11 @@ input[type=range]::-webkit-slider-thumb {
    badge-variansot vezetunk be. */
 .scr-v2 .badge.illustrative{background:#F1F5F9;color:var(--ink-soft)}
 .scr-v2 .doc-spec{font-size:12.5px;font-weight:500;color:var(--ink-soft);margin-top:2px}
+/* v2.5: Mick kerese -- ha az orvos neve az elsodleges (p.doc), a klinika
+   neve (pl. "MedSoulYou") KOZVETLENUL a nev alatt, alcimkent is jelenjen
+   meg (nem csak a cim-sorban lentebb), hogy azonnal lassak, melyik
+   klinikahoz tartozik. Ugyanaz a mintazat, mint a marketplace .mk-clinic-ctx. */
+.scr-v2 .doc-clinic-name{font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-top:2px}
 .scr-v2 .doc-clinic{font-size:12px;color:var(--ink-soft);margin-top:2px;display:flex;align-items:center;gap:5px}
 .scr-v2 .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
 .scr-v2 .tags span{font-size:11px;background:var(--color-background);border:1px solid var(--color-border);color:var(--ink-soft);padding:3px 8px;border-radius:100px}
@@ -3144,7 +3149,9 @@ function renderResult(d){
       if(rsc3)rsc3.style.display='block'; // v2.4: same '' vs display:none pitfall found+fixed on the Screening sticky bar, applied here too
       if(topP){
         if(rctaText)rctaText.textContent=topP.real?'Időpont érdeklődés':'Ajánlott partnerek megtekintése';
-        if(rctaSub)rctaSub.textContent=topP.real?(topP.doc?topP.doc+' · '+topP.sp:topP.nm):'A legjobb egyezésű találatok listája lent';
+        // v2.5: Mick kerese -- ha az orvos neve az elsodleges, a klinika neve
+        // (topP.nm, pl. "MedSoulYou") is jelenjen meg mellette, ne csak a szakterulet.
+        if(rctaSub)rctaSub.textContent=topP.real?(topP.doc?topP.doc+' · '+topP.nm:topP.nm):'A legjobb egyezésű találatok listája lent';
       }
     }
   }
@@ -3296,19 +3303,25 @@ function renderScreeningV2(mode, partners, locNoteText){
         const badge=p.real
           ? (p.doc?'<span class="badge partner">Igazolt partner</span>':'<span class="badge pending">adategyeztetés alatt</span>')
           : '<span class="badge illustrative">Illusztratív példa</span>';
-        // v2.3.2: ha van konkret orvosnev (p.doc, orvos-first eset), a
-        // klinika neve (p.nm, pl. "MedSoulYou") mostantol MINDIG megjelenik
-        // masodlagos/alcim elemkent a cim-soron -- korabban p.doc eseten a
-        // cim sor csak a cimet (p.addr) mutatta, es a klinikanev sehol nem
-        // jelent meg, ami ellentmond a "MedSoulYou csak alcimkent" kerésnek.
-        // Ha nincs kulon orvosnev (a klinikanev MAGA az elsodleges elem),
-        // a regi viselkedes marad: cim ha van, kulonben klinikanev.
+        // v2.5 FRISSITES (Mick kerese): a klinika neve (p.nm, pl.
+        // "MedSoulYou") mostantol KULON, dedikalt alcim-sorban jelenik meg
+        // kozvetlenul a nev alatt (clinicSubtitle, lentebb) -- igy a lenti
+        // cim-sorban mar nem kell megismetelni, csak a tenyleges cim marad
+        // ott (ha van), elkerulve a "MedSoulYou · MedSoulYou..." tipusu
+        // felesleges ismetlest. Ha nincs kulon orvosnev (a klinikanev MAGA
+        // az elsodleges elem), a regi viselkedes marad: cim ha van,
+        // kulonben klinikanev.
         const clinicLine=p.doc
-          ? (p.addr?`${p.nm} · ${p.addr}`:p.nm)
+          ? (p.addr||p.nm)
           : (p.addr||p.nm||'');
+        // v2.5: Mick kerese -- ha van konkret orvosnev (p.doc), a klinika
+        // neve (p.nm, pl. "MedSoulYou") KOZVETLENUL a nev alatt, kulon
+        // alcim-sorkent is megjelenik (nem csak a lenti cim-sorban).
+        const clinicSubtitle=p.doc?`<div class="doc-clinic-name">${p.nm}</div>`:'';
         return `<div class="doc-card${idx===0?' featured':''}">`+
           `<div class="doc-top"><div class="avatar">${initials}</div>`+
           `<div class="doc-info"><div class="doc-name-row"><span class="doc-name">${displayName}</span>${badge}</div>`+
+          clinicSubtitle+
           `<div class="doc-spec">${p.sp||''}</div>`+
           `<div class="doc-clinic">📍 ${clinicLine}</div></div>`+
           `<div class="match-ring">${p.pct}%</div></div>`+
