@@ -2103,12 +2103,25 @@ function scrBetegsegPick(el,val){
 //    jelentés) — ezért a szintleírásokat klinikailag ésszerű, a
 //    kategóriának megfelelő magyar szöveggel töltöttük fel. ──
 const SCR_LIKERT=[
+  // v2.3 KRITIKUS JAVITAS (logikai doksi 07b, "skala-irany bug"): a Mozgas
+  // skala korabban FORDITVA allt a masik 4 kategoriahoz kepest -- itt az
+  // 5-os szint jelentette a JO (aktiv) valaszt, mig dohanyzasnal/alvasnal/
+  // stressznel/alkoholnal az 5-os szint mindig a ROSSZ valasz. Mivel
+  // computeScreeningFlags() egysegesen `szint>=4 -> kockazati jelzes`
+  // szabalyt hasznal minden kategoriara, ez tevesen jelzett kockazatot
+  // aktiv embereknel (Mozgas=5 -> "van mire figyelni" lett volna). Most
+  // MEGFORDITVA: 1=alacsony kockazat (aktiv sportolo) .. 5=magas kockazat
+  // (ulo eletmod), ugyanugy mint a tobbi kategorianal. A UI valaszlista
+  // sorrendje kozvetlenul a levels tombbol jon (ld. scrWizRender()), igy
+  // ez az egyetlen hely, amit modositani kellett -- a
+  // computeScreeningFlags() kuszob-logikaja valtozatlanul `lvl>=4` marad,
+  // mostantol mar helyesen.
   {key:'mozgas',title:'Mozgás',ic:'🏃',levels:[
-    'Szinte egyáltalán nem mozgok',
-    'Ritkán, alkalomszerűen mozgok',
-    'Heti 1-2 alkalommal mozgok',
-    'Heti 3-4 alkalommal rendszeresen mozgok',
-    'Szinte minden nap aktívan mozgok'
+    'Aktívan sportolok, heti 4 vagy több célzott edzéssel',
+    'Rendszeresen mozgok, heti 2-3 alkalommal',
+    'Mérsékelten, csak alkalmanként mozgok',
+    'Csak könnyű fizikai aktivitás jellemez (napi séta, otthoni teendők)',
+    'Szinte egyáltalán nem mozgok, ülő életmódot élek'
   ]},
   {key:'dohanyzas',title:'Dohányzás',ic:'🚬',levels:[
     'Nem dohányzom és sosem is dohányoztam',
@@ -2870,15 +2883,23 @@ function renderResult(d){
   }else{
     if(tipsWrap){tipsWrap.style.display='none';tipsWrap.innerHTML='';}
 
-    // v2.2: hatókör-bug javítás (A.1) — a "van mire figyelni" Screening ág
-    // MEGTARTJA a v2.0-s egyszerű, kvalitatív sávos listát (steps+partners
-    // szekció), a gazdag redesign (AI jelentés / Magán vs. Állami /
-    // marketplace) KIZÁRÓLAG a panasz-alapú (nem Screening) területeken
-    // jelenik meg — a doksi explicit kérése szerint ez NEM kerülhet a
-    // Screening eredményoldalára.
+    // v2.2: a gazdag redesign (AI jelentés / Magán vs. Állami / marketplace)
+    // KIZÁRÓLAG a panasz-alapú (nem Screening) területeken jelenik meg.
+    //
+    // v2.3 BUGFIX (logikai doksi 07b, "a partner-ajánlás csak EGYSZER
+    // jelenhet meg"): korábban itt `isScr?'':'none'` állt, azaz a régi,
+    // egyszerű .p-card rács (r-steps-section/r-partners-section) Screening
+    // eseten LÁTHATÓ maradt -- de a v2.3 mockup-redesign (#scr-v2) óta a
+    // Screening "van mire figyelni" ág MÁR a #scr-v2 doc-list-jét használja
+    // ugyanahhoz a `partners` tömbhöz, így mindkét szekció egyszerre
+    // jelenítette meg UGYANAZT a 3 kártyát -- ez volt a duplikált
+    // partner-ajánlás bugja. A régi r-steps-section/r-partners-section
+    // MOSTANTÓL Screening eseten is mindig rejtve marad (a #scr-v2 teljesen
+    // átveszi a szerepüket); nem-Screening területeken változatlanul a
+    // marketplace (#r-marketplace-section) jelenik meg, nem ez a régi rács.
     const isScr=isScreeningFlow();
-    if(stepsSection)stepsSection.style.display=isScr?'':'none';
-    if(partnersSection)partnersSection.style.display=isScr?'':'none';
+    if(stepsSection)stepsSection.style.display='none';
+    if(partnersSection)partnersSection.style.display='none';
     if(aiReportSection)aiReportSection.style.display=isScr?'none':'';
     if(ppSection)ppSection.style.display=isScr?'none':'';
     if(mkSection)mkSection.style.display=isScr?'none':'';
@@ -2921,8 +2942,15 @@ function renderResult(d){
     // elsodleges: AI valasz -> fuzzy -> elso megjelolt terulet -> default
     const firstTerulet=(MULTI['terület']&&MULTI['terület'][0])||null;
     const prim=matchCat(d.primary_specialty)||matchCat(firstTerulet)||'Szűrés-Megelőzés';
-    const medsoulyouTargetId=isScr?'medsoulyou-booking':'medsoulyou-booking-mk';
-    if(window.MedSoulYouBooking){try{MedSoulYouBooking.render(document.getElementById(medsoulyouTargetId), prim);}catch(e){console.error('MedSoulYou widget hiba:',e);}}
+    // v2.3 BUGFIX: Screening eseten a regi #medsoulyou-booking widget celpontja
+    // a MOST MAR mindig rejtett #r-partners-section-on belul van -- ha itt is
+    // renderelnenk, az a scr-v2 doc-card-javal egyutt (nem lathato, de felesleges
+    // es DOM-szinten duplikalt) MedSoulYou-emlitest hozna letre. Screeningnel
+    // ezert kihagyjuk; nem-Screening (marketplace) agon valtozatlan marad.
+    if(!isScr){
+      const medsoulyouTargetId='medsoulyou-booking-mk';
+      if(window.MedSoulYouBooking){try{MedSoulYouBooking.render(document.getElementById(medsoulyouTargetId), prim);}catch(e){console.error('MedSoulYou widget hiba:',e);}}
+    }
     const sec=matchCat(d.secondary_specialty);
     let partners=PDATA[prim]||PDATA['default'];
     if(sec&&sec!==prim&&PDATA[sec]){
@@ -2963,63 +2991,27 @@ function renderResult(d){
         locNoteTextPlain=`Az igazolt partnerünk (MedSoulYou) Budapesten érhető el — a megadott irányítószám (${postal}) alapján ez ${region} térségétől távol esik. A hálózatunk bővül, addig is a lenti ajánlások szakmailag relevánsak, de utazást igényelhetnek.`;
       }
     }
-    if(locBanner)locBanner.innerHTML=locBannerHtml;
+    if(locBanner && !isScr)locBanner.innerHTML=locBannerHtml;
     // a másik (rejtett) nézet loc-bannerét is ürítjük, hogy ne maradjon ott régi tartalom
     const otherLocBanner=document.getElementById(isScr?'loc-banner-mk':'loc-banner');
     if(otherLocBanner)otherLocBanner.innerHTML='';
 
     if(isScr){
-      // v2.0/v2.1: Screening "van mire figyelni" — VÁLTOZATLAN, egyszerű
-      // kártyarács (nem kapja meg a marketplace-t/AI jelentést).
+      // v2.3 BUGFIX (logikai doksi 07b, "a partner-ajanlas csak EGYSZER
+      // jelenhet meg"): korabban itt egy teljes regi .p-card racs epult fel
+      // a #r-partners-be, MEG AKKOR IS, ha a szekcio kesobb display:none-nal
+      // el lett rejtve -- ez felesleges munka volt es DOM-szinten duplikalta
+      // ugyanazt a partner-adatot a #scr-v2 doc-card listaja mellett. Mivel
+      // a #r-partners-section Screening eseten MOST MAR mindig rejtve marad
+      // (ld. lejjebb a fuggveny elejen), a regi racsot itt nem epitjuk fel
+      // tobbe -- kizarolag a #scr-v2 doc-card lista jeleniti meg a
+      // partnereket.
       const pg=document.getElementById('r-partners');
-      pg.innerHTML='';
-      partners.forEach((p,idx)=>{
-        const div=document.createElement('div');
-        div.className='p-card-wrap';
-        const badge = p.real
-          ? '<div class="real-badge">✓ Igazolt partner</div>'
-          : (p.top?'<div class="top-badge">Legjobb találat</div>':'');
-        const expandContent = p.real
-          ? `<div class="p-detail-row"><span class="p-detail-ic">📍</span><span>${p.addr||'Budapest'}</span></div>
-             <div class="p-detail-row"><span class="p-detail-ic">📞</span><span>${p.tel||''}</span></div>
-             <div class="p-detail-row"><span class="p-detail-ic">🕒</span><span>${p.hours||''}</span></div>
-             <div class="p-detail-desc">${p.about||''}</div>
-             <div class="p-actions">
-               <button class="p-book-btn real" onclick="openBooking(${idx})">📅 Időpontfoglalás a MedSoulYou oldalán →</button>
-               <a class="p-call-btn" href="tel:${(p.tel||'').replace(/\s/g,'')}">📞 Hívás</a>
-             </div>`
-          : `<div class="p-detail-row"><span class="p-detail-ic">📍</span><span>${p.addr||'Budapest'}</span></div>
-             <div class="p-detail-desc">${p.about||'Illusztratív példa a bemutató céljából — nem valós partnerklinika.'}</div>
-             <div class="illustrative-note">Illusztratív példa — még nem partnerünk. A végleges verzióban itt valós, igazolt partnerklinikák jelennek meg elérhetőségekkel és időpontfoglalással.</div>`;
-        div.innerHTML=`
-          <div class="p-card${p.top?' top':''}${p.real?' real':''}" onclick="toggleClinic(${idx})">
-            ${badge}
-            <div class="p-av">${p.ic}</div>
-            <div class="p-inf">
-              ${p.doc
-                ? `<div class="p-nm">${p.doc}</div><div class="p-clinic-ctx">${p.nm}</div>`
-                : (p.real
-                    ? `<div class="p-nm">MedSoulYou szakorvos (adategyeztetés alatt)</div><div class="p-clinic-ctx">${p.nm}</div>`
-                    : `<div class="p-nm">${p.nm}</div>`)}
-              <div class="p-sp">${p.sp}</div>
-              <div class="p-tags">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
-            </div>
-            <div class="p-right">
-              <div class="p-pct">${p.pct}%</div>
-              <div class="p-plbl">egyezés</div>
-              <div class="p-chevron" id="chev-${idx}">⌄</div>
-            </div>
-          </div>
-          <div class="p-expand" id="exp-${idx}">
-            ${expandContent}
-          </div>`;
-        pg.appendChild(div);
-      });
+      if(pg)pg.innerHTML='';
       window.__partners=partners;
       // v2.3: a valos partner-tomb (partners) es a kod-szinten ellenorzott,
       // oszinte lokacio-szoveg (locNoteTextPlain) atadasa a mockup-alapu
-      // uj Screening eredmenyoldalnak -- ugyanaz az adat, mint a fenti
-      // regi p-card racs kapott, csak a mockup .doc-card szerkezeteben.
+      // uj Screening eredmenyoldalnak.
       renderScreeningV2('flag', partners, locNoteTextPlain);
     }else{
       // v2.2: panasz-alapú területek — orvos-first marketplace + AI
