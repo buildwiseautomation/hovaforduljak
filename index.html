@@ -1004,6 +1004,19 @@ input[type=range]::-webkit-slider-thumb {
 #scr-v2-sticky .inner{max-width:520px;margin:0 auto}
 #scr-v2-sticky .cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--color-action);color:#fff;border:none;border-radius:13px;padding:15px;font-size:14.5px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px -6px rgba(47,111,237,.35)}
 #scr-v2-sticky .cta-sub{text-align:center;font-size:11px;font-weight:500;color:var(--ink-soft);margin-top:7px}
+/* v2.4: 9 hagyomanyos szakterulet eredmenyoldala -- trust-footer + also sticky CTA,
+   ugyanazokkal a szinjelentesekkel/tipografiaval mint a Screening-mockup (.scr-v2),
+   de a regi tokennevekkel (--accent/--text3/--success stb.), amik AZONOS ertekre
+   mutatnak mint a --color-action/--ink-soft/--color-success. Csak a #s-res panasz-
+   alapu (nem-Screening) agan hasznalt -- ld. renderMarketplace()/renderResult(). */
+.result-trust{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:28px 0 8px}
+.result-trust div{display:flex;gap:8px;align-items:center;font-size:11px;font-weight:500;color:var(--text3)}
+.result-trust svg{flex-shrink:0;color:var(--success)}
+@media(max-width:480px){.result-trust{grid-template-columns:1fr}}
+#result-sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-top:1px solid var(--border);padding:12px 18px calc(12px + env(safe-area-inset-bottom));display:none}
+#result-sticky-cta .inner{max-width:520px;margin:0 auto}
+#result-sticky-cta .cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--accent);color:#fff;border:none;border-radius:13px;padding:15px;font-size:14.5px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px -6px rgba(47,111,237,.35)}
+#result-sticky-cta .cta-sub{text-align:center;font-size:11px;font-weight:500;color:var(--text3);margin-top:7px}
 .scr-v2-shell{max-width:520px;margin:0 auto;padding-bottom:110px}
 @media(min-width:640px){.scr-v2-shell{padding-bottom:24px}}
 
@@ -1529,9 +1542,30 @@ input[type=range]::-webkit-slider-thumb {
       <div class="ai-body" id="r-explain"></div>
     </div>
 
+    <!-- v2.4: 9 hagyomanyos szakterulet reskin -- trust-footer, ugyanaz a szoveg/ikon
+         mint a Screening-mockupban (.trust), csak nem .scr-v2 alatt scope-olva.
+         Screening eseten mindig rejtve marad (ld. renderResult()). -->
+    <div class="result-trust" id="result-trust" style="display:none">
+      <div><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Ingyenes és biztonságos</div>
+      <div><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Adataid bizalmasan kezelve</div>
+    </div>
+
     <button class="btn-restart" onclick="restart()">↺ Új elemzés indítása</button>
   </div>
 </section>
+
+<!-- v2.4: 9 hagyomanyos szakterulet reskin -- also sticky CTA, ugyanaz a minta mint
+     #scr-v2-sticky, de a marketplace elso (legjobb egyezesu) partnerere mutat.
+     Screening eseten mindig rejtve marad (ld. renderResult()/renderScreeningV2()). -->
+<div id="result-sticky-cta">
+  <div class="inner">
+    <button class="cta-btn" id="result-cta-btn" onclick="resultStickyCtaClick()">
+      <span id="result-cta-text">Időpont érdeklődés</span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+    <p class="cta-sub" id="result-cta-sub"></p>
+  </div>
+</div>
 
 <!-- SAFETY / RED ZONE — állapot-független biztonsági réteg -->
 <section class="scr" id="s-alert">
@@ -1699,6 +1733,13 @@ const PDATA = {
     // megjelenest kapja (nev elsodleges, MedSoulYou masodlagos), NEM tobbe
     // 'adategyeztetes alatt' placeholder.
     {nm:'MedSoulYou',doc:'Barta Beatrix',sp:'Pszichológia',ic:'💫',tags:['Stresszkezelés','Szorongás','Pszichológia'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Klinikai pszichológus a MedSoulYou csapatában, stresszkezelésre és szorongásra specializálódva.'},
+    // v2.4: tovabbi 3 valos MedSoulYou pszichologus (Mick kozvetlen chat-uzenetebol,
+    // a 9-szakterulet reskin feladat reszekent). Pontos alspecializaciojukrol Mick
+    // nem adott reszletet, ezert a tags mezo szandekosan altalanos ('Pszichologia'),
+    // hogy ne fabrikaljunk konkret szakteruletet, amit nem tudunk.
+    {nm:'MedSoulYou',doc:'Horendi Kata',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:97,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
+    {nm:'MedSoulYou',doc:'Makrai-Szécsi Dóra',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:96,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
+    {nm:'MedSoulYou',doc:'Vancsóné Anna',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:95,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
     {nm:'Budai Pszichológus Központ',sp:'Klinikai pszichológia · Kognitív terápia',ic:'🧠',tags:['Szorongás','Depresszió','KBT','Online is'],pct:96,top:false,region:'1',addr:'1104 Budapest, VI. Andrássy út 63.',tel:'+36 1 428 3286',hours:'H–P: 8:00–18:00'},
     {nm:'Dr. Varga Éva',sp:'Pszichiáter · Magánrendelő',ic:'💊',tags:['Gyógyszeres kezelés','Burnout','Pánikroham'],pct:87,top:false,region:'1',addr:'1119 Budapest, III. Bécsi út 109.',tel:'+36 1 232 1488',hours:'H–P: 8:00–18:00'},
     {nm:'MindSpace Terápia',sp:'Egyéni és páros terápia',ic:'💬',tags:['Önismeret','Párkapcsolat','Online is'],pct:81,top:false,region:'1',addr:'1138 Budapest, XIII. Váci út 155.',tel:'+36 1 227 4257',hours:'H–P: 9:00–19:00'},
@@ -1765,7 +1806,7 @@ const PDATA = {
     {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'9',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'}
   ],
   'Gyomor-bél': [
-    {nm:'MedSoulYou',sp:'Gasztroenterológia · Állapotfelmérés',ic:'💫',tags:['Reflux','Puffadás','IBS','SIBO'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gasztroenterológus szakorvosi háttérrel vizsgálják a puffadás, reflux, IBS és egyéb emésztőrendszeri panaszok valódi kiváltó okát.'},
+    {nm:'MedSoulYou',doc:'Dr. Mátyi Kata',sp:'Gasztroenterológia',ic:'💫',tags:['Reflux','Puffadás','IBS','SIBO'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gasztroenterológus a MedSoulYou csapatában, a puffadás, reflux, IBS és egyéb emésztőrendszeri panaszok valódi kiváltó okának feltárására specializálódva.'},
     {nm:'Gasztro Centrum Budapest',sp:'Gasztroenterológia · Endoszkópia',ic:'🫃',tags:['Reflux','IBS','Intoleranciák'],pct:94,top:false,region:'1',addr:'1130 Budapest, V. Váci utca 81.',tel:'+36 1 610 5386',hours:'H–P: 8:00–18:00'},
     {nm:'Dr. Horváth Gábor',sp:'Belgyógyász · Emésztőrendszer',ic:'🩺',tags:['Emésztési zavar','Puffadás','Colon'],pct:86,top:false,region:'1',addr:'1195 Budapest, XIII. Váci út 55.',tel:'+36 1 871 9179',hours:'H–P: 9:00–19:00'},
     {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Labor','Intolerancia teszt','H. pylori'],pct:78,top:false,region:'1',addr:'1124 Budapest, XII. Alkotás utca 36.',tel:'+36 1 452 9830',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
@@ -1815,7 +1856,12 @@ const PDATA = {
     {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'9',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'}
   ],
   'Bőr-Haj': [
-    {nm:'Bőrgyógyászati Magánrendelő',sp:'Dermatológia · Esztétikai bőrgyógyászat',ic:'✨',tags:['Akne','Psoriasis','Hajhullás'],pct:93,top:true,region:'1',addr:'1228 Budapest, VI. Andrássy út 33.',tel:'+36 1 331 8787',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    // v2.4: Dr. Salanki Zsuzsanna mar szerepel az Anyagcsere-Hormonalis kategorianal
+    // (endokrinologia/diabetologia), Mick szerint bőrgyógyászatot is ellat -- ezert
+    // itt kulon, bőrgyógyászati kontextusban is felvesszuk (ugyanaz a szemely, ket
+    // relevans szakterulet, ld. jelentes a chatben).
+    {nm:'MedSoulYou',doc:'Dr. Salánki Zsuzsanna',sp:'Bőrgyógyászat',ic:'💫',tags:['Bőrgyógyászat'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász-diabetológus, endokrinológus a MedSoulYou csapatában, bőrgyógyászati vonatkozású panaszokban is.'},
+    {nm:'Bőrgyógyászati Magánrendelő',sp:'Dermatológia · Esztétikai bőrgyógyászat',ic:'✨',tags:['Akne','Psoriasis','Hajhullás'],pct:93,top:false,region:'1',addr:'1228 Budapest, VI. Andrássy út 33.',tel:'+36 1 331 8787',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
     {nm:'Dr. Lakatos Mária',sp:'Bőrgyógyász · Trichológus',ic:'💇',tags:['Hajhullás','Bőrbetegségek','Hormonális akne'],pct:87,top:false,region:'1',addr:'1189 Budapest, XI. Bartók Béla út 109.',tel:'+36 1 416 9835',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
     {nm:'SkinLab Budapest',sp:'Endokrinológia + Bőrgyógyászat',ic:'🔬',tags:['Hormonális összefüggés','Labor','Komplex'],pct:81,top:false,region:'1',addr:'1165 Budapest, XI. Bartók Béla út 113.',tel:'+36 1 729 8397',hours:'H–P: 8:00–18:00'},
     {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'3',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
@@ -2898,6 +2944,10 @@ function renderResult(d){
     const bk=document.getElementById('medsoulyou-booking');
     if(bk)bk.innerHTML='';
     window.__partners=[];
+    const rsc1=document.getElementById('result-sticky-cta');
+    const rt1=document.getElementById('result-trust');
+    if(rsc1)rsc1.style.display='none';
+    if(rt1)rt1.style.display='none';
     renderScreeningV2('clear', [], '');
   }else{
     if(tipsWrap){tipsWrap.style.display='none';tipsWrap.innerHTML='';}
@@ -3062,6 +3112,10 @@ function renderResult(d){
       // v2.3: a valos partner-tomb (partners) es a kod-szinten ellenorzott,
       // oszinte lokacio-szoveg (locNoteTextPlain) atadasa a mockup-alapu
       // uj Screening eredmenyoldalnak.
+      const rsc2=document.getElementById('result-sticky-cta');
+      const rt2=document.getElementById('result-trust');
+      if(rsc2)rsc2.style.display='none';
+      if(rt2)rt2.style.display='none';
       renderScreeningV2('flag', partners, locNoteTextPlain);
     }else{
       // v2.2: panasz-alapú területek — orvos-first marketplace + AI
@@ -3077,6 +3131,21 @@ function renderResult(d){
       renderMarketplace(partners, prim, d);
       renderAiReport(d, partners);
       renderPrivatePublic(d);
+      // v2.4: 9 hagyomanyos szakterulet reskin -- also sticky CTA + trust-footer,
+      // a Screening-mockup mintajara. A legjobb egyezesu (elso) partnerre mutat --
+      // ha az igazolt (real) partner, kozvetlen foglalas-erdeklodest indit, kulonben
+      // a marketplace listajahoz gorget.
+      const rt3=document.getElementById('result-trust');
+      const rsc3=document.getElementById('result-sticky-cta');
+      const rctaText=document.getElementById('result-cta-text');
+      const rctaSub=document.getElementById('result-cta-sub');
+      const topP=partners[0];
+      if(rt3)rt3.style.display='';
+      if(rsc3)rsc3.style.display='block'; // v2.4: same '' vs display:none pitfall found+fixed on the Screening sticky bar, applied here too
+      if(topP){
+        if(rctaText)rctaText.textContent=topP.real?'Időpont érdeklődés':'Ajánlott partnerek megtekintése';
+        if(rctaSub)rctaSub.textContent=topP.real?(topP.doc?topP.doc+' · '+topP.sp:topP.nm):'A legjobb egyezésű találatok listája lent';
+      }
     }
   }
 
@@ -3285,7 +3354,7 @@ function renderScreeningV2(mode, partners, locNoteText){
   const scr2=document.getElementById('scr-v2');
   const scr2sticky=document.getElementById('scr-v2-sticky');
   if(scr2)scr2.style.display='';
-  if(scr2sticky)scr2sticky.style.display='';
+  if(scr2sticky)scr2sticky.style.display='block'; // v2.4 bugfix: '' falls back to CSS display:none, never actually shows
 }
 
 // v2.3.3 FRISSITES (Mick kozvetlen visszajelzese a chatben): a korabbi
@@ -3719,6 +3788,21 @@ function toggleClinic(idx){
 }
 
 // ── Foglalási nézet ──
+// v2.4: 9 hagyomanyos szakterulet also sticky CTA-jának kattintás-kezelője --
+// ha az elso (legjobb egyezesu) partner igazolt (real), kozvetlenul a
+// meglevo openBooking(0) foglalas-erdeklodes modalt nyitja meg (UGYANAZ a
+// folyamat, amit a marketplace-kartyan levo gomb is hasznal -- nincs
+// kulon/uj booking-logika); kulonben a marketplace-listahoz gorget, ahol
+// az osszes talalat lathato.
+function resultStickyCtaClick(){
+  const partners=window.__partners||[];
+  if(partners[0]&&partners[0].real){
+    openBooking(0);
+  }else{
+    const mk=document.getElementById('r-marketplace-section');
+    if(mk)mk.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
 function openBooking(idx){
   const p=(window.__partners||[])[idx];
   if(!p)return;
