@@ -1694,7 +1694,11 @@ function isAllapot(x){return S.allapot===x}
 // ── Partner adatbázis ──
 const PDATA = {
   'Mentális-Pszichés': [
-    {nm:'MedSoulYou',sp:'Orvosi és pszichológiai csapat · Állapotfelmérés',ic:'💫',tags:['Pszichológia','Pszichiátria','Testi-lelki együtt'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Orvosokból és pszichológusokból álló csapat, akik a testi és lelki egészséget együtt vizsgálják — nem csak tüneti kezelést adnak, hanem a kiváltó okot keresik.'},
+    // v2.3.2: valos MedSoulYou orvos (Mick sajat mockup-fajljabol, ld.
+    // jelentes a chatben) -- doc:'Barta Beatrix' -> a doc-card orvos-first
+    // megjelenest kapja (nev elsodleges, MedSoulYou masodlagos), NEM tobbe
+    // 'adategyeztetes alatt' placeholder.
+    {nm:'MedSoulYou',doc:'Barta Beatrix',sp:'Pszichológia',ic:'💫',tags:['Stresszkezelés','Szorongás','Pszichológia'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Klinikai pszichológus a MedSoulYou csapatában, stresszkezelésre és szorongásra specializálódva.'},
     {nm:'Budai Pszichológus Központ',sp:'Klinikai pszichológia · Kognitív terápia',ic:'🧠',tags:['Szorongás','Depresszió','KBT','Online is'],pct:96,top:false,region:'1',addr:'1104 Budapest, VI. Andrássy út 63.',tel:'+36 1 428 3286',hours:'H–P: 8:00–18:00'},
     {nm:'Dr. Varga Éva',sp:'Pszichiáter · Magánrendelő',ic:'💊',tags:['Gyógyszeres kezelés','Burnout','Pánikroham'],pct:87,top:false,region:'1',addr:'1119 Budapest, III. Bécsi út 109.',tel:'+36 1 232 1488',hours:'H–P: 8:00–18:00'},
     {nm:'MindSpace Terápia',sp:'Egyéni és páros terápia',ic:'💬',tags:['Önismeret','Párkapcsolat','Online is'],pct:81,top:false,region:'1',addr:'1138 Budapest, XIII. Váci út 155.',tel:'+36 1 227 4257',hours:'H–P: 9:00–19:00'},
@@ -1706,8 +1710,11 @@ const PDATA = {
     {nm:'Székesfehérvár Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'8',addr:'8000 Székesfehérvár, Petőfi Sándor utca 12.',tel:'+36 22 420 315',hours:'H–P: 8:00–17:00'},
     {nm:'Győr Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'9',addr:'9021 Győr, Petőfi Sándor utca 12.',tel:'+36 96 420 315',hours:'H–P: 8:00–17:00'}
   ],
+  // v2.3.2: Mick explicit jelezte, hogy Alvashoz jelenleg NINCS relevans
+  // MedSoulYou-s szakember -- a regi 'MedSoulYou (adategyeztetes alatt)'
+  // placeholder-bejegyzes ezert eltavolitva, nem eroltetjuk be. Az elso
+  // (illusztrativ) minta-partner marad a lista elejen.
   'Alvás': [
-    {nm:'MedSoulYou',sp:'Belgyógyászat + Pszichológia · Állapotfelmérés',ic:'💫',tags:['Alvászavar','Krónikus fáradtság','Komplex kivizsgálás'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Az alvászavarok hátterében gyakran hormonális, anyagcsere- vagy stressz-eredetű okok állnak — a MedSoulYou csapata ezeket egyben vizsgálja.'},
     {nm:'SleepWell Alvásdiagnosztika',sp:'Alváscentrum · Poligráfia',ic:'🌙',tags:['Alvászavar','Apnoe','Horkolás'],pct:95,top:false,region:'1',addr:'1179 Budapest, XIII. Váci út 72.',tel:'+36 1 206 3615',hours:'H–P: 9:00–19:00'},
     {nm:'Dr. Molnár Zsófia',sp:'Neurológus · Alvásspecialista',ic:'⚡',tags:['Inszomnia','Alvásterápia'],pct:88,top:false,region:'1',addr:'1142 Budapest, VII. Király utca 56.',tel:'+36 1 981 6514',hours:'H–P: 8:00–18:00'},
     {nm:'Budai Egészségközpont',sp:'Általános kivizsgálás + alvás',ic:'🏥',tags:['Komplex szűrés','Labor'],pct:76,top:false,region:'1',addr:'1161 Budapest, VI. Andrássy út 92.',tel:'+36 1 552 5333',hours:'H–P: 8:00–18:00'},
@@ -3177,11 +3184,21 @@ function renderScreeningV2(mode, partners, locNoteText){
         const badge=p.real
           ? (p.doc?'<span class="badge partner">Igazolt partner</span>':'<span class="badge pending">adategyeztetés alatt</span>')
           : '<span class="badge illustrative">Illusztratív példa</span>';
+        // v2.3.2: ha van konkret orvosnev (p.doc, orvos-first eset), a
+        // klinika neve (p.nm, pl. "MedSoulYou") mostantol MINDIG megjelenik
+        // masodlagos/alcim elemkent a cim-soron -- korabban p.doc eseten a
+        // cim sor csak a cimet (p.addr) mutatta, es a klinikanev sehol nem
+        // jelent meg, ami ellentmond a "MedSoulYou csak alcimkent" kerésnek.
+        // Ha nincs kulon orvosnev (a klinikanev MAGA az elsodleges elem),
+        // a regi viselkedes marad: cim ha van, kulonben klinikanev.
+        const clinicLine=p.doc
+          ? (p.addr?`${p.nm} · ${p.addr}`:p.nm)
+          : (p.addr||p.nm||'');
         return `<div class="doc-card${idx===0?' featured':''}">`+
           `<div class="doc-top"><div class="avatar">${initials}</div>`+
           `<div class="doc-info"><div class="doc-name-row"><span class="doc-name">${displayName}</span>${badge}</div>`+
           `<div class="doc-spec">${p.sp||''}</div>`+
-          `<div class="doc-clinic">📍 ${p.addr||p.nm||''}</div></div>`+
+          `<div class="doc-clinic">📍 ${clinicLine}</div></div>`+
           `<div class="match-ring">${p.pct}%</div></div>`+
           `<div class="tags">${(p.tags||[]).map(t=>`<span>${t}</span>`).join('')}</div>`+
           `<button class="doc-cta" onclick="openBooking(${idx})">Időpont érdeklődés</button>`+
