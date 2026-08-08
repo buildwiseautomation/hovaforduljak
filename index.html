@@ -1169,13 +1169,23 @@ input[type=range]::-webkit-slider-thumb {
 
     <div class="profile-row" id="r-profile"></div>
 
-    <div class="sec-lbl">Ajánlott következő lépések</div>
-    <div class="steps-list" id="r-steps"></div>
+    <!-- v2.1: Screening "nincs jel" (alacsony kockázati kép) ágon ez a blokk
+         jelenik meg a lépések/partnerek helyett — bátorító tipp(ek) + a
+         "nem helyettesíti a szűrést" záradék, konkrét orvos/klinika-ajánlás
+         NÉLKÜL. Ld. renderResult(). Minden más esetben üres/rejtett. -->
+    <div id="r-prevention-tips" style="display:none"></div>
 
-    <div class="sec-lbl">Ajánlott partnerek</div>
-    <div id="loc-banner"></div>
-    <div class="p-grid" id="r-partners"></div>
-    <div id="medsoulyou-booking"></div>
+    <div id="r-steps-section">
+      <div class="sec-lbl">Ajánlott következő lépések</div>
+      <div class="steps-list" id="r-steps"></div>
+    </div>
+
+    <div id="r-partners-section">
+      <div class="sec-lbl">Ajánlott partnerek</div>
+      <div id="loc-banner"></div>
+      <div class="p-grid" id="r-partners"></div>
+      <div id="medsoulyou-booking"></div>
+    </div>
 
     <div class="sec-lbl">Miért ezek az ajánlások?</div>
     <div class="ai-box">
@@ -2464,125 +2474,166 @@ function renderResult(d){
     pc.appendChild(div);
   });
 
-  // next steps
-  const sl=document.getElementById('r-steps');
-  sl.innerHTML='';
-  (d.next_steps||[]).forEach(s=>{
-    const div=document.createElement('div');
-    div.className='step-card';
-    div.innerHTML=`<div class="step-icon ${s.type}">${s.icon}</div><div class="step-body"><div class="step-head">${s.title}</div><div class="step-txt">${s.desc}</div></div>`;
-    sl.appendChild(div);
-  });
+  // v2.1: Screening "nincs jel" ág (SCR.flags üres) — a doksi 07b
+  // "v2.1 — pontosítás" kérése szerint ezen az ágon NEM jelenhet meg
+  // konkrét szakember/klinika-ajánlás, mert ott ennek nincs tényleges
+  // létjogosultsága (nincs jelzett kockázat, amihez irányítanánk). Helyette
+  // 1-2, a legmagasabb (de a "van mire figyelni" küszöböt el nem érő)
+  // szintű kategóriára szabott, kód-szinten (nem AI-ra bízva) meghatározott
+  // megelőzési tipp + a "nem helyettesíti a szűrést" záradék jelenik meg —
+  // ugyanaz a védekező elv, mint a numerikus kockázat kiszűrésénél
+  // (stripNumericRisk): nem bízzuk kizárólag az AI promptra, kódszinten is
+  // kikényszerítjük.
+  const scrNincsJel=isScreeningFlow()&&(SCR.flags||[]).length===0;
+  const stepsSection=document.getElementById('r-steps-section');
+  const partnersSection=document.getElementById('r-partners-section');
+  const tipsWrap=document.getElementById('r-prevention-tips');
 
-  // partners
-  const pg=document.getElementById('r-partners');
-  pg.innerHTML='';
-  // Fuzzy matcher: az AI valtozatos kulcsszavait a helyes kategoriahoz koti
-  function foldHu(s){
-    return s.toLowerCase()
-      .replace(/[áàâ]/g,'a').replace(/é/g,'e').replace(/[íì]/g,'i')
-      .replace(/[óòô]/g,'o').replace(/ő/g,'o').replace(/[úùû]/g,'u').replace(/ű/g,'u');
-  }
-  function matchCat(s){
-    if(!s)return null;
-    if(PDATA[s])return s; // pontos talalat
-    const t=foldHu(s);
-    if(/ment|psz|szoron|depr|kiege|stressz|hangulat|lelki/.test(t))return 'Mentális-Pszichés';
-    if(/alv|insz|apno|horko/.test(t))return 'Alvás';
-    if(/anyagcs|hormon|pajzs|endokr|cukor|inzulin|dieteti|taplal/.test(t))return 'Anyagcsere-Hormonális';
-    if(/mozgas|ortop|gerinc|izul|reuma|izom|csont/.test(t))return 'Mozgásszervi';
-    if(/gyomor|emeszt|reflux|gaszt|szekl|puffad/.test(t))return 'Gyomor-bél';
-    if(/sziv|kering|kardio|vernyom|ritmus/.test(t))return 'Szív és keringés';
-    if(/legz|tudo|pulmo|asztma|allerg|orr|gege/.test(t))return 'Légzőszervi';
-    if(/neuro|fejfaj|migren|szedu|zsibba|ideg/.test(t))return 'Neurológiai';
-    if(/bor|haj|derma|akne|psoria/.test(t))return 'Bőr-Haj';
-    if(/szur|megel|preven|labor|diagn/.test(t))return 'Szűrés-Megelőzés';
-    return null;
-  }
-  // elsodleges: AI valasz -> fuzzy -> elso megjelolt terulet -> default
-  const firstTerulet=(MULTI['terület']&&MULTI['terület'][0])||null;
-  const prim=matchCat(d.primary_specialty)||matchCat(firstTerulet)||'Szűrés-Megelőzés';
-  if(window.MedSoulYouBooking){try{MedSoulYouBooking.render(document.getElementById('medsoulyou-booking'), prim);}catch(e){console.error('MedSoulYou widget hiba:',e);}}
-  const sec=matchCat(d.secondary_specialty);
-  let partners=PDATA[prim]||PDATA['default'];
-  if(sec&&sec!==prim&&PDATA[sec]){
-    // elkerüljük a duplikációt, ha a másodlagos kategória első helyezettje
-    // (pl. MedSoulYou) már szerepel az elsődlegesben
-    const already=new Set(partners.map(p=>p.nm));
-    const secPick=PDATA[sec].find(p=>!already.has(p.nm))||PDATA[sec][0];
-    partners=[partners[0],partners[1],secPick];
-  }
-
-  // régió-tudatos rendezés: ha van megadott irányítószám és nem budapesti,
-  // a saját régiós találat kerüljön ELŐRE (teljes átállás, nem csak beszúrás)
-  const userRegion=(A.iranyitoszam||'').trim()[0]||null;
-  let regionMatchFound=false;
-  if(userRegion && userRegion!=='1'){
-    const regional=(PDATA[prim]||[]).find(p=>p.region===userRegion);
-    if(regional){
-      regionMatchFound=true;
-      // regionális találat előre, utána a valós/igazolt partner (akkor is ha távolabb van), majd a maradék
-      const rest=partners.filter(p=>p.nm!==regional.nm);
-      partners=[regional, ...rest].slice(0,3);
+  if(scrNincsJel){
+    if(stepsSection)stepsSection.style.display='none';
+    if(partnersSection)partnersSection.style.display='none';
+    const tips=computePreventionTips();
+    const tipsHtml=tips.length
+      ? tips.map(t=>`<div class="step-card"><div class="step-icon p">🌱</div><div class="step-body"><div class="step-head">${t.title}</div><div class="step-txt">${t.tip}</div></div></div>`).join('')
+      : `<div class="step-card"><div class="step-icon p">🌱</div><div class="step-body"><div class="step-head">Szép munka</div><div class="step-txt">A válaszaid alapján jelenleg nem találtunk kiemelt figyelmet igénylő területet.</div></div></div>`;
+    if(tipsWrap){
+      tipsWrap.innerHTML=`<div class="sec-lbl">Amit érdemes szem előtt tartani</div><div class="steps-list">${tipsHtml}</div>`+
+        `<div class="med-disclaimer">✦ Ez az eredmény nem helyettesíti a rendszeres szűrővizsgálatokat — panasz hiányában is érdemes a kornak/nemnek megfelelő szűréseken részt venni.</div>`;
+      tipsWrap.style.display='';
     }
-  }
-
-  // lokáció-őszinteség: kódszinten ellenőrizzük, nem az AI-ra bízzuk
-  const locBanner=document.getElementById('loc-banner');
-  const postal=(A.iranyitoszam||'').trim();
-  if(postal && postal[0]!=='1'){
-    const region=getRegion(postal)||'a megadott területen';
-    if(regionMatchFound){
-      locBanner.innerHTML=`<div class="loc-banner"><span class="li">✓</span><span>A megadott irányítószám alapján <strong>${region}</strong> térségéből mutatjuk elsőként az ajánlást — a budapesti igazolt partnerünk (MedSoulYou) is elérhető, de távolabb esik. (A regionális ajánlás illusztratív, a hálózat bővülésével válik valódivá.)</span></div>`;
-    }else{
-      locBanner.innerHTML=`<div class="loc-banner"><span class="li">📍</span><span>Az igazolt partnerünk (MedSoulYou) Budapesten érhető el — a megadott irányítószám (${postal}) alapján ez <strong>${region}</strong> térségétől távol esik. A hálózatunk bővül, addig is a lenti ajánlások szakmailag relevánsak, de utazást igényelhetnek.</span></div>`;
-    }
+    document.getElementById('r-steps').innerHTML='';
+    document.getElementById('r-partners').innerHTML='';
+    document.getElementById('loc-banner').innerHTML='';
+    const bk=document.getElementById('medsoulyou-booking');
+    if(bk)bk.innerHTML='';
+    window.__partners=[];
   }else{
-    locBanner.innerHTML='';
-  }
+    if(stepsSection)stepsSection.style.display='';
+    if(partnersSection)partnersSection.style.display='';
+    if(tipsWrap){tipsWrap.style.display='none';tipsWrap.innerHTML='';}
 
-  partners.forEach((p,idx)=>{
-    const div=document.createElement('div');
-    div.className='p-card-wrap';
-    const badge = p.real
-      ? '<div class="real-badge">✓ Igazolt partner</div>'
-      : (p.top?'<div class="top-badge">Legjobb találat</div>':'');
-    const expandContent = p.real
-      ? `<div class="p-detail-row"><span class="p-detail-ic">📍</span><span>${p.addr||'Budapest'}</span></div>
-         <div class="p-detail-row"><span class="p-detail-ic">📞</span><span>${p.tel||''}</span></div>
-         <div class="p-detail-row"><span class="p-detail-ic">🕒</span><span>${p.hours||''}</span></div>
-         <div class="p-detail-desc">${p.about||''}</div>
-         <div class="p-actions">
-           <button class="p-book-btn real" onclick="openBooking(${idx})">📅 Időpontfoglalás a MedSoulYou oldalán →</button>
-           <a class="p-call-btn" href="tel:${(p.tel||'').replace(/\s/g,'')}">📞 Hívás</a>
-         </div>`
-      : `<div class="p-detail-row"><span class="p-detail-ic">📍</span><span>${p.addr||'Budapest'}</span></div>
-         <div class="p-detail-desc">${p.about||'Illusztratív példa a bemutató céljából — nem valós partnerklinika.'}</div>
-         <div class="illustrative-note">Illusztratív példa — még nem partnerünk. A végleges verzióban itt valós, igazolt partnerklinikák jelennek meg elérhetőségekkel és időpontfoglalással.</div>`;
-    div.innerHTML=`
-      <div class="p-card${p.top?' top':''}${p.real?' real':''}" onclick="toggleClinic(${idx})">
-        ${badge}
-        <div class="p-av">${p.ic}</div>
-        <div class="p-inf">
-          ${p.doc
-            ? `<div class="p-nm">${p.doc}</div><div class="p-clinic-ctx">${p.nm}</div>`
-            : `<div class="p-nm">${p.nm}</div>`}
-          <div class="p-sp">${p.sp}</div>
-          <div class="p-tags">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
+    // next steps
+    const sl=document.getElementById('r-steps');
+    sl.innerHTML='';
+    (d.next_steps||[]).forEach(s=>{
+      const div=document.createElement('div');
+      div.className='step-card';
+      div.innerHTML=`<div class="step-icon ${s.type}">${s.icon}</div><div class="step-body"><div class="step-head">${s.title}</div><div class="step-txt">${s.desc}</div></div>`;
+      sl.appendChild(div);
+    });
+
+    // partners
+    const pg=document.getElementById('r-partners');
+    pg.innerHTML='';
+    // Fuzzy matcher: az AI valtozatos kulcsszavait a helyes kategoriahoz koti
+    function foldHu(s){
+      return s.toLowerCase()
+        .replace(/[áàâ]/g,'a').replace(/é/g,'e').replace(/[íì]/g,'i')
+        .replace(/[óòô]/g,'o').replace(/ő/g,'o').replace(/[úùû]/g,'u').replace(/ű/g,'u');
+    }
+    function matchCat(s){
+      if(!s)return null;
+      if(PDATA[s])return s; // pontos talalat
+      const t=foldHu(s);
+      if(/ment|psz|szoron|depr|kiege|stressz|hangulat|lelki/.test(t))return 'Mentális-Pszichés';
+      if(/alv|insz|apno|horko/.test(t))return 'Alvás';
+      if(/anyagcs|hormon|pajzs|endokr|cukor|inzulin|dieteti|taplal/.test(t))return 'Anyagcsere-Hormonális';
+      if(/mozgas|ortop|gerinc|izul|reuma|izom|csont/.test(t))return 'Mozgásszervi';
+      if(/gyomor|emeszt|reflux|gaszt|szekl|puffad/.test(t))return 'Gyomor-bél';
+      if(/sziv|kering|kardio|vernyom|ritmus/.test(t))return 'Szív és keringés';
+      if(/legz|tudo|pulmo|asztma|allerg|orr|gege/.test(t))return 'Légzőszervi';
+      if(/neuro|fejfaj|migren|szedu|zsibba|ideg/.test(t))return 'Neurológiai';
+      if(/bor|haj|derma|akne|psoria/.test(t))return 'Bőr-Haj';
+      if(/szur|megel|preven|labor|diagn/.test(t))return 'Szűrés-Megelőzés';
+      return null;
+    }
+    // elsodleges: AI valasz -> fuzzy -> elso megjelolt terulet -> default
+    const firstTerulet=(MULTI['terület']&&MULTI['terület'][0])||null;
+    const prim=matchCat(d.primary_specialty)||matchCat(firstTerulet)||'Szűrés-Megelőzés';
+    if(window.MedSoulYouBooking){try{MedSoulYouBooking.render(document.getElementById('medsoulyou-booking'), prim);}catch(e){console.error('MedSoulYou widget hiba:',e);}}
+    const sec=matchCat(d.secondary_specialty);
+    let partners=PDATA[prim]||PDATA['default'];
+    if(sec&&sec!==prim&&PDATA[sec]){
+      // elkerüljük a duplikációt, ha a másodlagos kategória első helyezettje
+      // (pl. MedSoulYou) már szerepel az elsődlegesben
+      const already=new Set(partners.map(p=>p.nm));
+      const secPick=PDATA[sec].find(p=>!already.has(p.nm))||PDATA[sec][0];
+      partners=[partners[0],partners[1],secPick];
+    }
+
+    // régió-tudatos rendezés: ha van megadott irányítószám és nem budapesti,
+    // a saját régiós találat kerüljön ELŐRE (teljes átállás, nem csak beszúrás)
+    const userRegion=(A.iranyitoszam||'').trim()[0]||null;
+    let regionMatchFound=false;
+    if(userRegion && userRegion!=='1'){
+      const regional=(PDATA[prim]||[]).find(p=>p.region===userRegion);
+      if(regional){
+        regionMatchFound=true;
+        // regionális találat előre, utána a valós/igazolt partner (akkor is ha távolabb van), majd a maradék
+        const rest=partners.filter(p=>p.nm!==regional.nm);
+        partners=[regional, ...rest].slice(0,3);
+      }
+    }
+
+    // lokáció-őszinteség: kódszinten ellenőrizzük, nem az AI-ra bízzuk
+    const locBanner=document.getElementById('loc-banner');
+    const postal=(A.iranyitoszam||'').trim();
+    if(postal && postal[0]!=='1'){
+      const region=getRegion(postal)||'a megadott területen';
+      if(regionMatchFound){
+        locBanner.innerHTML=`<div class="loc-banner"><span class="li">✓</span><span>A megadott irányítószám alapján <strong>${region}</strong> térségéből mutatjuk elsőként az ajánlást — a budapesti igazolt partnerünk (MedSoulYou) is elérhető, de távolabb esik. (A regionális ajánlás illusztratív, a hálózat bővülésével válik valódivá.)</span></div>`;
+      }else{
+        locBanner.innerHTML=`<div class="loc-banner"><span class="li">📍</span><span>Az igazolt partnerünk (MedSoulYou) Budapesten érhető el — a megadott irányítószám (${postal}) alapján ez <strong>${region}</strong> térségétől távol esik. A hálózatunk bővül, addig is a lenti ajánlások szakmailag relevánsak, de utazást igényelhetnek.</span></div>`;
+      }
+    }else{
+      locBanner.innerHTML='';
+    }
+
+    partners.forEach((p,idx)=>{
+      const div=document.createElement('div');
+      div.className='p-card-wrap';
+      const badge = p.real
+        ? '<div class="real-badge">✓ Igazolt partner</div>'
+        : (p.top?'<div class="top-badge">Legjobb találat</div>':'');
+      const expandContent = p.real
+        ? `<div class="p-detail-row"><span class="p-detail-ic">📍</span><span>${p.addr||'Budapest'}</span></div>
+           <div class="p-detail-row"><span class="p-detail-ic">📞</span><span>${p.tel||''}</span></div>
+           <div class="p-detail-row"><span class="p-detail-ic">🕒</span><span>${p.hours||''}</span></div>
+           <div class="p-detail-desc">${p.about||''}</div>
+           <div class="p-actions">
+             <button class="p-book-btn real" onclick="openBooking(${idx})">📅 Időpontfoglalás a MedSoulYou oldalán →</button>
+             <a class="p-call-btn" href="tel:${(p.tel||'').replace(/\s/g,'')}">📞 Hívás</a>
+           </div>`
+        : `<div class="p-detail-row"><span class="p-detail-ic">📍</span><span>${p.addr||'Budapest'}</span></div>
+           <div class="p-detail-desc">${p.about||'Illusztratív példa a bemutató céljából — nem valós partnerklinika.'}</div>
+           <div class="illustrative-note">Illusztratív példa — még nem partnerünk. A végleges verzióban itt valós, igazolt partnerklinikák jelennek meg elérhetőségekkel és időpontfoglalással.</div>`;
+      div.innerHTML=`
+        <div class="p-card${p.top?' top':''}${p.real?' real':''}" onclick="toggleClinic(${idx})">
+          ${badge}
+          <div class="p-av">${p.ic}</div>
+          <div class="p-inf">
+            ${p.doc
+              ? `<div class="p-nm">${p.doc}</div><div class="p-clinic-ctx">${p.nm}</div>`
+              : (p.real
+                  ? `<div class="p-nm">MedSoulYou szakorvos (adategyeztetés alatt)</div><div class="p-clinic-ctx">${p.nm}</div>`
+                  : `<div class="p-nm">${p.nm}</div>`)}
+            <div class="p-sp">${p.sp}</div>
+            <div class="p-tags">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
+          </div>
+          <div class="p-right">
+            <div class="p-pct">${p.pct}%</div>
+            <div class="p-plbl">egyezés</div>
+            <div class="p-chevron" id="chev-${idx}">⌄</div>
+          </div>
         </div>
-        <div class="p-right">
-          <div class="p-pct">${p.pct}%</div>
-          <div class="p-plbl">egyezés</div>
-          <div class="p-chevron" id="chev-${idx}">⌄</div>
-        </div>
-      </div>
-      <div class="p-expand" id="exp-${idx}">
-        ${expandContent}
-      </div>`;
-    pg.appendChild(div);
-  });
-  // eltároljuk a jelenlegi partnereket a foglaláshoz
-  window.__partners=partners;
+        <div class="p-expand" id="exp-${idx}">
+          ${expandContent}
+        </div>`;
+      pg.appendChild(div);
+    });
+    // eltároljuk a jelenlegi partnereket a foglaláshoz
+    window.__partners=partners;
+  }
 
   // explanation + personal note
   document.getElementById('r-explain').textContent=
@@ -2590,23 +2641,79 @@ function renderResult(d){
 
   go('s-res');
 }
-// v2.0: a Szűrés-Megelőzés eredményoldal CTA-ja erre mutat — mivel az
-// alkalmazásnak nincs külön "hosszú, hagyományos kérdőív" oldala/route-ja
-// (ugyanaz a kérdéssor szolgálja ki mindkettőt, a Q3-as terület-választás
-// dönti el, melyik ág fut le), a "töltsd ki a részletesebb tesztet" a
-// gyakorlatban azt jelenti: visszavisszük a felhasználót a terület-
-// választáshoz, a Szűrés-Megelőzés jelölést levéve, hogy valódi
-// tünetterülete(ke)t tudjon választani, és a teljes, tünet-alapú A/B/C
-// kérdéssoron menjen végig.
-function restartToDetailedQuiz(){
-  MULTI['terület']=(MULTI['terület']||[]).filter(t=>t!=='Szűrés-Megelőzés');
-  A['terület']=(MULTI['terület']||[]).join(', ');
-  const teruletBox=document.getElementById('teruletek');
-  if(teruletBox)teruletBox.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
-  go('s-quiz');
-  showQ(3);
+
+// v2.1: 1-2, a legmagasabb (de nem-flaggelt, hiszen a "nincs jel" ágon
+// vagyunk) szintű Likert-kategóriára szabott, KÓD-szinten rögzített
+// megelőzési tipp — nem az AI generálja, hogy garantáltan ne kerüljön bele
+// implicit klinika/szakember-ajánlás.
+const SCR_PREVENTION_TIPS={
+  mozgas:'Már heti pár rövid séta vagy 10 perces mozgás is számít — érdemes fokozatosan beépíteni a mindennapokba.',
+  dohanyzas:'Ha dohányzol, még a mennyiség csökkentése is mérhető javulást hozhat — háziorvosod segíthet a leszokásban, ha szeretnéd.',
+  alvas:'Próbálj rendszeres lefekvési időt tartani, és lefekvés előtt kerülni a képernyőket — ez sokat javíthat az alvásminőségen.',
+  stressz:'Napi pár perc tudatos pihenés (légzőgyakorlat, séta, kikapcsolódás) hosszabb távon is érezhető különbséget hoz.',
+  alkohol:'Érdemes figyelni az alkoholfogyasztás gyakoriságát és mennyiségét — a rendszeres, alacsonyabb szintű fogyasztás is összeadódik.'
+};
+function computePreventionTips(){
+  const likert=(SCR.answers&&SCR.answers.likert)||{};
+  const scored=SCR_LIKERT.map(cat=>({cat,lvl:likert[cat.key]||0})).filter(x=>x.lvl>0);
+  scored.sort((a,b)=>b.lvl-a.lvl);
+  return scored.slice(0,2).map(x=>({title:x.cat.title,tip:SCR_PREVENTION_TIPS[x.cat.key]}));
 }
 
+// v2.1: a Likert-kategória (és a BMI-jelzés) -> hagyományos, tünet-alapú
+// szakterület leképezése, a "pontosabb eredmény" CTA célzott routingjához.
+// Ez egy értelmezési döntés (a doksi nem ad explicit táblázatot) — a
+// legjobban illeszkedő meglévő szakterületet választottuk mindegyikhez;
+// az Alkoholfogyasztás -> Gyomor-bél irány a legkevésbé egyértelmű (nincs
+// dedikált "addiktológia" vagy "hepatológia" szakterület a listán), ld.
+// jelentés a chatben.
+const SCR_LIKERT_TO_SPECIALTY={
+  mozgas:'Mozgásszervi',
+  dohanyzas:'Légzőszervi',
+  alvas:'Alvás',
+  stressz:'Mentális-Pszichés',
+  alkohol:'Gyomor-bél'
+};
+function scrFlagToSpecialty(f){
+  if(f.area==='Testtömegindex (BMI)')return 'Anyagcsere-Hormonális';
+  const cat=SCR_LIKERT.find(c=>c.title===f.area);
+  return cat?SCR_LIKERT_TO_SPECIALTY[cat.key]:null;
+}
+// v2.1: a Szűrés-Megelőzés eredményoldal CTA-ja erre mutat. Korábban (v2.0)
+// mindig a sima terület-választóra vitt vissza; most, ha volt jelzett
+// kategória, a LEGMAGASABB kockázatú (KIEMELT/hard, azaz 5-ös szintű)
+// jelzés szakterületét jelöli elő elsőként, a többi jelzett területet is
+// vele EGYÜTT (a meglévő, multi-területes qsym-renderelés natívan egy
+// képernyőn mutatja mindet, ld. goSymptoms()) — így a többi is kitölthető
+// anélkül, hogy vissza kéne menni a terület-választóhoz. Az alapadatok
+// (kor/nem/testsúly/magasság) a közös A objektumban ÚGYIS megmaradnak,
+// nem kell külön átadni. Ha nem volt jelzett kategória (pl. a "nincs jel"
+// ágról indították a CTA-t), nincs mire automatikusan ráállni — ekkor a
+// v2.0-s viselkedés marad: sima terület-választó, Screening levéve.
+function restartToDetailedQuiz(){
+  const flags=(SCR.flags||[]).slice().sort((a,b)=>(b.hard?1:0)-(a.hard?1:0));
+  const specialties=[];
+  flags.forEach(f=>{
+    const sp=scrFlagToSpecialty(f);
+    if(sp&&!specialties.includes(sp))specialties.push(sp);
+  });
+  if(specialties.length===0){
+    MULTI['terület']=(MULTI['terület']||[]).filter(t=>t!=='Szűrés-Megelőzés');
+    A['terület']=(MULTI['terület']||[]).join(', ');
+    const teruletBox=document.getElementById('teruletek');
+    if(teruletBox)teruletBox.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+    go('s-quiz');
+    showQ(3);
+    return;
+  }
+  MULTI['terület']=specialties;
+  A['terület']=specialties.join(', ');
+  S.allapot='A';A.allapot='A';
+  go('s-quiz');
+  goSymptoms();
+}
+
+// ── Klinika kártya kinyitás ──
 // ── Klinika kártya kinyitás ──
 function toggleClinic(idx){
   const exp=document.getElementById('exp-'+idx);
@@ -2694,7 +2801,8 @@ if(typeof window!=='undefined'){
     RISK_NUMBER_RE,stripNumericRisk,sanitizeResultNumbers,
     buildScreeningPrompt,goScreeningAlap,scrWizRender,scrWizGoto,scrWizManualNext,scrWizRfGate,
     scrLikertPick,scrBetegsegPick,restartToDetailedQuiz,scrCheckOptionalSkips,
-    renderResult,restart,submit
+    renderResult,restart,submit,
+    computePreventionTips,SCR_PREVENTION_TIPS,SCR_LIKERT_TO_SPECIALTY,scrFlagToSpecialty
   };
 }
 </script>
