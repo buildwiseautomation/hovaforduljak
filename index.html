@@ -217,21 +217,136 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .p-tags{display:flex;flex-wrap:wrap;gap:5px}
 .p-tag{font-size:.66rem;font-weight:500;padding:2px 7px;border-radius:5px;background:var(--bg2);color:var(--text3);border:1px solid var(--border)}
 .p-right{flex-shrink:0;text-align:right}
-/* v2.0: "Partner klinika" felirat / badge és a %-egyezés jelző ütközésének
-   javítása — a badge abszolút pozicionált, a .p-right pedig korábban
-   vertikálisan középre igazodott, ezért rövid kártyáknál átfedhettek.
-   Fix align-items:flex-start-re váltva, a badge-es kártyáknál (.top/.real)
-   pedig fix top-margin biztosítja, hogy a pct blokk sose kerüljön a badge
-   sávja alá, méret- és nézetfüggetlenül. */
+/* v2.2 (a v2.0-s részleges javítás bővítése — a "Igazolt partner" badge
+   MÉG MINDIG belelóghatott a kártya bal oldali szövegébe, pl. hosszú
+   orvosnévnél/klinikanévnél: a v2.0-s fix csak a .p-right (%-egyezés)
+   blokkot tolta el a badge alól, a .p-inf (név+szakterület+címkék) blokk
+   nem kapott top-margin-t, pedig align-items:flex-start miatt az is a
+   kártya tetején, tehát a badge sávjában indul). Most MINDHÁROM flex-
+   gyermek (.p-av, .p-inf, .p-right) azonos top-margin-t kap badge-es
+   kártyáknál, így semelyikük tartalma — se rövid, se hosszú név/klinikanév
+   — nem kerülhet a badge alá/mögé, sem szélesség-, sem tartalomhossz-
+   függetlenül. */
 .p-card{align-items:flex-start}
 .p-av{margin-top:2px}
+.p-inf{margin-top:2px}
 .p-right{margin-top:2px}
+.p-card.top .p-av,.p-card.real .p-av,
+.p-card.top .p-inf,.p-card.real .p-inf,
 .p-card.top .p-right,.p-card.real .p-right{margin-top:28px}
 .p-pct{font-family:'Manrope',sans-serif;font-size:1.2rem;font-weight:700;color:var(--accent2);line-height:1}
 .p-plbl{font-size:.66rem;color:var(--text3);margin-top:2px}
 .top-badge{position:absolute;top:10px;right:12px;font-size:.62rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--accent2);background:var(--accent-soft);padding:2px 7px;border-radius:5px;border:1px solid rgba(47,111,237,.2)}
 .real-badge{position:absolute;top:10px;right:12px;font-size:.62rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text);background:linear-gradient(135deg,var(--success),#5FDCAE);padding:3px 9px;border-radius:5px;box-shadow:0 2px 10px rgba(52,195,143,.35)}
 .p-card.real{border-color:rgba(52,195,143,.45)}
+
+/* ══════════════════════════════════════════════════════════════
+   v2.2 — panasz-alapú eredményoldal-redesign (AI jelentés, Magán vs.
+   Állami, orvos-first marketplace). Kizárólag a meglévő --brand
+   CSS-változókat használja (Deep Navy=--text, Digital Blue=--accent,
+   Strong Cyan=--teal, Mint Leaf=--success, Sky Reflection=--info) —
+   nincs a referenciaképekről átvett szín/logó/szöveg, csak a szerkezet.
+   ══════════════════════════════════════════════════════════════ */
+.sec-lbl2{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);margin:22px 0 10px}
+
+/* AI jelentés kártya */
+.ai-report-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 22px 20px;margin-bottom:8px}
+.ai-report-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+.ai-score-ring{width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--ai-pct,0)*1%),var(--card2) 0);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.ai-score-ring::before{content:'';position:absolute;inset:7px;border-radius:50%;background:var(--card)}
+.ai-score-num{position:relative;font-family:'Manrope',sans-serif;font-weight:800;font-size:1.25rem;color:var(--text)}
+.ai-score-lbl{position:relative;font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
+.ai-score-tag{font-size:.78rem;font-weight:600;padding:6px 12px;border-radius:20px;background:var(--accent-soft);color:var(--accent2)}
+.ai-metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0 4px}
+.ai-metric-box{background:var(--card2);border-radius:12px;padding:12px 14px;text-align:center}
+.ai-metric-val{font-family:'Manrope',sans-serif;font-weight:700;font-size:1rem;color:var(--text)}
+.ai-metric-lbl{font-size:.68rem;color:var(--text3);margin-top:3px}
+.ai-causes{display:flex;flex-direction:column;gap:8px}
+.ai-cause-card{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--card2);border-radius:11px;padding:11px 14px}
+.ai-cause-name{font-size:.86rem;font-weight:600;color:var(--text)}
+.ai-cause-pct{font-family:'Manrope',sans-serif;font-weight:700;font-size:.86rem;color:var(--accent2);flex-shrink:0}
+.ai-findings{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.ai-finding-item{display:flex;align-items:center;gap:8px;background:var(--card2);border-radius:10px;padding:9px 11px;font-size:.78rem;color:var(--text2)}
+.ai-finding-ic{font-size:1rem;flex-shrink:0}
+.ai-reasons{margin:0;padding-left:18px;color:var(--text2);font-size:.86rem;line-height:1.7}
+.ai-unknowns{display:flex;flex-direction:column;gap:6px}
+.ai-unknown-item{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text3)}
+.ai-unknown-ic{color:var(--warm);flex-shrink:0}
+.ai-plan{display:flex;flex-direction:column;gap:8px}
+.ai-plan-step{display:flex;align-items:center;gap:12px;background:var(--card2);border-radius:11px;padding:11px 14px}
+.ai-plan-when{font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--accent2);background:var(--accent-soft);border-radius:6px;padding:3px 8px;flex-shrink:0;white-space:nowrap}
+.ai-plan-txt{font-size:.84rem;color:var(--text2)}
+.ai-timeline{display:flex;flex-wrap:wrap;gap:10px}
+.ai-timeline-phase{flex:1;min-width:140px;background:var(--card2);border-radius:11px;padding:12px 14px}
+.ai-timeline-ic{font-size:1.1rem;margin-bottom:4px}
+.ai-timeline-t{font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:2px}
+.ai-timeline-d{font-size:.74rem;color:var(--text3);line-height:1.5}
+.ai-report-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+
+/* Magán vs. Állami */
+.pp-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px}
+.pp-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.pp-table th,.pp-table td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.pp-table th{background:var(--card2);color:var(--text2);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em}
+.pp-table td.pp-private{color:var(--accent2);font-weight:500}
+.pp-table td.pp-public{color:var(--text2)}
+.pp-table tr:last-child td{border-bottom:none}
+.pp-suggestion{background:var(--info-soft);border:1px solid rgba(143,191,224,.5);border-radius:12px;padding:14px 18px;margin:16px 0;font-size:.84rem;color:var(--text2);line-height:1.6}
+.pp-cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.pp-cta-row .btn-p,.pp-cta-row .btn-back{flex:1;min-width:200px}
+
+/* Marketplace / orvos-first lista */
+.mk-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:36px 0 14px}
+.mk-header-txt{font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+.mk-header-badge{font-size:.78rem;font-weight:700;color:var(--success);background:var(--success-soft);border-radius:20px;padding:5px 12px;flex-shrink:0}
+.mk-sorttabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.mk-tab{font-size:.78rem;color:var(--text2);background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:7px 14px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.mk-tab.sel{background:var(--accent);color:#fff;border-color:var(--accent)}
+.mk-layout{display:grid;grid-template-columns:200px 1fr 220px;gap:18px;align-items:start}
+@media(max-width:900px){.mk-layout{grid-template-columns:1fr}}
+.mk-filters{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+.mk-filter-grp{margin-bottom:16px}
+.mk-filter-grp:last-child{margin-bottom:0}
+.mk-filter-lbl{font-size:.7rem;font-weight:600;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em}
+.mk-chip-row{display:flex;flex-wrap:wrap;gap:6px}
+.mk-chip{font-size:.72rem;color:var(--text2);background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:5px 10px;cursor:pointer}
+.mk-chip.sel{background:var(--teal-soft);color:var(--teal);border-color:var(--teal)}
+.mk-toggle-row{display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:var(--text2)}
+.mk-list-wrap{min-width:0}
+.mk-list{display:flex;flex-direction:column;gap:12px}
+.mk-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px;position:relative;overflow:hidden}
+.mk-card.real{border-color:rgba(52,195,143,.45)}
+.mk-card-top{display:flex;gap:14px}
+.mk-photo{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--teal));display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;color:#fff}
+.mk-badge-tag{position:absolute;top:14px;right:16px;font-size:.62rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:5px;background:var(--accent-soft);color:var(--accent2)}
+.mk-card.top .mk-photo,.mk-card.real .mk-photo,.mk-card.top .mk-info,.mk-card.real .mk-info,.mk-card.top .mk-stats,.mk-card.real .mk-stats{margin-top:24px}
+.mk-info{flex:1;min-width:0}
+.mk-nm{font-weight:700;font-size:.96rem;color:var(--text)}
+.mk-clinic-ctx{font-size:.76rem;color:var(--text3);margin-top:1px}
+.mk-sp{font-size:.78rem;color:var(--text3);margin-top:2px}
+.mk-rating-row{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:.78rem;color:var(--text2)}
+.mk-rating-row .stars{color:var(--warm)}
+.mk-verified-tag{display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:600;color:var(--success);margin-top:6px}
+.mk-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.mk-tag{font-size:.66rem;font-weight:500;padding:2px 7px;border-radius:5px;background:var(--bg2);color:var(--text3);border:1px solid var(--border)}
+.mk-stats{flex-shrink:0;text-align:right;min-width:90px}
+.mk-price{font-family:'Manrope',sans-serif;font-weight:700;font-size:.92rem;color:var(--text)}
+.mk-distance,.mk-wait{font-size:.72rem;color:var(--text3);margin-top:2px}
+.mk-why{background:var(--card2);border-radius:10px;padding:10px 12px;font-size:.78rem;color:var(--text2);margin-top:12px;line-height:1.5}
+.mk-actions{display:flex;gap:8px;margin-top:12px}
+.mk-book-btn{flex:1;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 14px;font-family:'Manrope',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .15s}
+.mk-book-btn:hover{background:var(--accent2)}
+.mk-save-btn{width:42px;background:var(--card2);border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:1rem;transition:border-color .15s}
+.mk-save-btn.saved{color:var(--red);border-color:var(--red)}
+.mk-illustrative{font-size:.68rem;color:var(--text3);font-style:italic;margin-top:8px}
+.mk-side{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+@media(max-width:900px){.mk-side{order:3}}
+.mk-side-lbl{font-size:.72rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+.mk-side-reason{font-size:.8rem;color:var(--text2);line-height:1.6;margin-bottom:6px;padding-left:14px;position:relative}
+.mk-side-reason::before{content:'•';position:absolute;left:0;color:var(--accent)}
+.mk-side-stats{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.mk-side-stat{display:flex;justify-content:space-between;font-size:.78rem;color:var(--text3)}
+.mk-side-stat b{color:var(--text);font-weight:700}
 .p-book-btn.real{background:var(--success);color:var(--text);font-weight:600}
 .p-book-btn.real:hover{background:#5FDCAE}
 
@@ -1187,6 +1302,85 @@ input[type=range]::-webkit-slider-thumb {
       <div id="medsoulyou-booking"></div>
     </div>
 
+    <!-- v2.2: panasz-alapú (nem Screening) eredményoldal-redesign — a doksi
+         07b callout-ja és a referenciaképek NEM voltak ténylegesen
+         elérhetők/feltöltve (ld. jelentés a chatben), ezért a chat szöveges
+         leírása alapján épült, saját HovaForduljak-branddel (nincs
+         referenciaképről átvett elem/szín/szöveg). Screeningnél MINDIG
+         rejtve marad — ld. renderResult() háromfelé ágazása.
+         AI jelentés: kör-diagram egyezési %, 3 metrika-doboz, fő lehetséges
+         okok jelölt-kártyák, kötelező disclaimer, "mit találtunk" grid,
+         "miért gondoljuk ezt", "amit még nem tudunk" (statikus,
+         átláthatósági szekció — szándékosan NEM AI-generált, hogy ne
+         legyen kitéve hallucinációnak), cselekvési terv, "mire
+         számíthatsz" (statikus, általános szakaszjelzés — konkrét,
+         kitalált időbeli prognózist NEM adunk), PDF/megosztás gombok. -->
+    <div id="r-ai-report-section" style="display:none">
+      <div class="sec-lbl">AI jelentés</div>
+      <div class="ai-report-card">
+        <div class="ai-report-top">
+          <div class="ai-score-ring" id="ai-score-ring">
+            <div class="ai-score-num" id="ai-score-num">–</div>
+            <div class="ai-score-lbl">egyezés</div>
+          </div>
+          <div class="ai-score-tag" id="ai-score-tag"></div>
+        </div>
+        <div class="ai-metric-row" id="ai-metric-row"></div>
+        <div class="sec-lbl2">Fő lehetséges okok</div>
+        <div class="ai-causes" id="ai-causes"></div>
+        <div class="med-disclaimer">⚠️ Ez az elemzés nem helyettesíti az orvosi vizsgálatot és nem ad diagnózist. Sürgős, életveszélyt jelentő tünetek esetén azonnal hívd a <strong>112</strong>-t.</div>
+        <div class="sec-lbl2">Mit találtunk</div>
+        <div class="ai-findings" id="ai-findings"></div>
+        <div class="sec-lbl2">Miért gondoljuk ezt</div>
+        <ul class="ai-reasons" id="ai-reasons"></ul>
+        <div class="sec-lbl2">Amit még nem tudunk</div>
+        <div class="ai-unknowns" id="ai-unknowns"></div>
+        <div class="sec-lbl2">Cselekvési terv</div>
+        <div class="ai-plan" id="ai-plan"></div>
+        <div class="sec-lbl2">Mire számíthatsz</div>
+        <div class="ai-timeline" id="ai-timeline"></div>
+        <div class="ai-report-actions">
+          <button class="btn-back" onclick="downloadReportPdf()">⬇ PDF letöltés</button>
+          <button class="btn-back" onclick="shareReportWithDoctor()">📤 Megosztás orvossal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- v2.2: Magán vs. Állami összevetés — csak panasz-alapú területeken.
+         A számszerű állítások szándékosan minőségi/relatív jellegűek (nem
+         kitalált, pontos napszámok), mivel az app nem rendelkezik valós,
+         intézményi várólista-adattal. -->
+    <div id="r-private-public-section" style="display:none">
+      <div class="sec-lbl">Magán vagy állami ellátás?</div>
+      <div class="pp-table-wrap">
+        <table class="pp-table" id="pp-table"></table>
+      </div>
+      <div class="pp-suggestion" id="pp-suggestion"></div>
+      <div class="pp-cta-row">
+        <button class="btn-p" onclick="choosePrivatePublic('private')">Válaszd a magán utat →</button>
+        <button class="btn-back" onclick="choosePrivatePublic('public')">Válaszd az állami utat →</button>
+      </div>
+    </div>
+
+    <!-- v2.2: orvos-first találati lista (marketplace) — csak panasz-alapú
+         területeken; Screeningnél az egyszerű #r-partners-section marad. -->
+    <div id="r-marketplace-section" style="display:none">
+      <div class="mk-header">
+        <div class="mk-header-txt">Az ajánlások a válaszaid alapján készültek</div>
+        <div class="mk-header-badge" id="mk-header-badge"></div>
+      </div>
+      <div class="mk-sorttabs" id="mk-sorttabs"></div>
+      <div class="mk-layout">
+        <div class="mk-filters" id="mk-filters"></div>
+        <div class="mk-list-wrap">
+          <div id="loc-banner-mk"></div>
+          <div class="mk-list" id="mk-list"></div>
+        </div>
+        <div class="mk-side" id="mk-side"></div>
+      </div>
+      <div id="medsoulyou-booking-mk"></div>
+    </div>
+
     <div class="sec-lbl">Miért ezek az ajánlások?</div>
     <div class="ai-box">
       <div class="ai-hd"><div class="ai-ico">✦</div><div class="ai-ht">AI magyarázat</div></div>
@@ -1533,7 +1727,7 @@ function afterMood(){
   if(cm)A.megjegyzes_mood=cm.value.trim();
   showQ(1);
 }
-function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];SCR.band=null;SCR.wizStack=[];SCR.wizCur=null;SCR_SKIP_WARNED=false;const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';go('s-land')}
+function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];SCR.band=null;SCR.wizStack=[];SCR.wizCur=null;SCR_SKIP_WARNED=false;const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';const cta=document.getElementById('r-detailed-cta');if(cta)cta.innerHTML='';go('s-land')}
 
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('on',window.scrollY>10));
 
@@ -2488,10 +2682,16 @@ function renderResult(d){
   const stepsSection=document.getElementById('r-steps-section');
   const partnersSection=document.getElementById('r-partners-section');
   const tipsWrap=document.getElementById('r-prevention-tips');
+  const aiReportSection=document.getElementById('r-ai-report-section');
+  const ppSection=document.getElementById('r-private-public-section');
+  const mkSection=document.getElementById('r-marketplace-section');
 
   if(scrNincsJel){
     if(stepsSection)stepsSection.style.display='none';
     if(partnersSection)partnersSection.style.display='none';
+    if(aiReportSection)aiReportSection.style.display='none';
+    if(ppSection)ppSection.style.display='none';
+    if(mkSection)mkSection.style.display='none';
     const tips=computePreventionTips();
     const tipsHtml=tips.length
       ? tips.map(t=>`<div class="step-card"><div class="step-icon p">🌱</div><div class="step-body"><div class="step-head">${t.title}</div><div class="step-txt">${t.tip}</div></div></div>`).join('')
@@ -2508,11 +2708,23 @@ function renderResult(d){
     if(bk)bk.innerHTML='';
     window.__partners=[];
   }else{
-    if(stepsSection)stepsSection.style.display='';
-    if(partnersSection)partnersSection.style.display='';
     if(tipsWrap){tipsWrap.style.display='none';tipsWrap.innerHTML='';}
 
-    // next steps
+    // v2.2: hatókör-bug javítás (A.1) — a "van mire figyelni" Screening ág
+    // MEGTARTJA a v2.0-s egyszerű, kvalitatív sávos listát (steps+partners
+    // szekció), a gazdag redesign (AI jelentés / Magán vs. Állami /
+    // marketplace) KIZÁRÓLAG a panasz-alapú (nem Screening) területeken
+    // jelenik meg — a doksi explicit kérése szerint ez NEM kerülhet a
+    // Screening eredményoldalára.
+    const isScr=isScreeningFlow();
+    if(stepsSection)stepsSection.style.display=isScr?'':'none';
+    if(partnersSection)partnersSection.style.display=isScr?'':'none';
+    if(aiReportSection)aiReportSection.style.display=isScr?'none':'';
+    if(ppSection)ppSection.style.display=isScr?'none':'';
+    if(mkSection)mkSection.style.display=isScr?'none':'';
+
+    // next steps (csak a Screening egyszerű nézetéhez kell ténylegesen,
+    // de ártalmatlan mindig kiszámolni)
     const sl=document.getElementById('r-steps');
     sl.innerHTML='';
     (d.next_steps||[]).forEach(s=>{
@@ -2522,10 +2734,9 @@ function renderResult(d){
       sl.appendChild(div);
     });
 
-    // partners
-    const pg=document.getElementById('r-partners');
-    pg.innerHTML='';
     // Fuzzy matcher: az AI valtozatos kulcsszavait a helyes kategoriahoz koti
+    // (MEGOSZTOTT logika a Screening egyszerű listája ÉS az új marketplace
+    // között — nem duplikáljuk a párosítási szabályokat)
     function foldHu(s){
       return s.toLowerCase()
         .replace(/[áàâ]/g,'a').replace(/é/g,'e').replace(/[íì]/g,'i')
@@ -2550,7 +2761,8 @@ function renderResult(d){
     // elsodleges: AI valasz -> fuzzy -> elso megjelolt terulet -> default
     const firstTerulet=(MULTI['terület']&&MULTI['terület'][0])||null;
     const prim=matchCat(d.primary_specialty)||matchCat(firstTerulet)||'Szűrés-Megelőzés';
-    if(window.MedSoulYouBooking){try{MedSoulYouBooking.render(document.getElementById('medsoulyou-booking'), prim);}catch(e){console.error('MedSoulYou widget hiba:',e);}}
+    const medsoulyouTargetId=isScr?'medsoulyou-booking':'medsoulyou-booking-mk';
+    if(window.MedSoulYouBooking){try{MedSoulYouBooking.render(document.getElementById(medsoulyouTargetId), prim);}catch(e){console.error('MedSoulYou widget hiba:',e);}}
     const sec=matchCat(d.secondary_specialty);
     let partners=PDATA[prim]||PDATA['default'];
     if(sec&&sec!==prim&&PDATA[sec]){
@@ -2576,63 +2788,79 @@ function renderResult(d){
     }
 
     // lokáció-őszinteség: kódszinten ellenőrizzük, nem az AI-ra bízzuk
-    const locBanner=document.getElementById('loc-banner');
+    const locBannerTarget=isScr?'loc-banner':'loc-banner-mk';
+    const locBanner=document.getElementById(locBannerTarget);
     const postal=(A.iranyitoszam||'').trim();
+    let locBannerHtml='';
     if(postal && postal[0]!=='1'){
       const region=getRegion(postal)||'a megadott területen';
       if(regionMatchFound){
-        locBanner.innerHTML=`<div class="loc-banner"><span class="li">✓</span><span>A megadott irányítószám alapján <strong>${region}</strong> térségéből mutatjuk elsőként az ajánlást — a budapesti igazolt partnerünk (MedSoulYou) is elérhető, de távolabb esik. (A regionális ajánlás illusztratív, a hálózat bővülésével válik valódivá.)</span></div>`;
+        locBannerHtml=`<div class="loc-banner"><span class="li">✓</span><span>A megadott irányítószám alapján <strong>${region}</strong> térségéből mutatjuk elsőként az ajánlást — a budapesti igazolt partnerünk (MedSoulYou) is elérhető, de távolabb esik. (A regionális ajánlás illusztratív, a hálózat bővülésével válik valódivá.)</span></div>`;
       }else{
-        locBanner.innerHTML=`<div class="loc-banner"><span class="li">📍</span><span>Az igazolt partnerünk (MedSoulYou) Budapesten érhető el — a megadott irányítószám (${postal}) alapján ez <strong>${region}</strong> térségétől távol esik. A hálózatunk bővül, addig is a lenti ajánlások szakmailag relevánsak, de utazást igényelhetnek.</span></div>`;
+        locBannerHtml=`<div class="loc-banner"><span class="li">📍</span><span>Az igazolt partnerünk (MedSoulYou) Budapesten érhető el — a megadott irányítószám (${postal}) alapján ez <strong>${region}</strong> térségétől távol esik. A hálózatunk bővül, addig is a lenti ajánlások szakmailag relevánsak, de utazást igényelhetnek.</span></div>`;
       }
-    }else{
-      locBanner.innerHTML='';
     }
+    if(locBanner)locBanner.innerHTML=locBannerHtml;
+    // a másik (rejtett) nézet loc-bannerét is ürítjük, hogy ne maradjon ott régi tartalom
+    const otherLocBanner=document.getElementById(isScr?'loc-banner-mk':'loc-banner');
+    if(otherLocBanner)otherLocBanner.innerHTML='';
 
-    partners.forEach((p,idx)=>{
-      const div=document.createElement('div');
-      div.className='p-card-wrap';
-      const badge = p.real
-        ? '<div class="real-badge">✓ Igazolt partner</div>'
-        : (p.top?'<div class="top-badge">Legjobb találat</div>':'');
-      const expandContent = p.real
-        ? `<div class="p-detail-row"><span class="p-detail-ic">📍</span><span>${p.addr||'Budapest'}</span></div>
-           <div class="p-detail-row"><span class="p-detail-ic">📞</span><span>${p.tel||''}</span></div>
-           <div class="p-detail-row"><span class="p-detail-ic">🕒</span><span>${p.hours||''}</span></div>
-           <div class="p-detail-desc">${p.about||''}</div>
-           <div class="p-actions">
-             <button class="p-book-btn real" onclick="openBooking(${idx})">📅 Időpontfoglalás a MedSoulYou oldalán →</button>
-             <a class="p-call-btn" href="tel:${(p.tel||'').replace(/\s/g,'')}">📞 Hívás</a>
-           </div>`
-        : `<div class="p-detail-row"><span class="p-detail-ic">📍</span><span>${p.addr||'Budapest'}</span></div>
-           <div class="p-detail-desc">${p.about||'Illusztratív példa a bemutató céljából — nem valós partnerklinika.'}</div>
-           <div class="illustrative-note">Illusztratív példa — még nem partnerünk. A végleges verzióban itt valós, igazolt partnerklinikák jelennek meg elérhetőségekkel és időpontfoglalással.</div>`;
-      div.innerHTML=`
-        <div class="p-card${p.top?' top':''}${p.real?' real':''}" onclick="toggleClinic(${idx})">
-          ${badge}
-          <div class="p-av">${p.ic}</div>
-          <div class="p-inf">
-            ${p.doc
-              ? `<div class="p-nm">${p.doc}</div><div class="p-clinic-ctx">${p.nm}</div>`
-              : (p.real
-                  ? `<div class="p-nm">MedSoulYou szakorvos (adategyeztetés alatt)</div><div class="p-clinic-ctx">${p.nm}</div>`
-                  : `<div class="p-nm">${p.nm}</div>`)}
-            <div class="p-sp">${p.sp}</div>
-            <div class="p-tags">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
+    if(isScr){
+      // v2.0/v2.1: Screening "van mire figyelni" — VÁLTOZATLAN, egyszerű
+      // kártyarács (nem kapja meg a marketplace-t/AI jelentést).
+      const pg=document.getElementById('r-partners');
+      pg.innerHTML='';
+      partners.forEach((p,idx)=>{
+        const div=document.createElement('div');
+        div.className='p-card-wrap';
+        const badge = p.real
+          ? '<div class="real-badge">✓ Igazolt partner</div>'
+          : (p.top?'<div class="top-badge">Legjobb találat</div>':'');
+        const expandContent = p.real
+          ? `<div class="p-detail-row"><span class="p-detail-ic">📍</span><span>${p.addr||'Budapest'}</span></div>
+             <div class="p-detail-row"><span class="p-detail-ic">📞</span><span>${p.tel||''}</span></div>
+             <div class="p-detail-row"><span class="p-detail-ic">🕒</span><span>${p.hours||''}</span></div>
+             <div class="p-detail-desc">${p.about||''}</div>
+             <div class="p-actions">
+               <button class="p-book-btn real" onclick="openBooking(${idx})">📅 Időpontfoglalás a MedSoulYou oldalán →</button>
+               <a class="p-call-btn" href="tel:${(p.tel||'').replace(/\s/g,'')}">📞 Hívás</a>
+             </div>`
+          : `<div class="p-detail-row"><span class="p-detail-ic">📍</span><span>${p.addr||'Budapest'}</span></div>
+             <div class="p-detail-desc">${p.about||'Illusztratív példa a bemutató céljából — nem valós partnerklinika.'}</div>
+             <div class="illustrative-note">Illusztratív példa — még nem partnerünk. A végleges verzióban itt valós, igazolt partnerklinikák jelennek meg elérhetőségekkel és időpontfoglalással.</div>`;
+        div.innerHTML=`
+          <div class="p-card${p.top?' top':''}${p.real?' real':''}" onclick="toggleClinic(${idx})">
+            ${badge}
+            <div class="p-av">${p.ic}</div>
+            <div class="p-inf">
+              ${p.doc
+                ? `<div class="p-nm">${p.doc}</div><div class="p-clinic-ctx">${p.nm}</div>`
+                : (p.real
+                    ? `<div class="p-nm">MedSoulYou szakorvos (adategyeztetés alatt)</div><div class="p-clinic-ctx">${p.nm}</div>`
+                    : `<div class="p-nm">${p.nm}</div>`)}
+              <div class="p-sp">${p.sp}</div>
+              <div class="p-tags">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
+            </div>
+            <div class="p-right">
+              <div class="p-pct">${p.pct}%</div>
+              <div class="p-plbl">egyezés</div>
+              <div class="p-chevron" id="chev-${idx}">⌄</div>
+            </div>
           </div>
-          <div class="p-right">
-            <div class="p-pct">${p.pct}%</div>
-            <div class="p-plbl">egyezés</div>
-            <div class="p-chevron" id="chev-${idx}">⌄</div>
-          </div>
-        </div>
-        <div class="p-expand" id="exp-${idx}">
-          ${expandContent}
-        </div>`;
-      pg.appendChild(div);
-    });
-    // eltároljuk a jelenlegi partnereket a foglaláshoz
-    window.__partners=partners;
+          <div class="p-expand" id="exp-${idx}">
+            ${expandContent}
+          </div>`;
+        pg.appendChild(div);
+      });
+      window.__partners=partners;
+    }else{
+      // v2.2: panasz-alapú területek — orvos-first marketplace + AI
+      // jelentés + Magán vs. Állami összevetés.
+      window.__partners=partners;
+      renderMarketplace(partners, prim, d);
+      renderAiReport(d, partners);
+      renderPrivatePublic(d);
+    }
   }
 
   // explanation + personal note
@@ -2713,7 +2941,370 @@ function restartToDetailedQuiz(){
   goSymptoms();
 }
 
-// ── Klinika kártya kinyitás ──
+// ══════════════════════════════════════════════════════════════
+//  v2.2 — panasz-alapú eredményoldal-redesign segédfüggvényei.
+//  A referenciaképek nem voltak ténylegesen elérhetők ebben a körben (ld.
+//  jelentés a chatben) — a chat szöveges leírása alapján épült.
+// ══════════════════════════════════════════════════════════════
+
+// Determinisztikus, "illusztratív" (nem valós) statisztika egy nem-igazolt
+// (p.real !== true) partnerhez — ugyanaz az elv, mint a meglévő
+// "Illusztratív példa — még nem partnerünk" jelölés: a demo-adat stabil
+// (nem villog újratöltésenként), és MINDIG egyértelműen jelölve van a UI-n.
+// Valós partnernél (MedSoulYou) SOSEM generálunk értékelést/árat/várakozást
+// — ott vagy valós adat van, vagy a mező egyszerűen nem jelenik meg.
+function scrPseudoInt(seed,min,max){
+  let h=0;
+  for(let i=0;i<seed.length;i++)h=(h*31+seed.charCodeAt(i))>>>0;
+  return min+(h%(max-min+1));
+}
+function illustrativeStats(p){
+  if(p.real)return {rating:null,reviewCount:null,priceHuf:null,waitDays:null};
+  const seed=(p.nm||'')+'|'+(p.sp||'');
+  return {
+    rating:(3.8+scrPseudoInt(seed+'a',0,12)/10).toFixed(1),
+    reviewCount:scrPseudoInt(seed+'b',18,240),
+    priceHuf:scrPseudoInt(seed+'c',12,45)*1000,
+    waitDays:scrPseudoInt(seed+'d',1,21)
+  };
+}
+// Rendezés — a valós (p.real) partner MINDIG legfelül marad (ő az egyetlen
+// igazolt, ellenőrzött adatú találat), a többi a választott szempont
+// szerint rendeződik újra alatta.
+function sortPartnersBy(list,mode){
+  const real=list.filter(p=>p.real);
+  const rest=list.filter(p=>!p.real).slice();
+  if(mode==='rating')rest.sort((a,b)=>parseFloat(illustrativeStats(b).rating)-parseFloat(illustrativeStats(a).rating));
+  else if(mode==='price')rest.sort((a,b)=>illustrativeStats(a).priceHuf-illustrativeStats(b).priceHuf);
+  else if(mode==='fastest')rest.sort((a,b)=>illustrativeStats(a).waitDays-illustrativeStats(b).waitDays);
+  else if(mode==='closest')rest.sort((a,b)=>((a.region==='1')?0:1)-((b.region==='1')?0:1));
+  else rest.sort((a,b)=>b.pct-a.pct); // 'match' (alapértelmezett)
+  return [...real, ...rest];
+}
+
+const MK_SORT_TABS=[
+  {key:'match',lbl:'Legjobb egyezés'},
+  {key:'closest',lbl:'Legközelebbi'},
+  {key:'rating',lbl:'Legjobb értékelés'},
+  {key:'price',lbl:'Legalacsonyabb ár'},
+  {key:'fastest',lbl:'Leggyorsabb időpont'}
+];
+const MK_STATE={sort:'match',verifiedOnly:false,minRating:0,maxPriceHuf:60000,maxDistance:'orszagos',insurance:[],payMode:null,saved:{}};
+
+function mkFmtHuf(n){return n.toLocaleString('hu-HU')+' Ft-tól';}
+
+function renderMarketplace(basePartners,prim,d){
+  window.__mkBase=basePartners;
+  window.__mkD=d;
+  mkRenderAll();
+}
+function mkRenderAll(){
+  const basePartners=window.__mkBase||[];
+  const d=window.__mkD||{};
+  const top=basePartners[0]||{};
+
+  // fejléc badge — a MEGLÉVŐ, panasz-alapú %-os egyezési mutató (rendszer-
+  // bizalmi jelzés, nem egyéni egészségi kockázat — ld. doksi callout)
+  const badgeEl=document.getElementById('mk-header-badge');
+  if(badgeEl)badgeEl.textContent=(top.pct?top.pct+'% egyezés':'');
+
+  // rendezés-fülek
+  const tabsEl=document.getElementById('mk-sorttabs');
+  if(tabsEl){
+    tabsEl.innerHTML=MK_SORT_TABS.map(t=>`<div class="mk-tab${MK_STATE.sort===t.key?' sel':''}" onclick="mkSetSort('${t.key}')">${t.lbl}</div>`).join('');
+  }
+
+  // szűrő-sáv (bal oldal) — a távolság/ár/értékelés/igazolt-partner
+  // ténylegesen szűr; a biztosító-chipek és a fizetési mód kapcsoló
+  // vizuálisan jelen vannak és kiválaszthatók, de mivel az appnak jelenleg
+  // nincs valós biztosítói-partnerségi adata, ezek funkcionálisan nem
+  // szűkítik a listát — ld. jelentés a chatben.
+  const filtersEl=document.getElementById('mk-filters');
+  if(filtersEl){
+    const insuranceOpts=['Egészségpénztár','NN Biztosító','Medicover Program','Generali'];
+    filtersEl.innerHTML=`
+      <div class="mk-filter-grp">
+        <div class="mk-filter-lbl">Minimum értékelés</div>
+        <div class="mk-chip-row">${[0,3.5,4,4.5].map(v=>`<div class="mk-chip${MK_STATE.minRating===v?' sel':''}" onclick="mkSetMinRating(${v})">${v===0?'Mind':v+'★+'}</div>`).join('')}</div>
+      </div>
+      <div class="mk-filter-grp">
+        <div class="mk-filter-lbl">Ár (illusztratív, max.)</div>
+        <div class="mk-chip-row">${[20000,35000,60000].map(v=>`<div class="mk-chip${MK_STATE.maxPriceHuf===v?' sel':''}" onclick="mkSetMaxPrice(${v})">${(v/1000)}e Ft alatt</div>`).join('')}</div>
+      </div>
+      <div class="mk-filter-grp">
+        <div class="mk-filter-lbl">Távolság</div>
+        <div class="mk-chip-row">
+          <div class="mk-chip${MK_STATE.maxDistance==='budapest'?' sel':''}" onclick="mkSetDistance('budapest')">Budapest</div>
+          <div class="mk-chip${MK_STATE.maxDistance==='orszagos'?' sel':''}" onclick="mkSetDistance('orszagos')">Országos</div>
+        </div>
+      </div>
+      <div class="mk-filter-grp">
+        <div class="mk-toggle-row"><span>Csak igazolt partnerek</span><input type="checkbox" ${MK_STATE.verifiedOnly?'checked':''} onchange="mkToggleVerifiedOnly(this.checked)"></div>
+      </div>
+      <div class="mk-filter-grp">
+        <div class="mk-filter-lbl">Biztosító <span style="font-weight:400;text-transform:none;color:var(--text3)">(még nincs valós adat)</span></div>
+        <div class="mk-chip-row">${insuranceOpts.map(o=>`<div class="mk-chip${MK_STATE.insurance.includes(o)?' sel':''}" onclick="mkToggleInsurance('${o}')">${o}</div>`).join('')}</div>
+      </div>
+      <div class="mk-filter-grp">
+        <div class="mk-filter-lbl">Fizetés</div>
+        <div class="mk-chip-row">
+          <div class="mk-chip${MK_STATE.payMode==='sajat'?' sel':''}" onclick="mkSetPayMode('sajat')">Saját fizetés</div>
+          <div class="mk-chip${MK_STATE.payMode==='allami'?' sel':''}" onclick="mkSetPayMode('allami')">Állami ellátás</div>
+        </div>
+      </div>`;
+  }
+
+  // lista összeállítása: rendezés + tényleges szűrők
+  let list=sortPartnersBy(basePartners,MK_STATE.sort);
+  list=list.filter(p=>{
+    if(MK_STATE.verifiedOnly&&!p.real)return false;
+    if(!p.real){
+      const st=illustrativeStats(p);
+      if(st.rating!==null&&parseFloat(st.rating)<MK_STATE.minRating)return false;
+      if(st.priceHuf!==null&&st.priceHuf>MK_STATE.maxPriceHuf)return false;
+    }
+    if(MK_STATE.maxDistance==='budapest'&&p.region&&p.region!=='1')return false;
+    return true;
+  });
+
+  const listEl=document.getElementById('mk-list');
+  if(listEl){
+    if(list.length===0){
+      listEl.innerHTML=`<div class="mk-why">Nincs a szűrésnek megfelelő találat — próbálj tágabb szűrőket.</div>`;
+    }else{
+      const firstNonRealIdx=list.findIndex(p=>!p.real);
+      listEl.innerHTML=list.map((p,idx)=>mkCardHtml(p,idx===firstNonRealIdx,idx)).join('');
+    }
+  }
+
+  // jobb oldali panel: "miért ajánljuk" + gyors statisztika
+  const sideEl=document.getElementById('mk-side');
+  if(sideEl){
+    const reasons=[
+      d.explanation?d.explanation:'A válaszaid alapján ez a szakterület illik legjobban a leírt panaszhoz.',
+      'A sürgősségi szint és a tünet-egyezés alapján rangsoroltuk a találatokat.',
+      'Az igazolt partner mindig előre kerül — nála ellenőrzött az elérhetőség és a szakterület.'
+    ];
+    const withStats=list.filter(p=>!p.real);
+    const avgRating=withStats.length?(withStats.reduce((s,p)=>s+parseFloat(illustrativeStats(p).rating),0)/withStats.length).toFixed(1):'–';
+    const avgWait=withStats.length?Math.round(withStats.reduce((s,p)=>s+illustrativeStats(p).waitDays,0)/withStats.length):'–';
+    const avgMatch=list.length?Math.round(list.reduce((s,p)=>s+(p.pct||0),0)/list.length):'–';
+    sideEl.innerHTML=`
+      <div class="mk-side-lbl">Miért ezeket ajánljuk?</div>
+      ${reasons.map(r=>`<div class="mk-side-reason">${r}</div>`).join('')}
+      <div class="mk-side-stats">
+        <div class="mk-side-stat"><span>Átlag egyezés</span><b>${avgMatch}%</b></div>
+        <div class="mk-side-stat"><span>Átlag értékelés</span><b>${avgRating}${avgRating!=='–'?'★':''}</b></div>
+        <div class="mk-side-stat"><span>Átlag várakozás</span><b>${avgWait}${avgWait!=='–'?' nap':''}</b></div>
+      </div>`;
+  }
+  window.__partners=list;
+}
+function mkCardHtml(p,isFirstNonReal,idx){
+  const st=illustrativeStats(p);
+  const nameBlock=p.doc
+    ? `<div class="mk-nm">${p.doc}</div><div class="mk-clinic-ctx">${p.nm}</div>`
+    : (p.real
+        ? `<div class="mk-nm">MedSoulYou szakorvos (adategyeztetés alatt)</div><div class="mk-clinic-ctx">${p.nm}</div>`
+        : `<div class="mk-nm">${p.nm}</div>`);
+  const ratingBlock=p.real
+    ? ''
+    : `<div class="mk-rating-row"><span class="stars">★</span><span>${st.rating}</span><span>(${st.reviewCount} vélemény)</span></div>`;
+  const priceBlock=p.real?'':`<div class="mk-price">${mkFmtHuf(st.priceHuf)}</div>`;
+  const waitBlock=p.real?'':`<div class="mk-wait">${st.waitDays} napon belül</div>`;
+  const verifiedTag=p.real?'<div class="mk-verified-tag">✓ Igazolt partner</div>':'';
+  // Badge-tag: az igazolt partner mindig ✓-ot kap; az első nem-igazolt
+  // találat a jelenlegi rendezési szempontnak megfelelő címkét kapja
+  // (AI első ajánlás / legjobb ár-érték / leggyorsabb időpont).
+  let badge='';
+  if(p.real)badge='<div class="mk-badge-tag">✓ Igazolt partner</div>';
+  else if(isFirstNonReal){
+    const tagBySort={match:'AI első ajánlás',price:'Legjobb ár-érték',fastest:'Leggyorsabb időpont',rating:'Legjobb értékelés',closest:'Legközelebbi'};
+    badge=`<div class="mk-badge-tag">${tagBySort[MK_STATE.sort]||'Legjobb találat'}</div>`;
+  }
+  const why=`<div class="mk-why">Miért ajánljuk? ${p.sp} területén releváns a megadott panaszokhoz${p.real?', és igazolt, ellenőrzött partnerünk.':'.'}</div>`;
+  const illustrativeNote=p.real?'':'<div class="mk-illustrative">Illusztratív példa — még nem partnerünk.</div>';
+  const saved=MK_STATE.saved[p.nm]?' saved':'';
+  const savedIc=MK_STATE.saved[p.nm]?'♥':'♡';
+  return `<div class="mk-card${p.top?' top':''}${p.real?' real':''}">
+    ${badge}
+    <div class="mk-card-top">
+      <div class="mk-photo">${p.ic}</div>
+      <div class="mk-info">
+        ${nameBlock}
+        <div class="mk-sp">${p.sp}</div>
+        ${ratingBlock}
+        ${verifiedTag}
+        <div class="mk-tags">${(p.tags||[]).map(t=>`<span class="mk-tag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="mk-stats">
+        ${priceBlock}
+        <div class="mk-distance">${p.addr?p.addr.split(',')[0]:'Budapest'}</div>
+        ${waitBlock}
+      </div>
+    </div>
+    ${why}
+    ${illustrativeNote}
+    <div class="mk-actions">
+      <button class="mk-book-btn" onclick="${p.real?`openBooking(${idx})`:'void(0)'}">📅 Időpont foglalása</button>
+      <button class="mk-save-btn${saved}" onclick="mkToggleSave('${(p.nm||'').replace(/'/g,"\\'")}')">${savedIc}</button>
+    </div>
+  </div>`;
+}
+function mkSetSort(key){MK_STATE.sort=key;mkRenderAll();}
+function mkSetMinRating(v){MK_STATE.minRating=v;mkRenderAll();}
+function mkSetMaxPrice(v){MK_STATE.maxPriceHuf=v;mkRenderAll();}
+function mkSetDistance(v){MK_STATE.maxDistance=v;mkRenderAll();}
+function mkToggleVerifiedOnly(v){MK_STATE.verifiedOnly=v;mkRenderAll();}
+function mkToggleInsurance(o){
+  if(MK_STATE.insurance.includes(o))MK_STATE.insurance=MK_STATE.insurance.filter(x=>x!==o);
+  else MK_STATE.insurance.push(o);
+  mkRenderAll();
+}
+function mkSetPayMode(m){MK_STATE.payMode=(MK_STATE.payMode===m?null:m);mkRenderAll();}
+function mkToggleSave(nm){MK_STATE.saved[nm]=!MK_STATE.saved[nm];mkRenderAll();}
+
+// ── AI jelentés ──────────────────────────────────────────────────────
+// Ahol lehet, a MEGLÉVŐ, már számolt adatokból dolgozik (top-partner %,
+// urgency, explanation, next_steps, profile_chips) — nem igényel új,
+// külön AI-promptmezőt ahhoz, hogy éles környezetben is helyesen
+// jelenjen meg, még ha a backend prompt egyelőre nem is ad vissza minden
+// opcionális v2.2-es mezőt (possible_causes stb.) minden válaszban.
+function renderAiReport(d,partners){
+  const top=partners[0]||{};
+  const pct=top.pct||0;
+  const ring=document.getElementById('ai-score-ring');
+  if(ring)ring.style.setProperty('--ai-pct',pct);
+  const numEl=document.getElementById('ai-score-num');
+  if(numEl)numEl.textContent=pct?pct+'%':'–';
+  const tagEl=document.getElementById('ai-score-tag');
+  if(tagEl)tagEl.textContent=pct>=90?'Magas egyezés':(pct>=75?'Közepes egyezés':'Alapszintű egyezés');
+
+  const improvementMap={low:'Valószínűleg jól kezelhető megfelelő szakemberrel',medium:'Megfelelő ellátással jó eséllyel javítható',high:'Mielőbbi ellátással jobban kezelhető'};
+  const metrics=[
+    {val:(pct?pct+'%':'–'),lbl:'Tüneti egyezés'},
+    {val:d.urgency_label||'–',lbl:'Sürgősségi szint'},
+    {val:improvementMap[d.urgency]||improvementMap.low,lbl:'Várható javulás'}
+  ];
+  const metricEl=document.getElementById('ai-metric-row');
+  if(metricEl)metricEl.innerHTML=metrics.map(m=>`<div class="ai-metric-box"><div class="ai-metric-val">${m.val}</div><div class="ai-metric-lbl">${m.lbl}</div></div>`).join('');
+
+  // Fő lehetséges okok — ha az AI ad possible_causes mezőt, azt használjuk;
+  // enélkül a fő/másodlagos szakterületből képzünk 1-2 jelölt kártyát,
+  // ugyanazt a meglévő %-egyezést újrahasznosítva (nem találunk ki külön
+  // számot okonként).
+  const causes=(d.possible_causes&&d.possible_causes.length)
+    ? d.possible_causes
+    : [d.primary_specialty?{name:d.primary_specialty,pct:pct}:null,d.secondary_specialty?{name:d.secondary_specialty,pct:Math.max(0,pct-15)}:null].filter(Boolean);
+  const causesEl=document.getElementById('ai-causes');
+  if(causesEl)causesEl.innerHTML=causes.length
+    ? causes.map(c=>`<div class="ai-cause-card"><span class="ai-cause-name">${c.name}</span><span class="ai-cause-pct">${c.pct}%</span></div>`).join('')
+    : `<div class="ai-cause-card"><span class="ai-cause-name">Nincs kiemelt jelölt terület</span></div>`;
+
+  // Mit találtunk — a meglévő profile_chips-ekből, ikonnal kiegészítve
+  const findEl=document.getElementById('ai-findings');
+  if(findEl){
+    const chips=d.profile_chips||[];
+    findEl.innerHTML=chips.length
+      ? chips.map(c=>`<div class="ai-finding-item"><span class="ai-finding-ic">✓</span><span>${c.label}: ${c.value}</span></div>`).join('')
+      : '<div class="ai-finding-item"><span class="ai-finding-ic">✓</span><span>A megadott válaszok alapján készült az elemzés</span></div>';
+  }
+
+  // Miért gondoljuk ezt — az explanation mondatokra bontva
+  const reasonsEl=document.getElementById('ai-reasons');
+  if(reasonsEl){
+    const sentences=(d.explanation||'').split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean);
+    reasonsEl.innerHTML=sentences.length
+      ? sentences.map(s=>`<li>${s}</li>`).join('')
+      : '<li>A megadott válaszok mintázata alapján készült az elemzés.</li>';
+  }
+
+  // Amit még nem tudunk — SZÁNDÉKOSAN statikus, nem AI-generált
+  // (a kérdőív eleve nem tud helyettesíteni ilyen vizsgálatokat, ez nem
+  // egyéni becslés kérdése)
+  const unknownsEl=document.getElementById('ai-unknowns');
+  if(unknownsEl){
+    const items=['Labor eredmények','Képalkotó vizsgálat (pl. röntgen, ultrahang)','Fizikai vizsgálat','Egyéb, korábbi orvosi dokumentáció'];
+    unknownsEl.innerHTML=items.map(i=>`<div class="ai-unknown-item"><span class="ai-unknown-ic">○</span><span>${i}</span></div>`).join('');
+  }
+
+  // Cselekvési terv — a meglévő next_steps-ekből, idő+sürgősség jelzéssel
+  const planEl=document.getElementById('ai-plan');
+  if(planEl){
+    const whens=[d.urgency==='high'?'Mielőbb':'Most',' Ezután','Hosszabb távon'];
+    const steps=d.next_steps||[];
+    planEl.innerHTML=steps.length
+      ? steps.map((s,i)=>`<div class="ai-plan-step"><span class="ai-plan-when">${whens[i]||'Folyamatosan'}</span><span class="ai-plan-txt"><b>${s.title}</b> — ${s.desc}</span></div>`).join('')
+      : '<div class="ai-plan-step"><span class="ai-plan-txt">Egyelőre nincs konkrét javasolt lépés.</span></div>';
+  }
+
+  // Mire számíthatsz — SZÁNDÉKOSAN statikus, általános szakaszjelzés,
+  // nem konkrét, kitalált időbeli prognózis
+  const tlEl=document.getElementById('ai-timeline');
+  if(tlEl){
+    tlEl.innerHTML=`
+      <div class="ai-timeline-phase"><div class="ai-timeline-ic">1️⃣</div><div class="ai-timeline-t">Rövid távon</div><div class="ai-timeline-d">Az első szakember-találkozó és a kivizsgálás megkezdése.</div></div>
+      <div class="ai-timeline-phase"><div class="ai-timeline-ic">2️⃣</div><div class="ai-timeline-t">Középtávon</div><div class="ai-timeline-d">A kivizsgálás eredményei alapján kezelési vagy életmódterv kialakítása.</div></div>
+      <div class="ai-timeline-phase"><div class="ai-timeline-ic">3️⃣</div><div class="ai-timeline-t">Hosszabb távon</div><div class="ai-timeline-d">Rendszeres kontroll és a válaszaidban jelzett terület nyomon követése.</div></div>`;
+  }
+}
+function downloadReportPdf(){
+  // Kliens-oldali, funkcionális megoldás valódi PDF-generáló backend
+  // nélkül: a böngésző natív nyomtatás→PDF mentése.
+  window.print();
+}
+function shareReportWithDoctor(){
+  const title=(document.getElementById('r-title')||{}).textContent||'';
+  const sum=(document.getElementById('r-sum')||{}).textContent||'';
+  const txt=`HovaForduljak.hu — AI elemzés összefoglaló\n\n${title}\n\n${sum}`;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>{
+      alert('Az összefoglaló a vágólapra másolva — küldd el vagy mutasd meg az orvosodnak.');
+    }).catch(()=>{
+      alert('Nem sikerült a vágólapra másolás — másold ki kézzel az összefoglalót.');
+    });
+  }else{
+    alert('Az összefoglaló:\n\n'+txt);
+  }
+}
+
+// ── Magán vs. Állami összevetés ─────────────────────────────────────
+// A számok/időtartamok szándékosan MINŐSÉGI/RELATÍV állítások — az
+// appnak nincs valós, intézményi várólista- vagy ár-adatbázisa, ezért
+// konkrét, kitalált napszámokat NEM adunk meg.
+const PP_ROWS=[
+  ['Első lépés','Gyors, önállóan foglalható időpont','Beutaló és/vagy háziorvosi vizit szükséges lehet'],
+  ['Első szabad időpont','Jellemzően napokon belül','Jellemzően hosszabb várólista, szakterülettől függően'],
+  ['Teljes kivizsgálás ideje','Rövidebb, egy kézben szervezhető','Több forduló, több helyszín is szükséges lehet'],
+  ['Kezelés megkezdése','Gyorsabban indítható','A várólista miatt később kezdődhet'],
+  ['Költség','Önköltséges, előre ismert díjszabás','Társadalombiztosítás fedezi, beutalóval térítésmentes/kedvezményes'],
+  ['Beutaló szükséges-e','Jellemzően nem','Sok esetben igen'],
+  ['Helyszínválasztás','Szabadon választható szakember/klinika','Területi ellátási rend szerint korlátozott lehet'],
+  ['Rugalmasság','Nagyobb rugalmasság az időpontban','Kevésbé rugalmas, intézményi kapacitástól függ']
+];
+function renderPrivatePublic(d){
+  const tableEl=document.getElementById('pp-table');
+  if(tableEl){
+    tableEl.innerHTML=`<thead><tr><th></th><th>Magán út</th><th>Állami ellátás</th></tr></thead>`+
+      `<tbody>${PP_ROWS.map(r=>`<tr><td>${r[0]}</td><td class="pp-private">${r[1]}</td><td class="pp-public">${r[2]}</td></tr>`).join('')}</tbody>`;
+  }
+  const sugEl=document.getElementById('pp-suggestion');
+  if(sugEl){
+    const lean=d.urgency==='high'
+      ? 'A jelzett sürgősségi szint alapján a magán út gyorsabb hozzáférést tehet lehetővé — de sürgős, életveszélyt jelentő tünetnél mindig a 112 vagy a sürgősségi ellátás az elsődleges.'
+      : 'A jelzett sürgősségi szint alapján mindkét út reális opció — a magán út gyorsabb hozzáférést, az állami ellátás alacsonyabb közvetlen költséget jelenthet.';
+    sugEl.innerHTML=`<strong>AI javaslat:</strong> ${lean}`;
+  }
+}
+function choosePrivatePublic(which){
+  MK_STATE.payMode=which==='private'?'sajat':'allami';
+  const mkSection=document.getElementById('r-marketplace-section');
+  if(mkSection){
+    mkRenderAll();
+    mkSection.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
 // ── Klinika kártya kinyitás ──
 function toggleClinic(idx){
   const exp=document.getElementById('exp-'+idx);
@@ -2802,7 +3393,11 @@ if(typeof window!=='undefined'){
     buildScreeningPrompt,goScreeningAlap,scrWizRender,scrWizGoto,scrWizManualNext,scrWizRfGate,
     scrLikertPick,scrBetegsegPick,restartToDetailedQuiz,scrCheckOptionalSkips,
     renderResult,restart,submit,
-    computePreventionTips,SCR_PREVENTION_TIPS,SCR_LIKERT_TO_SPECIALTY,scrFlagToSpecialty
+    computePreventionTips,SCR_PREVENTION_TIPS,SCR_LIKERT_TO_SPECIALTY,scrFlagToSpecialty,
+    illustrativeStats,sortPartnersBy,MK_STATE,MK_SORT_TABS,renderMarketplace,mkSetSort,
+    mkSetMinRating,mkSetMaxPrice,mkSetDistance,mkToggleVerifiedOnly,mkToggleInsurance,
+    mkSetPayMode,mkToggleSave,renderAiReport,renderPrivatePublic,choosePrivatePublic,
+    downloadReportPdf,shareReportWithDoctor,PP_ROWS
   };
 }
 </script>
