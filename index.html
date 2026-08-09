@@ -35,22 +35,26 @@
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
 
-/* AMBIENT */
+/* AMBIENT -- v2.6 polish (item C, Mick kerese): EGY, nagyon halvany, lassan
+   mozgo/homalyosodo elem a hatterben, Digital Blue (--accent) szinben. A
+   Brand Board kifejezetten ovva int a tuldekoralt hatasoktol -- ezert csak
+   EGY elem van (nem ketto, mint korabban), nagyon alacsony opacitassal
+   (.05), lassu (26s) es finom mozgassal/skalazassal, semmi villogas vagy
+   eros kontraszt. `prefers-reduced-motion`-nel teljesen le is all. */
 .amb{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.amb::before{content:'';position:absolute;top:-20%;left:-10%;width:700px;height:700px;background:radial-gradient(circle,rgba(143,191,224,0.20) 0%,transparent 65%);animation:a1 14s ease-in-out infinite alternate}
-.amb::after{content:'';position:absolute;bottom:-10%;right:-5%;width:500px;height:500px;background:radial-gradient(circle,rgba(22,191,200,0.10) 0%,transparent 65%);animation:a2 18s ease-in-out infinite alternate}
-@keyframes a1{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,40px) scale(1.15)}}
-@keyframes a2{from{transform:translate(0,0)}to{transform:translate(-50px,-30px)}}
+.amb::before{content:'';position:absolute;top:-15%;left:-10%;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle,rgba(47,111,237,0.055) 0%,transparent 68%);filter:blur(2px);animation:a1 26s ease-in-out infinite alternate}
+@keyframes a1{from{transform:translate(0,0) scale(1)}to{transform:translate(70px,50px) scale(1.12)}}
+@media(prefers-reduced-motion:reduce){.amb::before{animation:none}}
 
 /* NAV */
-.nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:18px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
-.nav.on{background:rgba(255,255,255,.88);backdrop-filter:blur(20px);border-color:var(--border)}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:18px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;transition:background .3s,border-color .3s;border-bottom:1px solid transparent;background:rgba(255,255,255,.96);backdrop-filter:blur(20px)}
+.nav.on{background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-color:var(--border)}
 .logo{font-family:'Manrope',sans-serif;font-size:1.25rem;font-weight:800;letter-spacing:-.02em;color:var(--text)}
 .logo em{font-style:normal;color:var(--accent)}
 .nav-pill{font-size:.68rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);border:1px solid var(--border);padding:4px 12px;border-radius:20px}
 
 /* SCREENS */
-.scr{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative}
+.scr{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;padding-top:92px;position:relative}
 .scr.on{display:flex}
 .wrap{position:relative;z-index:1;width:100%;max-width:660px}
 
@@ -97,6 +101,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Manrop
 .q-sub{font-size:.86rem;color:var(--text3);margin-bottom:26px;line-height:1.6}
 .q-sub.has-why{margin-bottom:10px}
 .q-why{font-size:.76rem;color:var(--text3);margin-top:0;margin-bottom:24px;line-height:1.5;display:flex;align-items:flex-start;gap:6px}
+/* Q2 (Alap informaciok): a 3 label kulonbozo hosszusagu ("Testmagassag (cm)"
+   ket sorra torik keskeny nezetben, a masik ketto nem) -- rogzitett,
+   2-soros magassagu, also-igazitott label-terulet biztositja, hogy az
+   input mezok MINDIG egy vonalban induljanak, fuggetlenul a sortoresetol.
+   Nem media-query-be zart (nem csak mobilon), hogy ugyanez a hiba semmilyen
+   szelessegen ne term​elodhessen ujra. */
+.q2-num-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
+.q2-lbl{font-size:.78rem;color:var(--text3);line-height:1.3;min-height:2.6em;display:flex;align-items:flex-end;margin-bottom:6px}
+@media(max-width:400px){.q2-num-grid{gap:8px}}
 .q-why::before{content:'ⓘ';font-size:.8rem;opacity:.8;flex-shrink:0;margin-top:1px}
 
 /* summary card before free text */
@@ -305,6 +318,26 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .pp-table td.pp-private{color:var(--accent2);font-weight:500}
 .pp-table td.pp-public{color:var(--text2)}
 .pp-table tr:last-child td{border-bottom:none}
+/* v2.6 JAVITAS: mobilon (<=600px) a 3-oszlopos tablazat osszezsugorodva
+   olvashatatlan volt ("teljes kaosz") -- itt NEM a tablazatot szukitjuk
+   tovabb, hanem parhuzamosan, ugyanabbol a PP_ROWS adatbol, kartyas
+   (label: ertek soros) nezetet epitunk (renderPrivatePublic(), lentebb),
+   es CSS-sel valtunk a ket nezet kozott a szelesseg fuggvenyeben -- igy a
+   tartalom garantaltan szinkronban marad, nincs kulon karbantartando
+   adatforras. A kartya-stilus ugyanaz, mint a doc-card/mk-card mintak. */
+.pp-cards{display:none}
+.pp-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.pp-card-label{font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:8px}
+.pp-card-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--border)}
+.pp-card-row:first-of-type{border-top:none}
+.pp-card-key{font-size:.72rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.03em;flex-shrink:0}
+.pp-card-val{font-size:.82rem;text-align:right}
+.pp-card-val.private{color:var(--accent2);font-weight:500}
+.pp-card-val.public{color:var(--text2)}
+@media(max-width:600px){
+  .pp-table-wrap{display:none}
+  .pp-cards{display:block}
+}
 .pp-suggestion{background:var(--info-soft);border:1px solid rgba(143,191,224,.5);border-radius:12px;padding:14px 18px;margin:16px 0;font-size:.84rem;color:var(--text2);line-height:1.6}
 .pp-cta-row{display:flex;gap:12px;flex-wrap:wrap}
 .pp-cta-row .btn-p,.pp-cta-row .btn-back{flex:1;min-width:200px}
@@ -330,10 +363,18 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .mk-list{display:flex;flex-direction:column;gap:12px}
 .mk-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px;position:relative;overflow:hidden}
 .mk-card.real{border-color:rgba(52,195,143,.45)}
-.mk-card-top{display:flex;gap:14px}
+.mk-card-top{display:flex;gap:14px;flex-wrap:wrap}
 .mk-photo{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--teal));display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;color:#fff}
-.mk-badge-tag{position:absolute;top:14px;right:16px;font-size:.62rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:5px;background:var(--accent-soft);color:var(--accent2)}
-.mk-card.top .mk-photo,.mk-card.real .mk-photo,.mk-card.top .mk-info,.mk-card.real .mk-info,.mk-card.top .mk-stats,.mk-card.real .mk-stats{margin-top:24px}
+/* v2.6 JAVITAS: a badge korabban position:absolute volt, es a kartya
+   tartalma (nev/klinikanev/ar) csak KET KULON, felteteles CSS-osztalyon
+   (.top / .real) keresztul kapott top-margint a kikerulesehez -- ez pont
+   azert nem fedte le MINDEN kombinaciot (pl. az elso, MEG NEM valos/top
+   partner "AI elso ajanlas" jelvenye), mert nem minden badge-et-kapo
+   kartya .top vagy .real. Most a badge normal dokumentum-folyasban van
+   (nem absolute), sajat sort foglal, igy barmilyen badge/ar/klinikanev
+   kombinacioban garantaltan nem csuszhat egymasra semmi.
+   NOTE: nincs .mk-card.top/.real margin-top-alapu kikerules tobbe. */
+.mk-badge-tag{display:inline-flex;font-size:.62rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:5px;background:var(--accent-soft);color:var(--accent2);margin-bottom:10px}
 .mk-info{flex:1;min-width:0}
 .mk-nm{font-weight:700;font-size:.96rem;color:var(--text)}
 .mk-clinic-ctx{font-size:.76rem;color:var(--text3);margin-top:1px}
@@ -347,6 +388,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .mk-price{font-family:'Manrope',sans-serif;font-weight:700;font-size:.92rem;color:var(--text)}
 .mk-distance,.mk-wait{font-size:.72rem;color:var(--text3);margin-top:2px}
 .mk-why{background:var(--card2);border-radius:10px;padding:10px 12px;font-size:.78rem;color:var(--text2);margin-top:12px;line-height:1.5}
+.mk-profile-link{display:inline-block;font-size:.76rem;font-weight:600;color:var(--accent2);text-decoration:none;margin-top:8px}
+.mk-profile-link:hover{text-decoration:underline}
 .mk-actions{display:flex;gap:8px;margin-top:12px}
 .mk-book-btn{flex:1;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 14px;font-family:'Manrope',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .15s}
 .mk-book-btn:hover{background:var(--accent2)}
@@ -472,18 +515,21 @@ html, body {
   color: var(--text);
 }
 
-.amb {
-  display: none;
-}
+/* v2.6: az .amb (finom Digital Blue hatter-elem) MOSTANTOL nem tiltott le
+   -- ld. a fenti (elso rétegbeli) szabaly, ami mar magaban visszafogott.
+   Korabban itt display:none allt, ami teljesen kikapcsolta a polish-t. */
 
 /* Finom Liquid Glass: csak a navigációban */
 .nav {
   padding: 18px clamp(20px, 5vw, 48px);
   border-bottom: 1px solid transparent;
+  background: rgba(255, 255, 255, .96);
+  backdrop-filter: blur(18px) saturate(145%);
+  -webkit-backdrop-filter: blur(18px) saturate(145%);
 }
 
 .nav.on {
-  background: rgba(255, 255, 255, .76);
+  background: rgba(255, 255, 255, .96);
   border-color: rgba(226, 232, 240, .9);
   backdrop-filter: blur(18px) saturate(145%);
   -webkit-backdrop-filter: blur(18px) saturate(145%);
@@ -584,6 +630,21 @@ html, body {
   box-shadow: none;
 }
 
+/* v2.6 polish (item C, Mick kerese): megnyomaskor a gomb rovid idore a
+   markacink Digital Blue-ra valt, kb. 80%-ban attetszoen, finom "uveges"
+   (frosted glass) szellel -- visszafogott, nem hivalkodo, csak a nyomas
+   pillanataig tart (transition .12s), utana visszaall. */
+.btn-p:active {
+  background: rgba(47, 111, 237, .2);
+  color: var(--accent2);
+  backdrop-filter: blur(8px) saturate(160%);
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  border: 1px solid rgba(47, 111, 237, .35);
+  box-shadow: none;
+  transform: scale(.97);
+  transition: background .12s, transform .12s, color .12s;
+}
+
 .btn-p:focus-visible,
 .btn-s:focus-visible,
 .opt:focus-visible,
@@ -604,6 +665,16 @@ html, body {
   border-color: var(--accent);
   color: var(--accent);
   transform: none;
+}
+
+.btn-s:active {
+  background: rgba(47, 111, 237, .12);
+  border-color: rgba(47, 111, 237, .35);
+  color: var(--accent2);
+  backdrop-filter: blur(8px) saturate(160%);
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  transform: scale(.97);
+  transition: background .12s, transform .12s, color .12s;
 }
 
 .stats {
@@ -940,9 +1011,11 @@ input[type=range]::-webkit-slider-thumb {
 .scr-v2 .eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 11px;border-radius:100px;margin-bottom:14px}
 .scr-v2 .eyebrow.flag{background:#E8FAFB;color:#0E7A80}
 .scr-v2 .eyebrow.clear{background:#EAFAF3;color:#1F7A57}
+.scr-v2 .eyebrow.urgent{background:#FDECEC;color:var(--color-danger)}
 .scr-v2 .eyebrow .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
 .scr-v2 .eyebrow.flag .dot{background:var(--color-secondary)}
 .scr-v2 .eyebrow.clear .dot{background:var(--color-success)}
+.scr-v2 .eyebrow.urgent .dot{background:var(--color-danger)}
 .scr-v2 h1{font-size:26px;line-height:1.3;font-weight:700;letter-spacing:-.01em;color:var(--color-primary);margin:0 0 12px}
 .scr-v2 .lede{font-size:15px;line-height:1.5;font-weight:500;color:var(--ink);margin:0 0 18px}
 .scr-v2 .lede b{color:var(--color-primary);font-weight:700}
@@ -992,6 +1065,9 @@ input[type=range]::-webkit-slider-thumb {
    klinikahoz tartozik. Ugyanaz a mintazat, mint a marketplace .mk-clinic-ctx. */
 .scr-v2 .doc-clinic-name{font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-top:2px}
 .scr-v2 .doc-clinic{font-size:12px;color:var(--ink-soft);margin-top:2px;display:flex;align-items:center;gap:5px}
+.scr-v2 .doc-price{font-size:12.5px;font-weight:600;color:var(--ink);margin-top:6px}
+.scr-v2 .doc-profile-link{display:inline-block;font-size:12.5px;font-weight:600;color:var(--color-action);text-decoration:none;margin-top:9px}
+.scr-v2 .doc-profile-link:hover{text-decoration:underline}
 .scr-v2 .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
 .scr-v2 .tags span{font-size:11px;background:var(--color-background);border:1px solid var(--color-border);color:var(--ink-soft);padding:3px 8px;border-radius:100px}
 .scr-v2 .doc-cta{margin-top:12px;width:100%;background:var(--color-action);color:#fff;border:none;border-radius:10px;padding:11px;font-size:13.5px;font-weight:700;cursor:pointer}
@@ -1128,17 +1204,17 @@ input[type=range]::-webkit-slider-thumb {
       <h2 class="q-title">Néhány szám rólad</h2>
       <p class="q-sub has-why">Kor és testsúly — segítenek a kockázatbecslésben.</p>
       <p class="q-why">Az életkor és a testsúly több szűrési és kockázati küszöbérték alapja, így pontosabb ajánlást tudunk adni.</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px">
+      <div class="q2-num-grid">
         <div>
-          <div style="font-size:.78rem;color:var(--text3);margin-bottom:6px">Életkor</div>
+          <div class="q2-lbl">Életkor</div>
           <input id="kor" type="number" min="10" max="99" placeholder="pl. 34" style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:12px 14px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
         </div>
         <div>
-          <div style="font-size:.78rem;color:var(--text3);margin-bottom:6px">Testsúly (kg)</div>
+          <div class="q2-lbl">Testsúly (kg)</div>
           <input id="suly" type="number" min="30" max="250" placeholder="pl. 72" style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:12px 14px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
         </div>
         <div>
-          <div style="font-size:.78rem;color:var(--text3);margin-bottom:6px">Testmagasság (cm)</div>
+          <div class="q2-lbl">Testmagasság (cm)</div>
           <input id="magassag" type="number" min="100" max="230" placeholder="pl. 170" style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:12px 14px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
         </div>
       </div>
@@ -1421,7 +1497,7 @@ input[type=range]::-webkit-slider-thumb {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
           <span>Ez az eredmény tájékoztató jellegű, nem ad diagnózist és nem méri fel számszerűen az egyéni kockázatodat. Sürgős, életveszélyt jelentő tünet esetén azonnal hívd a <b>112</b>-t.</span>
         </div>
-        <div class="sec-head"><h2>Hogyan áll össze ez a kép</h2><span>5 kategória</span></div>
+        <div class="sec-head"><h2>Hogyan áll össze ez a kép</h2><span id="sv2-cat-count"></span></div>
         <div class="cat-card" id="sv2-cat-card"></div>
         <div class="sec-head" id="sv2-tips-head" style="display:none"><h2>Ajánlott következő lépések</h2></div>
         <div id="sv2-tips-list"></div>
@@ -1431,6 +1507,7 @@ input[type=range]::-webkit-slider-thumb {
         </div>
         <div id="sv2-doc-section" style="display:none">
           <div class="sec-head"><h2>Ha szeretnéd, ezek segíthetnek</h2><span>Ajánlott partnerek</span></div>
+          <div class="mk-sorttabs" id="sv2-doc-sorttabs" style="margin-top:10px"></div>
           <div id="sv2-doc-list"></div>
           <p class="loc-note-v2" id="sv2-loc-note"></p>
         </div>
@@ -1515,6 +1592,7 @@ input[type=range]::-webkit-slider-thumb {
       <div class="pp-table-wrap">
         <table class="pp-table" id="pp-table"></table>
       </div>
+      <div class="pp-cards" id="pp-cards"></div>
       <div class="pp-suggestion" id="pp-suggestion"></div>
       <div class="pp-cta-row">
         <button class="btn-p" onclick="choosePrivatePublic('private')">Válaszd a magán utat →</button>
@@ -1742,9 +1820,9 @@ const PDATA = {
     // a 9-szakterulet reskin feladat reszekent). Pontos alspecializaciojukrol Mick
     // nem adott reszletet, ezert a tags mezo szandekosan altalanos ('Pszichologia'),
     // hogy ne fabrikaljunk konkret szakteruletet, amit nem tudunk.
-    {nm:'MedSoulYou',doc:'Horendi Kata',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:97,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
+    {nm:'MedSoulYou',doc:'Herendi Kata',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:97,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
     {nm:'MedSoulYou',doc:'Makrai-Szécsi Dóra',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:96,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
-    {nm:'MedSoulYou',doc:'Vancsóné Anna',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:95,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
+    {nm:'MedSoulYou',doc:'Vancskó Anna',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:95,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
     {nm:'Budai Pszichológus Központ',sp:'Klinikai pszichológia · Kognitív terápia',ic:'🧠',tags:['Szorongás','Depresszió','KBT','Online is'],pct:96,top:false,region:'1',addr:'1104 Budapest, VI. Andrássy út 63.',tel:'+36 1 428 3286',hours:'H–P: 8:00–18:00'},
     {nm:'Dr. Varga Éva',sp:'Pszichiáter · Magánrendelő',ic:'💊',tags:['Gyógyszeres kezelés','Burnout','Pánikroham'],pct:87,top:false,region:'1',addr:'1119 Budapest, III. Bécsi út 109.',tel:'+36 1 232 1488',hours:'H–P: 8:00–18:00'},
     {nm:'MindSpace Terápia',sp:'Egyéni és páros terápia',ic:'💬',tags:['Önismeret','Párkapcsolat','Online is'],pct:81,top:false,region:'1',addr:'1138 Budapest, XIII. Váci út 155.',tel:'+36 1 227 4257',hours:'H–P: 9:00–19:00'},
@@ -1811,7 +1889,7 @@ const PDATA = {
     {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'9',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'}
   ],
   'Gyomor-bél': [
-    {nm:'MedSoulYou',doc:'Dr. Mátyi Kata',sp:'Gasztroenterológia',ic:'💫',tags:['Reflux','Puffadás','IBS','SIBO'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gasztroenterológus a MedSoulYou csapatában, a puffadás, reflux, IBS és egyéb emésztőrendszeri panaszok valódi kiváltó okának feltárására specializálódva.'},
+    {nm:'MedSoulYou',doc:'Dr. Mályi Kata',sp:'Gasztroenterológia',ic:'💫',tags:['Reflux','Puffadás','IBS','SIBO'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gasztroenterológus a MedSoulYou csapatában, a puffadás, reflux, IBS és egyéb emésztőrendszeri panaszok valódi kiváltó okának feltárására specializálódva.'},
     {nm:'Gasztro Centrum Budapest',sp:'Gasztroenterológia · Endoszkópia',ic:'🫃',tags:['Reflux','IBS','Intoleranciák'],pct:94,top:false,region:'1',addr:'1130 Budapest, V. Váci utca 81.',tel:'+36 1 610 5386',hours:'H–P: 8:00–18:00'},
     {nm:'Dr. Horváth Gábor',sp:'Belgyógyász · Emésztőrendszer',ic:'🩺',tags:['Emésztési zavar','Puffadás','Colon'],pct:86,top:false,region:'1',addr:'1195 Budapest, XIII. Váci út 55.',tel:'+36 1 871 9179',hours:'H–P: 9:00–19:00'},
     {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Labor','Intolerancia teszt','H. pylori'],pct:78,top:false,region:'1',addr:'1124 Budapest, XII. Alkotás utca 36.',tel:'+36 1 452 9830',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
@@ -1939,7 +2017,7 @@ function afterMood(){
   if(cm)A.megjegyzes_mood=cm.value.trim();
   showQ(1);
 }
-function restart(){Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];SCR.band=null;SCR.wizStack=[];SCR.wizCur=null;SCR_SKIP_WARNED=false;const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';const cta=document.getElementById('r-detailed-cta');if(cta)cta.innerHTML='';go('s-land')}
+function restart(){if(__autoAdvanceTimer){clearTimeout(__autoAdvanceTimer);__autoAdvanceTimer=null;}Object.keys(A).forEach(k=>delete A[k]);Object.keys(MULTI).forEach(k=>delete MULTI[k]);Object.keys(SEVITEMS).forEach(k=>delete SEVITEMS[k]);S.terulet=null;S.allapot=null;S.zona='zold';S.flaggedItems=[];S.megszakitva=false;SCR.answers={};SCR.flags=[];SCR.tudtad=[];SCR.band=null;SCR.wizStack=[];SCR.wizCur=null;SCR_SKIP_WARNED=false;const sw=document.getElementById('sev-wrap');if(sw)sw.innerHTML=SEV_HTML_ORIG;const vz=document.getElementById('q5-valtozas');if(vz)vz.innerHTML='';SEV=0;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('szabadszoveg').value='';document.getElementById('iranyitoszam').value='';document.querySelectorAll('.mc-input').forEach(el=>el.value='');document.getElementById('errbox').classList.remove('on');const lb=document.getElementById('loc-banner');if(lb)lb.innerHTML='';const cta=document.getElementById('r-detailed-cta');if(cta)cta.innerHTML='';go('s-land')}
 
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('on',window.scrollY>10));
 
@@ -2022,11 +2100,35 @@ function shake(n){
 }
 
 // ── Option picks ──
+// v2.6 (doksi 09. szekcio -- automatikus tovabb egyvalasztos kerdesnel):
+// pick() KIZAROLAG egyvalasztos ("radio") tipusu opcio-csoportoknal
+// hasznalt (a multi-select kepernyok kulon, mpick()-et hasznaljak, ezert
+// a "nem multi-select" feltetel mar magaban a fuggveny-valasztasban
+// biztositva van). Valasztas utan automatikusan tovabblep, KIVEVE ha:
+//  (a) a lepesen van szabadon irhato mezo is (textarea/input.mc-input) --
+//      a felhasznalonak ideje legyen beirni, mielott tovabblep;
+//  (b) a lepesen TOBB kulon egyvalasztos kerdes-csoport is van (pl. Q5-nel
+//      C allapotban az idotartam MELLETT egy "valtozott-e" alkerdes is
+//      megjelenik ugyanazon a kepernyon) -- csak akkor lep tovabb, ha
+//      MINDEGYIK csoportban van mar kivalasztott opcio.
+// Visszalepes mindig elerheto marad, ezt nem erinti.
+let __autoAdvanceTimer=null;
 function pick(el,key,val){
   const p=el.closest('.qstep');
   p.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
   el.classList.add('sel');
   A[key]=val;
+  if(__autoAdvanceTimer){clearTimeout(__autoAdvanceTimer);__autoAdvanceTimer=null;}
+  const hasFreeText=p&&p.querySelector('textarea.mc-input, input.mc-input');
+  if(hasFreeText)return;
+  const groups=p?p.querySelectorAll('.opts'):[];
+  let allGroupsAnswered=groups.length>0;
+  groups.forEach(g=>{if(!g.querySelector('.opt.sel'))allGroupsAnswered=false;});
+  if(!allGroupsAnswered)return;
+  const nextBtn=p&&p.querySelector('.q-nav .btn-p');
+  if(nextBtn){
+    __autoAdvanceTimer=setTimeout(()=>{__autoAdvanceTimer=null;nextBtn.click();},280);
+  }
 }
 function mpick(el,key,val){
   el.classList.toggle('sel');
@@ -2194,7 +2296,7 @@ const SCR_LIKERT=[
     'Szinte egyáltalán nem mozgok, ülő életmódot élek'
   ]},
   {key:'dohanyzas',title:'Dohányzás',ic:'🚬',levels:[
-    'Nem dohányzom és sosem is dohányoztam',
+    'Nem dohányzom, és korábban sem dohányoztam.',
     'Leszoktam, jelenleg nem dohányzom',
     'Alkalmanként dohányzom (pl. társaságban)',
     'Rendszeresen dohányzom (cigaretta, e-cigaretta, IQOS vagy vízipipa)',
@@ -2203,7 +2305,7 @@ const SCR_LIKERT=[
   {key:'alvas',title:'Alvás',ic:'🌙',levels:[
     'Pihentető, rendszeres alvásom van',
     'Többnyire jól alszom, ritkán akad gond',
-    'Gyakran nehezen alszom el vagy ébredek éjjel',
+    'Gyakran nehezen alszom el, vagy éjjel felébredek.',
     'Rendszeresen kevesebb mint 6 órát alszom',
     'Szinte minden éjjel rossz vagy nagyon kevés az alvásom'
   ]},
@@ -2220,6 +2322,16 @@ const SCR_LIKERT=[
     'Hetente 1-2 alkalommal fogyasztok',
     'Hetente többször fogyasztok',
     'Szinte naponta fogyasztok alkoholt'
+  ]},
+  // v2.6 UJ KATEGORIA (doksi 07b): egyetlen osszevont etkezes-kerdes --
+  // rost/zoldseg/hidratacio szandekosan EGY kerdesbe surítve, NEM 3 kulon
+  // kerdeskent, ugyanazzal az 1-5 mintaval mint a tobbi kategoria.
+  {key:'etkezes',title:'Étkezés',ic:'🥗',levels:[
+    'Tudatosan, változatosan étkezem, sok zöldséggel/gyümölccsel és megfelelő folyadékbevitellel',
+    'Többnyire kiegyensúlyozottan étkezem, néha kevesebb zöldséggel vagy folyadékkal',
+    'Változó, hol rendszertelen, hol kiegyensúlyozott az étkezésem',
+    'Gyakran rendszertelenül, kevés zöldséggel/rosttal vagy kevés folyadékkal étkezem',
+    'Szinte alig figyelek az étkezésemre, gyakran kihagyom az étkezéseket vagy feldolgozott ételeket eszem'
   ]}
 ];
 function scrLikertPick(n){
@@ -2289,7 +2401,7 @@ function scrWizRender(){
       `<div class="opt" onclick="scrWizRfGate(false)"><div class="ol">Nincs ilyen</div></div>`+
     `</div>`;
   }else if(step.type==='rflist'){
-    scrWizSetChrome('Szűrés-Megelőzés · Biztonsági kérdés','Melyik illik rád az alábbiak közül?','Jelöld meg mindet, ami igaz — bármelyiket választod, azonnal továbbirányítunk.',true);
+    scrWizSetChrome('Szűrés-Megelőzés · Biztonsági kérdés','Melyik illik rád az alábbiak közül?','Jelöld meg mindet, ami igaz — utána a Tovább gombbal folytathatod a tesztet, az eredményben ennek megfelelően sürgős jelzést is kapsz.',true);
     cont.innerHTML=`<div class="sym-opts">${buildRedFlagListHtml()}</div>`;
   }
   showStep('qscr-mod',scrWizPct());
@@ -2620,14 +2732,37 @@ function buildElozmeny(){
 function rfPick(el,area,i){
   const rf=(RED_FLAGS[area]||[])[i];
   if(!rf)return;
-  el.classList.add('sel');
+  // v2.6 KRITIKUS JAVITAS (doksi 06. szekcio): KIZAROLAG az ongyilkossagi
+  // gondolat/onsertesi szandek jelzese (rf.crisis===true) valthatja ki a
+  // teljes megszakitast (showCrisis -> 116-123/112 kepernyo). MINDEN mas
+  // fizikai piros zaszlo (barmely szakterulet, barmely tunet) csak
+  // bejelolheto/torolheto allapot -- NEM navigal el, NEM hivja showRedZone-t
+  // (a regi teljes-megszakitas kepernyot), a teszt zokkenomentesen
+  // folytathato utana. A jelzes a S.zona/S.flaggedItems-en keresztul
+  // sürgősségi eredmenyt eredmenyez a teszt VEGEN, nem utkozben.
+  if(rf.crisis){
+    el.classList.add('sel');
+    if(!MULTI['tunet'])MULTI['tunet']=[];
+    if(!MULTI['tunet'].includes(rf.t))MULTI['tunet'].push(rf.t);
+    A.tunetek=(MULTI['tunet']||[]).join(', ');
+    S.zona='piros';
+    S.flaggedItems.push({tetel:rf.t, terulet:area});
+    showCrisis();
+    return;
+  }
+  // nem-krizis piros zaszlo: egyszeru, visszavonhato kivalasztas-toggle
+  const already=el.classList.contains('sel');
+  el.classList.toggle('sel');
   if(!MULTI['tunet'])MULTI['tunet']=[];
-  if(!MULTI['tunet'].includes(rf.t))MULTI['tunet'].push(rf.t);
+  if(already){
+    MULTI['tunet']=MULTI['tunet'].filter(v=>v!==rf.t);
+    S.flaggedItems=(S.flaggedItems||[]).filter(f=>!(f.tetel===rf.t&&f.terulet===area));
+  }else{
+    if(!MULTI['tunet'].includes(rf.t))MULTI['tunet'].push(rf.t);
+    S.flaggedItems.push({tetel:rf.t, terulet:area});
+  }
   A.tunetek=(MULTI['tunet']||[]).join(', ');
-  S.zona='piros';
-  S.flaggedItems.push({tetel:rf.t, terulet:area});
-  if(rf.crisis){showCrisis();return}
-  showRedZone(area,rf.t);
+  S.zona=(S.flaggedItems||[]).length>0?'piros':S.zona;
 }
 // Rugalmasabb minták, ahol 1-2 szó közbeékelődhet két kulcsszó közé
 // (pl. "véget kellene vetnem" — nem csak a szó szerinti "véget vetni").
@@ -2922,7 +3057,11 @@ function renderResult(d){
   // ugyanaz a védekező elv, mint a numerikus kockázat kiszűrésénél
   // (stripNumericRisk): nem bízzuk kizárólag az AI promptra, kódszinten is
   // kikényszerítjük.
-  const scrNincsJel=isScreeningFlow()&&(SCR.flags||[]).length===0;
+  // v2.6: fizikai piros zaszlo (S.flaggedItems, nem-krizis -- a krizis
+  // mar korabban, renderResult() elott megszakitotta a folyamatot) is
+  // 'van mire figyelni' agra kell hogy vigyen, meg akkor is, ha a Likert-
+  // kategoriak (SCR.flags) maguktol nem jeleznenek semmit.
+  const scrNincsJel=isScreeningFlow()&&(SCR.flags||[]).length===0&&(S.flaggedItems||[]).length===0;
   const stepsSection=document.getElementById('r-steps-section');
   const partnersSection=document.getElementById('r-partners-section');
   const tipsWrap=document.getElementById('r-prevention-tips');
@@ -3027,13 +3166,22 @@ function renderResult(d){
     // elsobbseget elvez, ugyanaz a sorrend, mint a CTA-routingnal.
     let prim;
     if(isScreeningFlow()){
-      const flagsSorted=(SCR.flags||[]).slice().sort((a,b)=>(b.hard?1:0)-(a.hard?1:0));
-      let mapped=null;
-      for(const f of flagsSorted){
-        const sp=scrFlagToSpecialty(f);
-        if(sp){mapped=sp;break;}
+      // v2.6: fizikai piros zaszlo (S.flaggedItems) magasabb prioritast kap,
+      // mint a Likert-alapu SCR.flags -- ez a sürgősebb jelzes, es a
+      // terulete (RED_FLAGS kulcs) EGYEZIK a PDATA kategorianevekkel, tehat
+      // kozvetlenul hasznalhato orvos-egyeztetesre.
+      const physFlag=(S.flaggedItems||[])[0];
+      if(physFlag&&PDATA[physFlag.terulet]){
+        prim=physFlag.terulet;
+      }else{
+        const flagsSorted=(SCR.flags||[]).slice().sort((a,b)=>(b.hard?1:0)-(a.hard?1:0));
+        let mapped=null;
+        for(const f of flagsSorted){
+          const sp=scrFlagToSpecialty(f);
+          if(sp){mapped=sp;break;}
+        }
+        prim=mapped||'Szűrés-Megelőzés';
       }
-      prim=mapped||'Szűrés-Megelőzés';
     }else{
       prim=matchCat(d.primary_specialty)||matchCat(firstTerulet)||'Szűrés-Megelőzés';
     }
@@ -3172,7 +3320,8 @@ const SCR_PREVENTION_TIPS={
   dohanyzas:'Ha dohányzol, még a mennyiség csökkentése is mérhető javulást hozhat — háziorvosod segíthet a leszokásban, ha szeretnéd.',
   alvas:'Próbálj rendszeres lefekvési időt tartani, és lefekvés előtt kerülni a képernyőket — ez sokat javíthat az alvásminőségen.',
   stressz:'Napi pár perc tudatos pihenés (légzőgyakorlat, séta, kikapcsolódás) hosszabb távon is érezhető különbséget hoz.',
-  alkohol:'Érdemes figyelni az alkoholfogyasztás gyakoriságát és mennyiségét — a rendszeres, alacsonyabb szintű fogyasztás is összeadódik.'
+  alkohol:'Érdemes figyelni az alkoholfogyasztás gyakoriságát és mennyiségét — a rendszeres, alacsonyabb szintű fogyasztás is összeadódik.',
+  etkezes:'Már napi egy adag zöldség/gyümölcs és elegendő folyadék hozzáadása is érezhető különbséget hoz — nem kell egyszerre mindent megváltoztatni.'
 };
 function computePreventionTips(){
   const likert=(SCR.answers&&SCR.answers.likert)||{};
@@ -3192,7 +3341,7 @@ const SCR_BMI_TIP='A testtömegindexed jelenleg az ajánlott tartományon kívü
 // felsorolasahoz (pl. "a stressz, az alkoholfogyasztas rendszeressege").
 const SCR_HERO_AREA_PHRASE={
   mozgas:'a mozgás szintje', dohanyzas:'a dohányzás', alvas:'az alvásminőség',
-  stressz:'a stressz', alkohol:'az alkoholfogyasztás rendszeressége'
+  stressz:'a stressz', alkohol:'az alkoholfogyasztás rendszeressége', etkezes:'az étkezési szokásaid'
 };
 function scrHeroAreaPhrase(f){
   const cat=SCR_LIKERT.find(c=>c.title===f.area);
@@ -3216,6 +3365,58 @@ function scrJoinHu(arr){
 // VALTOZATLANUL nem-numerikus marad (cat-dots), ld. MDR-megjegyzes a
 // computeScreeningFlags() korul -- ez a fuggveny ezt nem valtoztatja meg,
 // csak vizualisan jeleniti meg ugyanazt a mar meglevo 1-5 szintet pontokkal.
+// v2.6: Screening doc-card lista rendezes-fulei (legkozelebbi/legolcsobb),
+// ugyanaz a mintaja mint a marketplace MK_SORT_TABS/MK_STATE-je, de kulon
+// allapotban, mert a Screening doc-list masik DOM-agban el.
+const SV2_DOC_SORT_TABS=[
+  {key:'match',lbl:'Legjobb egyezés'},
+  {key:'closest',lbl:'Legközelebbi'},
+  {key:'price',lbl:'Legolcsóbb'}
+];
+const SV2_DOC_STATE={sort:'match',base:[]};
+function sv2DocCardHtml(p,idx){
+  const nameForInitials=p.doc||p.nm||'';
+  const initials=nameForInitials.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'??';
+  const displayName=p.doc||(p.real?'MedSoulYou szakorvos':p.nm);
+  const badge=p.real
+    ? (p.doc?'<span class="badge partner">Igazolt partner</span>':'<span class="badge pending">adategyeztetés alatt</span>')
+    : '<span class="badge illustrative">Illusztratív példa</span>';
+  const clinicLine=p.doc?(p.addr||p.nm):(p.addr||p.nm||'');
+  const clinicSubtitle=p.doc?`<div class="doc-clinic-name">${p.nm}</div>`:'';
+  // v2.6: oszinte ar-fallback (soha nem ures/0), es reszletes-adatlap link
+  // csak ha tenylegesen van valos profileUrl -- ugyanaz a mintaja mint a
+  // marketplace mkCardHtml()-jenek.
+  const priceLine=p.real?`<div class="doc-price">${p.price?mkFmtHuf(p.price):'Ár egyeztetés alapján'}</div>`:'';
+  const profileLink=p.profileUrl?`<a class="doc-profile-link" href="${p.profileUrl}" target="_blank" rel="noopener">Részletes adatlap →</a>`:'';
+  return `<div class="doc-card${idx===0?' featured':''}">`+
+    `<div class="doc-top"><div class="avatar">${initials}</div>`+
+    `<div class="doc-info"><div class="doc-name-row"><span class="doc-name">${displayName}</span>${badge}</div>`+
+    clinicSubtitle+
+    `<div class="doc-spec">${p.sp||''}</div>`+
+    `<div class="doc-clinic">📍 ${clinicLine}</div>`+
+    priceLine+
+    `</div>`+
+    `<div class="match-ring">${p.pct}%</div></div>`+
+    `<div class="tags">${(p.tags||[]).map(t=>`<span>${t}</span>`).join('')}</div>`+
+    profileLink+
+    `<button class="doc-cta" onclick="openBooking(${idx})">Időpont érdeklődés</button>`+
+    `</div>`;
+}
+function sv2RenderDocList(){
+  const docList=document.getElementById('sv2-doc-list');
+  if(!docList)return;
+  const sorted=sortPartnersBy(SV2_DOC_STATE.base||[],SV2_DOC_STATE.sort);
+  window.__partners=sorted;
+  docList.innerHTML=sorted.map((p,idx)=>sv2DocCardHtml(p,idx)).join('');
+}
+function sv2SetDocSort(key){
+  SV2_DOC_STATE.sort=key;
+  const sortTabsEl=document.getElementById('sv2-doc-sorttabs');
+  if(sortTabsEl){
+    sortTabsEl.innerHTML=SV2_DOC_SORT_TABS.map(t=>`<div class="mk-tab${SV2_DOC_STATE.sort===t.key?' sel':''}" onclick="sv2SetDocSort('${t.key}')">${t.lbl}</div>`).join('');
+  }
+  sv2RenderDocList();
+}
 function renderScreeningV2(mode, partners, locNoteText){
   const isFlag=mode==='flag';
   const likert=(SCR.answers&&SCR.answers.likert)||{};
@@ -3238,6 +3439,8 @@ function renderScreeningV2(mode, partners, locNoteText){
   }).join('');
   const catCardEl=document.getElementById('sv2-cat-card');
   if(catCardEl)catCardEl.innerHTML=catCardHtml;
+  const catCountEl=document.getElementById('sv2-cat-count');
+  if(catCountEl)catCountEl.textContent=SCR_LIKERT.length+' kategória';
 
   // -- hero (eyebrow / cimsor / lede) -- kod-szinten generalt, NEM az AI
   // d.title/d.summary mezoibol, hogy garantaltan a tenyleges jelzett
@@ -3246,7 +3449,23 @@ function renderScreeningV2(mode, partners, locNoteText){
   const eyebrowTxtEl=document.getElementById('sv2-eyebrow-txt');
   const headlineEl=document.getElementById('sv2-headline');
   const ledeEl=document.getElementById('sv2-lede');
-  if(isFlag){
+  // v2.6: fizikai (nem-krizis) piros zaszlo eseten kulon, surgossegi
+  // hangvetelu hero valtozat -- a felhasznalo VEGIGMENT a teszten (nem
+  // szakadt meg), de a jelzett tetel(ek)et itt, az eredmenyoldalon
+  // egyertelmuen orvoshoz/112-hoz iranyitva mutatjuk, nem egy utkozbeni
+  // dead-end kepernyon.
+  const physFlags=S.flaggedItems||[];
+  if(isFlag&&physFlags.length>0){
+    if(eyebrowEl)eyebrowEl.className='eyebrow urgent';
+    if(eyebrowTxtEl)eyebrowTxtEl.textContent='Sürgősségi jelzés';
+    if(headlineEl)headlineEl.textContent='Ezt érdemes mihamarabb orvosival megnézetni';
+    const physNames=physFlags.map(f=>f.tetel);
+    const physList=scrJoinHu(physNames);
+    const ledeHtml=physFlags.length<=1
+      ? `Azt jelölted, hogy <b>${physList}</b> — ez olyan jelzés, amit nem érdemes kivárni. Ha a panasz most is fennáll vagy súlyosbodik, hívd a <b>112</b>-t, vagy keress fel mielőbb egy szakembert.`
+      : `Azt jelölted, hogy <b>${physList}</b> — ezek olyan jelzések, amiket nem érdemes kivárni. Ha bármelyik panasz most is fennáll vagy súlyosbodik, hívd a <b>112</b>-t, vagy keress fel mielőbb egy szakembert.`;
+    if(ledeEl)ledeEl.innerHTML=ledeHtml;
+  }else if(isFlag){
     if(eyebrowEl)eyebrowEl.className='eyebrow flag';
     if(eyebrowTxtEl)eyebrowTxtEl.textContent='Érdemes tudatosabban odanézni';
     if(headlineEl)headlineEl.textContent='Van mire figyelni — de semmi vészes';
@@ -3279,57 +3498,31 @@ function renderScreeningV2(mode, partners, locNoteText){
     // (nem csak a top-2, mint a "nincs jel" ag computePreventionTips()-e) --
     // a feladat explicit kerese szerint a tippek a TENYLEGESEN jelzett
     // kategoriakhoz igazodjanak.
-    const tipRows=flags.map(f=>{
+    // v2.6: a fizikai (nem-krizis) piros zaszlok SAJAT tipp-sort kapnak,
+    // a Likert-alapu tippek ELE fuzve -- ezek a legsurgetobb jelzesek.
+    const physTipRows=physFlags.map(f=>({t:f.tetel,d:'Ezt érdemes mihamarabb orvosival, szakemberrel megnézetni — ha súlyosbodik vagy hirtelen erősödik, ne várj, hívd a 112-t.'}));
+    const likertTipRows=flags.map(f=>{
       const cat=SCR_LIKERT.find(c=>c.title===f.area);
       const tipTxt=cat?SCR_PREVENTION_TIPS[cat.key]:SCR_BMI_TIP;
       return {t:f.area,d:tipTxt};
     });
+    const tipRows=physTipRows.concat(likertTipRows);
     if(tipsList)tipsList.innerHTML=tipRows.map((t,i)=>`<div class="tip"><div class="num">${i+1}</div><p><b>${t.t}</b><br>${t.d}</p></div>`).join('');
     if(habitSection)habitSection.style.display='none';
     if(docSection)docSection.style.display='';
 
-    // v2.3: orvos-elsodleges (doctor-first) kartyalista a mockup .doc-card
-    // szerkezete szerint, VALOS partneradatokkal (ugyanaz a `partners`
-    // tomb, amit a regi p-card grid is hasznalt). Badge-becsuletesseg:
-    // "Igazolt partner" CSAK a tenylegesen p.real=true partnernel jelenik
-    // meg -- a mockup demo-kartyaja ezt egy nem-valos illusztracios
-    // klinikara is ratette, ami valos adattal hamis allitas lenne, ezert
-    // itt kulon "Illusztratív példa" jelzest kap minden nem-valos sor.
-    if(docList){
-      docList.innerHTML=(partners||[]).map((p,idx)=>{
-        const nameForInitials=p.doc||p.nm||'';
-        const initials=nameForInitials.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'??';
-        const displayName=p.doc||(p.real?'MedSoulYou szakorvos':p.nm);
-        const badge=p.real
-          ? (p.doc?'<span class="badge partner">Igazolt partner</span>':'<span class="badge pending">adategyeztetés alatt</span>')
-          : '<span class="badge illustrative">Illusztratív példa</span>';
-        // v2.5 FRISSITES (Mick kerese): a klinika neve (p.nm, pl.
-        // "MedSoulYou") mostantol KULON, dedikalt alcim-sorban jelenik meg
-        // kozvetlenul a nev alatt (clinicSubtitle, lentebb) -- igy a lenti
-        // cim-sorban mar nem kell megismetelni, csak a tenyleges cim marad
-        // ott (ha van), elkerulve a "MedSoulYou · MedSoulYou..." tipusu
-        // felesleges ismetlest. Ha nincs kulon orvosnev (a klinikanev MAGA
-        // az elsodleges elem), a regi viselkedes marad: cim ha van,
-        // kulonben klinikanev.
-        const clinicLine=p.doc
-          ? (p.addr||p.nm)
-          : (p.addr||p.nm||'');
-        // v2.5: Mick kerese -- ha van konkret orvosnev (p.doc), a klinika
-        // neve (p.nm, pl. "MedSoulYou") KOZVETLENUL a nev alatt, kulon
-        // alcim-sorkent is megjelenik (nem csak a lenti cim-sorban).
-        const clinicSubtitle=p.doc?`<div class="doc-clinic-name">${p.nm}</div>`:'';
-        return `<div class="doc-card${idx===0?' featured':''}">`+
-          `<div class="doc-top"><div class="avatar">${initials}</div>`+
-          `<div class="doc-info"><div class="doc-name-row"><span class="doc-name">${displayName}</span>${badge}</div>`+
-          clinicSubtitle+
-          `<div class="doc-spec">${p.sp||''}</div>`+
-          `<div class="doc-clinic">📍 ${clinicLine}</div></div>`+
-          `<div class="match-ring">${p.pct}%</div></div>`+
-          `<div class="tags">${(p.tags||[]).map(t=>`<span>${t}</span>`).join('')}</div>`+
-          `<button class="doc-cta" onclick="openBooking(${idx})">Időpont érdeklődés</button>`+
-          `</div>`;
-      }).join('');
+    // v2.6: a doktor-kartyalista mostantol sajat, ujrahasznalhato
+    // fuggvenyeken (sv2DocCardHtml/sv2RenderDocList/sv2SetDocSort) at
+    // renderelodik, hogy a legkozelebbi/legolcsobb rendezes-fulek
+    // (sortPartnersBy, mar bevalt a marketplace-en) ugyanugy mukodjenek itt
+    // is -- a valos partner mindig elore van pinnelve, a "sparse" adaton is
+    // korrekten mukodik, es automatikusan jobb lesz, ahogy bovul a lista.
+    SV2_DOC_STATE.base=partners||[];
+    const sortTabsEl=document.getElementById('sv2-doc-sorttabs');
+    if(sortTabsEl){
+      sortTabsEl.innerHTML=SV2_DOC_SORT_TABS.map(t=>`<div class="mk-tab${SV2_DOC_STATE.sort===t.key?' sel':''}" onclick="sv2SetDocSort('${t.key}')">${t.lbl}</div>`).join('');
     }
+    sv2RenderDocList();
     if(locNoteEl)locNoteEl.textContent=locNoteText||'';
   }else{
     if(tipsHead)tipsHead.style.display='none';
@@ -3339,18 +3532,17 @@ function renderScreeningV2(mode, partners, locNoteText){
     if(locNoteEl)locNoteEl.textContent='';
     if(habitSection)habitSection.style.display='';
     // v2.3: a "nincs jel" agon NINCS klinika/orvos-ajanlas (ld. v2.1
-    // dontes) -- helyette 4, tenylegesen KERDEZETT kategoriara epulo,
-    // altalanos fenntarto tipp. A mockup eredeti 4. kartyaja ("Étkezés")
-    // olyan temat erintett, amit az app SOHA nem kerdez -- az helyett a
-    // tenylegesen felmert Dohanyzas kategoriat hasznaljuk, hogy ne
-    // legyen olyan allitas, ami nem a valos valaszokon alapul. A Mozgas
-    // kartya szandekosan NEM gratulalo hangvetelu (ld. jelentes a
-        // chatben a Mozgas-skala iranyultsagi kerdojelerol).
+    // dontes) -- helyette az AKTUALIS SCR_LIKERT-kategoriakra epulo,
+    // altalanos fenntarto tipp-kartyak. A Mozgas kartya szandekosan NEM
+    // gratulalo hangvetelu (ld. jelentes a chatben a Mozgas-skala
+    // iranyultsagi kerdojelerol). v2.6: Etkezes (uj, 6. kategoria) is
+    // sajat kartyat kap, ugyanabban a mintaban.
     if(habitGrid)habitGrid.innerHTML=
       `<div class="habit"><span class="icon">🏃</span><b>Maradj mozgásban</b><span>Heti 2-3 alkalom mozgás is sokat számít hosszú távon.</span></div>`+
       `<div class="habit"><span class="icon">😴</span><b>Alvásritmus</b><span>A jelenlegi alvásmintád jó jel — érdemes tartani.</span></div>`+
       `<div class="habit"><span class="icon">🧘</span><b>Stresszkezelés</b><span>Néhány perces napi levezetés sokat számít hosszú távon.</span></div>`+
-      `<div class="habit"><span class="icon">🚭</span><b>Dohányzás</b><span>A jelenlegi szokásaid alapján nincs sürgető teendő.</span></div>`;
+      `<div class="habit"><span class="icon">🚭</span><b>Dohányzás</b><span>A jelenlegi szokásaid alapján nincs sürgető teendő.</span></div>`+
+      `<div class="habit"><span class="icon">🥗</span><b>Étkezés</b><span>Már napi egy kis zöldség/gyümölcs és elég folyadék is számít.</span></div>`;
   }
 
   // -- sticky CTA (mindket agon lathato, mas szoveggel) --
@@ -3384,7 +3576,8 @@ const SCR_LIKERT_TO_SPECIALTY={
   dohanyzas:'Légzőszervi',
   alvas:'Alvás',
   stressz:'Mentális-Pszichés',
-  alkohol:'Mentális-Pszichés'
+  alkohol:'Mentális-Pszichés',
+  etkezes:'Anyagcsere-Hormonális'
 };
 function scrFlagToSpecialty(f){
   if(f.area==='Testtömegindex (BMI)')return 'Anyagcsere-Hormonális';
@@ -3594,7 +3787,13 @@ function mkCardHtml(p,isFirstNonReal,idx){
   const ratingBlock=p.real
     ? ''
     : `<div class="mk-rating-row"><span class="stars">★</span><span>${st.rating}</span><span>(${st.reviewCount} vélemény)</span></div>`;
-  const priceBlock=p.real?'':`<div class="mk-price">${mkFmtHuf(st.priceHuf)}</div>`;
+  // v2.6: valos (p.real) partnernel oszinten mutatjuk az arat, ha van
+  // (p.price), kulonben egyertelmu "ar egyeztetes alapjan" szoveget --
+  // SOHA nem ures mezot vagy "0 Ft"-ot. Nem-valos illusztrativ partnernel
+  // valtozatlanul a demo-ar (illustrativeStats) jelenik meg.
+  const priceBlock=p.real
+    ? `<div class="mk-price">${p.price?mkFmtHuf(p.price):'Ár egyeztetés alapján'}</div>`
+    : `<div class="mk-price">${mkFmtHuf(st.priceHuf)}</div>`;
   const waitBlock=p.real?'':`<div class="mk-wait">${st.waitDays} napon belül</div>`;
   const verifiedTag=p.real?'<div class="mk-verified-tag">✓ Igazolt partner</div>':'';
   // Badge-tag: az igazolt partner mindig ✓-ot kap; az első nem-igazolt
@@ -3608,6 +3807,9 @@ function mkCardHtml(p,isFirstNonReal,idx){
   }
   const why=`<div class="mk-why">Miért ajánljuk? ${p.sp} területén releváns a megadott panaszokhoz${p.real?', és igazolt, ellenőrzött partnerünk.':'.'}</div>`;
   const illustrativeNote=p.real?'':'<div class="mk-illustrative">Illusztratív példa — még nem partnerünk.</div>';
+  // v2.6: reszletes adatlap link CSAK akkor jelenik meg, ha ehhez a
+  // partnerhez tenylegesen van valos profileUrl -- nincs fabrikalt link.
+  const profileLinkBlock=p.profileUrl?`<a class="mk-profile-link" href="${p.profileUrl}" target="_blank" rel="noopener">Részletes adatlap →</a>`:'';
   const saved=MK_STATE.saved[p.nm]?' saved':'';
   const savedIc=MK_STATE.saved[p.nm]?'♥':'♡';
   return `<div class="mk-card${p.top?' top':''}${p.real?' real':''}">
@@ -3620,6 +3822,7 @@ function mkCardHtml(p,isFirstNonReal,idx){
         ${ratingBlock}
         ${verifiedTag}
         <div class="mk-tags">${(p.tags||[]).map(t=>`<span class="mk-tag">${t}</span>`).join('')}</div>
+        ${profileLinkBlock}
       </div>
       <div class="mk-stats">
         ${priceBlock}
@@ -3772,6 +3975,16 @@ function renderPrivatePublic(d){
     tableEl.innerHTML=`<thead><tr><th></th><th>Magán út</th><th>Állami ellátás</th></tr></thead>`+
       `<tbody>${PP_ROWS.map(r=>`<tr><td>${r[0]}</td><td class="pp-private">${r[1]}</td><td class="pp-public">${r[2]}</td></tr>`).join('')}</tbody>`;
   }
+  // v2.6: mobil kartyas nezet -- ugyanaz a PP_ROWS adat, csak label:ertek
+  // sorokra bontva, nem oldalirany szukitett tablazatkent.
+  const cardsEl=document.getElementById('pp-cards');
+  if(cardsEl){
+    cardsEl.innerHTML=PP_ROWS.map(r=>
+      `<div class="pp-card"><div class="pp-card-label">${r[0]}</div>`+
+      `<div class="pp-card-row"><span class="pp-card-key">Magán út</span><span class="pp-card-val private">${r[1]}</span></div>`+
+      `<div class="pp-card-row"><span class="pp-card-key">Állami ellátás</span><span class="pp-card-val public">${r[2]}</span></div></div>`
+    ).join('');
+  }
   const sugEl=document.getElementById('pp-suggestion');
   if(sugEl){
     const lean=d.urgency==='high'
@@ -3887,16 +4100,17 @@ if(typeof window!=='undefined'){
     RED_FLAGS,SYMPTOMS,SCR_LIKERT,SCR_BETEGSEG_OPTS,FREQ_OPTS,
     CRISIS_WORDS,CRISIS_PATTERNS,foldHuCrisis,scanCrisis,
     getRegion,REGIONS,PDATA,
-    isScreeningFlow,computeBMI,computeScreeningFlags,computeScreeningBand,computeTudtadE,
+    isScreeningFlow,computeBMI,computeScreeningFlags,computeScreeningBand,computeTudtadE,rfPick,
     RISK_NUMBER_RE,stripNumericRisk,sanitizeResultNumbers,
     buildScreeningPrompt,goScreeningAlap,scrWizRender,scrWizGoto,scrWizManualNext,scrWizRfGate,
     scrLikertPick,scrBetegsegPick,restartToDetailedQuiz,scrCheckOptionalSkips,
-    renderResult,restart,submit,
-    computePreventionTips,SCR_PREVENTION_TIPS,SCR_LIKERT_TO_SPECIALTY,scrFlagToSpecialty,
+    renderResult,restart,submit,goSymptoms,showQ,
+    computePreventionTips,SCR_PREVENTION_TIPS,SCR_HERO_AREA_PHRASE,SCR_LIKERT_TO_SPECIALTY,scrFlagToSpecialty,
     illustrativeStats,sortPartnersBy,MK_STATE,MK_SORT_TABS,renderMarketplace,mkSetSort,
     mkSetMinRating,mkSetMaxPrice,mkSetDistance,mkToggleVerifiedOnly,mkToggleInsurance,
     mkSetPayMode,mkToggleSave,renderAiReport,renderPrivatePublic,choosePrivatePublic,
-    downloadReportPdf,shareReportWithDoctor,PP_ROWS
+    downloadReportPdf,shareReportWithDoctor,PP_ROWS,
+    SV2_DOC_SORT_TABS,SV2_DOC_STATE,sv2DocCardHtml,sv2RenderDocList,sv2SetDocSort
   };
 }
 </script>
