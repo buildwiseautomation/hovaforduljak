@@ -35,16 +35,19 @@
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
 
-/* AMBIENT -- v2.6 polish (item C, Mick kerese): EGY, nagyon halvany, lassan
-   mozgo/homalyosodo elem a hatterben, Digital Blue (--accent) szinben. A
-   Brand Board kifejezetten ovva int a tuldekoralt hatasoktol -- ezert csak
-   EGY elem van (nem ketto, mint korabban), nagyon alacsony opacitassal
-   (.05), lassu (26s) es finom mozgassal/skalazassal, semmi villogas vagy
-   eros kontraszt. `prefers-reduced-motion`-nel teljesen le is all. */
+/* AMBIENT -- v2.6.1 polish (Mick kifejezett kerese, 2. kor: az elozo
+   verzio TUL halvany volt, alig lathato -- mostantol tudatosan erzekelheto,
+   lassan pulzalo/lebego ket Digital Blue (--accent) folt a hatterben,
+   hogy a felulet ne legyen "unalmas". Meg mindig visszafogott (nincs
+   tobb szin, nincs eles kontraszt, nincs villogas-szeru gyors valtas --
+   csak lassu, meditativ pulzalas+sodrodas), de mostantol tenylegesen
+   eszreveheto. `prefers-reduced-motion`-nel teljesen le is all. */
 .amb{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.amb::before{content:'';position:absolute;top:-15%;left:-10%;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle,rgba(47,111,237,0.055) 0%,transparent 68%);filter:blur(2px);animation:a1 26s ease-in-out infinite alternate}
-@keyframes a1{from{transform:translate(0,0) scale(1)}to{transform:translate(70px,50px) scale(1.12)}}
-@media(prefers-reduced-motion:reduce){.amb::before{animation:none}}
+.amb::before{content:'';position:absolute;top:-15%;left:-10%;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle,rgba(47,111,237,0.16) 0%,transparent 68%);filter:blur(6px);animation:a1 16s ease-in-out infinite alternate}
+.amb::after{content:'';position:absolute;bottom:-15%;right:-10%;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(47,111,237,0.11) 0%,transparent 70%);filter:blur(6px);animation:a2 20s ease-in-out infinite alternate}
+@keyframes a1{0%{transform:translate(0,0) scale(1);opacity:.7}50%{opacity:1}100%{transform:translate(90px,60px) scale(1.25);opacity:.7}}
+@keyframes a2{0%{transform:translate(0,0) scale(1.08);opacity:.6}50%{opacity:1}100%{transform:translate(-70px,-50px) scale(.9);opacity:.6}}
+@media(prefers-reduced-motion:reduce){.amb::before,.amb::after{animation:none}}
 
 /* NAV */
 .nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:18px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;transition:background .3s,border-color .3s;border-bottom:1px solid transparent;background:rgba(255,255,255,.96);backdrop-filter:blur(20px)}
@@ -387,6 +390,21 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .mk-stats{flex-shrink:0;text-align:right;min-width:90px}
 .mk-price{font-family:'Manrope',sans-serif;font-weight:700;font-size:.92rem;color:var(--text)}
 .mk-distance,.mk-wait{font-size:.72rem;color:var(--text3);margin-top:2px}
+/* v2.6.1 KRITIKUS JAVITAS (Mick valos telefon-screenshotja alapjan): a
+   .mk-info (nev/specialitas) es .mk-stats (ar/tavolsag) oldalt-egymas-
+   melletti flex-oszlopok keskeny mobil szelessegen (a hosszu "Ar
+   egyeztetes alapjan" es "MedSoulYou szakorvos (adategyeztetes alatt)"
+   szovegek eseten) osszecsusztak/egymasra fedtek. A flex-wrap oldalirany
+   -ban NEM garantalja, hogy a ket oszlop szovege ne folyjon egymasba,
+   ha mindketto sok helyet igenyel. A biztos, mindig-mukodo megoldas:
+   egy adott szelesseg alatt a ket oszlop TELJESEN egymas ALA kerul
+   (flex-direction:column), igy fizikailag lehetetlen az atfedes,
+   fuggetlenul a szoveg hosszatol barmelyik oldalon. */
+@media(max-width:560px){
+  .mk-card-top{flex-direction:column}
+  .mk-stats{text-align:left;min-width:0;width:100%;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+  .mk-distance,.mk-wait{margin-top:4px}
+}
 .mk-why{background:var(--card2);border-radius:10px;padding:10px 12px;font-size:.78rem;color:var(--text2);margin-top:12px;line-height:1.5}
 .mk-profile-link{display:inline-block;font-size:.76rem;font-weight:600;color:var(--accent2);text-decoration:none;margin-top:8px}
 .mk-profile-link:hover{text-decoration:underline}
@@ -431,7 +449,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   .how-cards{grid-template-columns:1fr}
   .stats{gap:18px}
   .nav{padding:14px 18px}
-  .scr{padding:16px}
+  /* v2.6.1 JAVITAS: a korabbi `padding:16px` shorthand nullazta a
+     padding-top-ot is, ami visszahozta a fejlec-atfedes bugot pont ezen
+     a (mobil) szelessegen -- longhand ertekekkel, padding-top megtartva. */
+  .scr{padding-left:16px;padding-right:16px;padding-bottom:16px;padding-top:92px}
   .sev-scale{grid-template-columns:repeat(5,1fr)}
 }
 
@@ -805,18 +826,36 @@ html, body {
   transform: none;
 }
 
+/* v2.6.1 polish (Mick kifejezett kerese, 2. kor): kivalasztaskor ES
+   megnyomaskor is lathato, "uveges" kek fenyles -- nem csak egy vekony
+   szeloldali csik, mint korabban. A szoveg (--text, kozel-fekete)
+   valtozatlan szinu marad, igy vilagos kek attetszo hatteren is jol
+   olvashato. */
 .opt.sel,
 .sym-opt.sel,
 .sev-btn.sel {
-  background: #F3F7FF;
+  background: rgba(47, 111, 237, .16);
   border-color: var(--accent);
-  box-shadow: inset 3px 0 0 var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent), 0 0 0 1px rgba(47, 111, 237, .15), 0 6px 18px rgba(47, 111, 237, .22);
+  backdrop-filter: blur(6px) saturate(160%);
+  -webkit-backdrop-filter: blur(6px) saturate(160%);
   color: var(--text);
 }
 
 .opt.sel .oi {
   background: var(--accent);
   color: #FFFFFF;
+}
+
+.opt:active,
+.sym-opt:active,
+.sev-btn:active {
+  background: rgba(47, 111, 237, .2);
+  border-color: var(--accent);
+  backdrop-filter: blur(8px) saturate(160%);
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  transform: scale(.98);
+  transition: background .1s, transform .1s;
 }
 
 .oi {
@@ -962,8 +1001,15 @@ input[type=range]::-webkit-slider-thumb {
     padding: 15px 18px;
   }
 
+  /* v2.6.1 JAVITAS: ugyanaz a hiba mint az 520px-es blokkban -- a
+     shorthand `padding: 20px` nullazta a padding-top-ot minden olyan
+     kepernyon, aminek nincs kulon ID-szintu override-ja (pl. s-how,
+     s-load, s-alert, qscr-mod) -- longhand ertekekkel javitva. */
   .scr {
-    padding: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    padding-top: 92px;
   }
 
   #s-land,
