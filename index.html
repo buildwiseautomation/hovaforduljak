@@ -287,6 +287,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .ai-score-num{position:relative;font-family:'Manrope',sans-serif;font-weight:800;font-size:1.25rem;color:var(--text)}
 .ai-score-lbl{position:relative;font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
 .ai-score-tag{font-size:.78rem;font-weight:600;padding:6px 12px;border-radius:20px;background:var(--accent-soft);color:var(--accent2)}
+.match-ring-caption{font-size:.74rem;line-height:1.5;color:var(--text3);background:var(--card2);border-radius:10px;padding:10px 12px;margin:10px 0 14px}
+.match-ring-caption strong{color:var(--text2)}
 .ai-metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0 4px}
 .ai-metric-box{background:var(--card2);border-radius:12px;padding:12px 14px;text-align:center}
 .ai-metric-val{font-family:'Manrope',sans-serif;font-weight:700;font-size:1rem;color:var(--text)}
@@ -1131,10 +1133,6 @@ input[type=range]::-webkit-slider-thumb {
 .scr-v2 .trust div{display:flex;gap:8px;align-items:center;font-size:11px;font-weight:500;color:var(--ink-soft)}
 .scr-v2 .trust svg{flex-shrink:0;color:var(--color-success)}
 .scr-v2 .loc-note-v2{font-size:12px;font-weight:500;color:var(--ink-soft);text-align:center;margin:14px 0 0}
-#scr-v2-sticky{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-top:1px solid var(--color-border);padding:12px 18px calc(12px + env(safe-area-inset-bottom));display:none}
-#scr-v2-sticky .inner{max-width:520px;margin:0 auto}
-#scr-v2-sticky .cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--color-action);color:#fff;border:none;border-radius:13px;padding:15px;font-size:14.5px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px -6px rgba(47,111,237,.35)}
-#scr-v2-sticky .cta-sub{text-align:center;font-size:11px;font-weight:500;color:var(--ink-soft);margin-top:7px}
 /* v2.4: 9 hagyomanyos szakterulet eredmenyoldala -- trust-footer + also sticky CTA,
    ugyanazokkal a szinjelentesekkel/tipografiaval mint a Screening-mockup (.scr-v2),
    de a regi tokennevekkel (--accent/--text3/--success stb.), amik AZONOS ertekre
@@ -1150,6 +1148,54 @@ input[type=range]::-webkit-slider-thumb {
 #result-sticky-cta .cta-sub{text-align:center;font-size:11px;font-weight:500;color:var(--text3);margin-top:7px}
 .scr-v2-shell{max-width:520px;margin:0 auto;padding-bottom:110px}
 @media(min-width:640px){.scr-v2-shell{padding-bottom:24px}}
+
+/* v2.6.3 KRITIKUS JAVITAS (PDF export, Mick jelentese): eddig NEM VOLT
+   @media print szabaly a fajlban -- a window.print()-alapu PDF-export
+   ezert a KEPERNYO teljes layout-jat probalta nyomtatni: a fixed fejlec
+   (.nav), a fixed dekorativ hatter (.amb -- pont az elozo korben
+   draamatikusan felerositett, nagy, elmosott KEK foltokkal!) es a fixed
+   sticky CTA-sav minden nyomtatott oldalon ujra megjelent es atfedte a
+   tartalmat -- ez okozta a "szetesett elrendezes" es a "kek, atlatszatlan
+   blokk" hibat. NEM kulon PDF-sablont epitunk (Mick kifejezett kerese) --
+   a print CSS egyszeruen eltavolitja a kepernyo-specifikus navigaciot,
+   dekoraciot es az on-screen-only interakcios elemeket (szurok, mentes-
+   gomb, foglalas-gomb, rendezes-fulek, "ujra" gomb), es hagyja, hogy a
+   bongeszo a lathato eredmeny-tartalmat termeszetes dokumentum-folyasban
+   nyomtassa -- pontosan azt, amit a felhasznalo a kepernyon lat. */
+@media print {
+  .nav, .amb, #result-sticky-cta, .modal-overlay,
+  .q-nav, #errbox,
+  .mk-sorttabs, .mk-filters, .mk-side, .mk-actions,
+  .doc-cta, .pp-cta-row, .btn-restart, #r-detailed-cta,
+  #medsoulyou-booking, #medsoulyou-booking-mk,
+  .mk-header-badge, .ai-report-actions {
+    display: none !important;
+  }
+  html, body {
+    overflow: visible !important;
+    background: #fff !important;
+  }
+  .scr {
+    position: static !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+  .scr:not(.on) {
+    display: none !important;
+  }
+  .wrap, .scr-v2-shell {
+    max-width: 100% !important;
+  }
+  .mk-layout {
+    grid-template-columns: 1fr !important;
+  }
+  * {
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
 
 </style>
 </head>
@@ -1514,9 +1560,9 @@ input[type=range]::-webkit-slider-thumb {
 
     <div class="med-disclaimer" id="r-top-disclaimer">⚠️ Ez az eszköz nem helyettesíti az orvosi ellátást és nem ad diagnózist — kizárólag eligazítást nyújt. Sürgős, életveszélyt jelentő tünetek esetén azonnal hívd a <strong>112</strong>-t vagy fordulj sürgősségi ellátáshoz.</div>
 
-    <!-- v2.0: Szűrés-Megelőzés eredményénél mindkét kimeneti ágon (van jelzés /
-         nincs jelzés) megjelenő CTA a részletesebb, tünet-alapú kérdéssorhoz —
-         ld. restartToDetailedQuiz(). Más szakterületeknél üres marad. -->
+    <!-- v2.3 ota mar mindig ures (a mockup-alapu #scr-v2 vette at a szerepet),
+         v2.6.3-ban a hozza tartozo CTA-koncepcio (restartToDetailedQuiz) is
+         teljesen torolve lett -- ez a konteneres marad, de sosem toltodik ki. -->
     <div id="r-detailed-cta"></div>
 
     <div class="profile-row" id="r-profile"></div>
@@ -1557,6 +1603,12 @@ input[type=range]::-webkit-slider-thumb {
         </div>
         <div id="sv2-doc-section" style="display:none">
           <div class="sec-head"><h2>Ha szeretnéd, ezek segíthetnek</h2><span>Ajánlott partnerek</span></div>
+          <!-- v2.6.3 (Mick kerese): a korokkel jelzett %-os szam mellett
+               egyertelmu magyarazat kell, hogy ez a rendszer sajat
+               magabiztossaga az ajanlasban, NEM a felhasznalo egeszsegi
+               kockazata/allapotanak sulyossaga -- egyszer, a lista
+               tetejen, nem kartyankent ismetelve (az mar zavaro lenne). -->
+          <p class="match-ring-caption">A körben látható szám az <strong>egyezési pontszám</strong> — ennyire illeszkedik az ajánlás a válaszaidhoz. Ez a rendszer magabiztossága, nem az egészségi kockázatod mértéke.</p>
           <div class="mk-sorttabs" id="sv2-doc-sorttabs" style="margin-top:10px"></div>
           <div id="sv2-doc-list"></div>
           <p class="loc-note-v2" id="sv2-loc-note"></p>
@@ -1565,15 +1617,6 @@ input[type=range]::-webkit-slider-thumb {
           <div><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Ingyenes és biztonságos</div>
           <div><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Adataid bizalmasan kezelve</div>
         </div>
-      </div>
-    </div>
-    <div id="scr-v2-sticky">
-      <div class="inner">
-        <button class="cta-btn" id="sv2-cta-btn" onclick="restartToDetailedQuiz()">
-          <span id="sv2-cta-text"></span>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </button>
-        <p class="cta-sub" id="sv2-cta-sub"></p>
       </div>
     </div>
 
@@ -1612,6 +1655,10 @@ input[type=range]::-webkit-slider-thumb {
           </div>
           <div class="ai-score-tag" id="ai-score-tag"></div>
         </div>
+        <!-- v2.6.3 (Mick kerese): egyertelmu magyarazat a kor mellett --
+             ez a rendszer sajat magabiztossaga, NEM a felhasznalo
+             egeszsegi kockazata/allapotanak sulyossaga. -->
+        <p class="match-ring-caption">Az <strong>egyezési pontszám</strong> azt mutatja, ennyire illeszkedik ez az ajánlás a válaszaidhoz — a rendszer magabiztossága, nem az egészségi kockázatod mértéke.</p>
         <div class="ai-metric-row" id="ai-metric-row"></div>
         <div class="sec-lbl2">Fő lehetséges okok</div>
         <div class="ai-causes" id="ai-causes"></div>
@@ -3050,13 +3097,10 @@ function renderResult(d){
   document.getElementById('r-title').textContent=d.title||'Személyre szabott ajánlás';
   document.getElementById('r-sum').textContent=d.summary||'';
 
-  // v2.0: Szűrés-Megelőzés eredményénél, MINDKÉT kimeneti ágon (VAN_MIRE_FIGYELNI
-  // és NINCS_JEL is) megjelenő CTA a részletesebb, tünet-alapú kérdéssorhoz —
-  // a state itt még elérhető (isScreeningFlow() a MULTI['terület']-et nézi,
-  // amit restartToDetailedQuiz() csak KATTINTÁSKOR módosít).
-  // v2.3: a regi r-detailed-cta inline gomb a Screeningen mostantol a
-  // #scr-v2-sticky uj, fixen also CTA-javal van kivaltva (ld. lejjebb,
-  // renderScreeningV2()), ezert itt mindig ures marad.
+  // v2.3 ota r-detailed-cta mindig ures a Screeningen (a mockup-alapu
+  // #scr-v2 vette at a szerepet). v2.6.3: a hozza kapcsolodo "melyebb
+  // teszt" CTA-koncepcio (regen: restartToDetailedQuiz()) teljesen
+  // torolve -- a Screening eredmenye onmagaban lezart vegpont.
   const ctaWrap=document.getElementById('r-detailed-cta');
   if(ctaWrap)ctaWrap.innerHTML='';
 
@@ -3207,8 +3251,7 @@ function renderResult(d){
     // v2.3.3: Screening eseten a partner-egyeztetes MOSTANTOL NEM az AI
     // szabad-szoveges primary_specialty tippjere tamaszkodik, hanem
     // determinisztikusan, a mar bevalt SCR_LIKERT_TO_SPECIALTY leképezésen
-    // (scrFlagToSpecialty(), ugyanaz, amit restartToDetailedQuiz() is
-    // hasznal) keresztul a TENYLEGESEN jelzett kategoriabol szamolja ki,
+    // (scrFlagToSpecialty()) keresztul a TENYLEGESEN jelzett kategoriabol szamolja ki,
     // melyik szakteruletet nezze -- igy a valos nevvel ellatott orvosok
     // (Barta Beatrix, Orosz-Toth Arpad stb.) MINDIG a Mick altal
     // megerositett, helyes kategoriahoz tartoznak, fuggetlenul az AI
@@ -3328,9 +3371,7 @@ function renderResult(d){
       // hasznalt -- biztosra megyunk, hogy rejtve marad (ha korabban egy
       // Screening render mutatta, ne maradjon lathato).
       const scr2Hide=document.getElementById('scr-v2');
-      const scr2StickyHide=document.getElementById('scr-v2-sticky');
       if(scr2Hide)scr2Hide.style.display='none';
-      if(scr2StickyHide)scr2StickyHide.style.display='none';
       renderMarketplace(partners, prim, d);
       renderAiReport(d, partners);
       renderPrivatePublic(d);
@@ -3595,21 +3636,13 @@ function renderScreeningV2(mode, partners, locNoteText){
       `<div class="habit"><span class="icon">🥗</span><b>Étkezés</b><span>Már napi egy kis zöldség/gyümölcs és elég folyadék is számít.</span></div>`;
   }
 
-  // -- sticky CTA (mindket agon lathato, mas szoveggel) --
-  const ctaTextEl=document.getElementById('sv2-cta-text');
-  const ctaSubEl=document.getElementById('sv2-cta-sub');
-  if(isFlag){
-    if(ctaTextEl)ctaTextEl.textContent='Szeretnél pontosabb eredményt?';
-    if(ctaSubEl)ctaSubEl.textContent='Töltsd ki a részletesebb tesztet a pontosabb eredményért';
-  }else{
-    if(ctaTextEl)ctaTextEl.textContent='Kíváncsi vagy egy mélyebb képre?';
-    if(ctaSubEl)ctaSubEl.textContent='Bármikor kitöltheted a részletesebb tesztet — nem kötelező';
-  }
-
+  // v2.6.3 (Mick kerese): a korabbi sticky CTA ("Töltsd ki a részletesebb
+  // tesztet") es a hozza tartozo routing (restartToDetailedQuiz) TELJESEN
+  // TOROLVE -- a Screening eredmenye mostantol onmagaban lezart vegpont,
+  // nincs "folytasd" gomb utana. A #scr-v2-sticky konteneren kivul semmi
+  // mas nem hasznalja -- a HTML/CSS is torolve, ld. jelentes a chatben.
   const scr2=document.getElementById('scr-v2');
-  const scr2sticky=document.getElementById('scr-v2-sticky');
   if(scr2)scr2.style.display='';
-  if(scr2sticky)scr2sticky.style.display='block'; // v2.4 bugfix: '' falls back to CSS display:none, never actually shows
 }
 
 // v2.3.3 FRISSITES (Mick kozvetlen visszajelzese a chatben): a korabbi
@@ -3634,39 +3667,9 @@ function scrFlagToSpecialty(f){
   const cat=SCR_LIKERT.find(c=>c.title===f.area);
   return cat?SCR_LIKERT_TO_SPECIALTY[cat.key]:null;
 }
-// v2.1: a Szűrés-Megelőzés eredményoldal CTA-ja erre mutat. Korábban (v2.0)
-// mindig a sima terület-választóra vitt vissza; most, ha volt jelzett
-// kategória, a LEGMAGASABB kockázatú (KIEMELT/hard, azaz 5-ös szintű)
-// jelzés szakterületét jelöli elő elsőként, a többi jelzett területet is
-// vele EGYÜTT (a meglévő, multi-területes qsym-renderelés natívan egy
-// képernyőn mutatja mindet, ld. goSymptoms()) — így a többi is kitölthető
-// anélkül, hogy vissza kéne menni a terület-választóhoz. Az alapadatok
-// (kor/nem/testsúly/magasság) a közös A objektumban ÚGYIS megmaradnak,
-// nem kell külön átadni. Ha nem volt jelzett kategória (pl. a "nincs jel"
-// ágról indították a CTA-t), nincs mire automatikusan ráállni — ekkor a
-// v2.0-s viselkedés marad: sima terület-választó, Screening levéve.
-function restartToDetailedQuiz(){
-  const flags=(SCR.flags||[]).slice().sort((a,b)=>(b.hard?1:0)-(a.hard?1:0));
-  const specialties=[];
-  flags.forEach(f=>{
-    const sp=scrFlagToSpecialty(f);
-    if(sp&&!specialties.includes(sp))specialties.push(sp);
-  });
-  if(specialties.length===0){
-    MULTI['terület']=(MULTI['terület']||[]).filter(t=>t!=='Szűrés-Megelőzés');
-    A['terület']=(MULTI['terület']||[]).join(', ');
-    const teruletBox=document.getElementById('teruletek');
-    if(teruletBox)teruletBox.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
-    go('s-quiz');
-    showQ(3);
-    return;
-  }
-  MULTI['terület']=specialties;
-  A['terület']=specialties.join(', ');
-  S.allapot='A';A.allapot='A';
-  go('s-quiz');
-  goSymptoms();
-}
+// v2.6.3 (Mick kerese): a korabbi "melyebb teszt" CTA es a hozza tartozo
+// restartToDetailedQuiz() routing-fuggveny TELJESEN TOROLVE -- a Screening
+// eredmenye onmagaban lezart vegpont, nincs tovabb-navigalo gomb utana.
 
 // ══════════════════════════════════════════════════════════════
 //  v2.2 — panasz-alapú eredményoldal-redesign segédfüggvényei.
@@ -3986,8 +3989,14 @@ function renderAiReport(d,partners){
   }
 }
 function downloadReportPdf(){
-  // Kliens-oldali, funkcionális megoldás valódi PDF-generáló backend
-  // nélkül: a böngésző natív nyomtatás→PDF mentése.
+  // Kliens-oldali, funkcionalis megoldas valodi PDF-generalo backend
+  // nelkul: a bongeszo nativ nyomtatas->PDF mentese -- pontosan azt
+  // exportalja, amit a felhasznalo a kepernyon lat, nincs kulon sablon.
+  // v2.6.3: a korabbi "szetesett elrendezes / kek atlatszatlan blokk"
+  // hiba oka az volt, hogy NEM VOLT @media print szabaly a fajlban -- a
+  // fixed fejlec/hatter/sticky-CTA minden nyomtatott oldalon ujra
+  // megjelent es atfedte a tartalmat. Ld. a @media print blokkot a
+  // <style>-ban, ami ezt javitja -- ez a fuggveny valtozatlan maradt.
   window.print();
 }
 function shareReportWithDoctor(){
@@ -4153,7 +4162,7 @@ if(typeof window!=='undefined'){
     isScreeningFlow,computeBMI,computeScreeningFlags,computeScreeningBand,computeTudtadE,rfPick,
     RISK_NUMBER_RE,stripNumericRisk,sanitizeResultNumbers,
     buildScreeningPrompt,goScreeningAlap,scrWizRender,scrWizGoto,scrWizManualNext,scrWizRfGate,
-    scrLikertPick,scrBetegsegPick,restartToDetailedQuiz,scrCheckOptionalSkips,
+    scrLikertPick,scrBetegsegPick,scrCheckOptionalSkips,
     renderResult,restart,submit,goSymptoms,showQ,
     computePreventionTips,SCR_PREVENTION_TIPS,SCR_HERO_AREA_PHRASE,SCR_LIKERT_TO_SPECIALTY,scrFlagToSpecialty,
     illustrativeStats,sortPartnersBy,MK_STATE,MK_SORT_TABS,renderMarketplace,mkSetSort,
