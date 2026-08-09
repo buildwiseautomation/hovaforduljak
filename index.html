@@ -35,18 +35,18 @@
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
 
-/* AMBIENT -- v2.6.1 polish (Mick kifejezett kerese, 2. kor: az elozo
-   verzio TUL halvany volt, alig lathato -- mostantol tudatosan erzekelheto,
-   lassan pulzalo/lebego ket Digital Blue (--accent) folt a hatterben,
-   hogy a felulet ne legyen "unalmas". Meg mindig visszafogott (nincs
-   tobb szin, nincs eles kontraszt, nincs villogas-szeru gyors valtas --
-   csak lassu, meditativ pulzalas+sodrodas), de mostantol tenylegesen
-   eszreveheto. `prefers-reduced-motion`-nel teljesen le is all. */
+/* AMBIENT -- v2.6.2 polish (Mick 3. visszajelzese: MEG MINDIG nem lathato
+   -- ket korabbi kisebb novelesi kiserlet sem volt eleg). Ezuttal
+   tudatosan NAGY, kozponti, jol lathato, lassan sodrodo/pulzalo Digital
+   Blue ("liquid glass") foltok -- nagyobb meret, kozelebb a lathato
+   terulet kozepehez (nem csak a sarokban, ahol nagy resze levagodik),
+   magasabb alap-opacitas, nagy blur a lagy "folyekony" hataskeltéshez.
+   `prefers-reduced-motion`-nel teljesen le is all. */
 .amb{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.amb::before{content:'';position:absolute;top:-15%;left:-10%;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle,rgba(47,111,237,0.16) 0%,transparent 68%);filter:blur(6px);animation:a1 16s ease-in-out infinite alternate}
-.amb::after{content:'';position:absolute;bottom:-15%;right:-10%;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(47,111,237,0.11) 0%,transparent 70%);filter:blur(6px);animation:a2 20s ease-in-out infinite alternate}
-@keyframes a1{0%{transform:translate(0,0) scale(1);opacity:.7}50%{opacity:1}100%{transform:translate(90px,60px) scale(1.25);opacity:.7}}
-@keyframes a2{0%{transform:translate(0,0) scale(1.08);opacity:.6}50%{opacity:1}100%{transform:translate(-70px,-50px) scale(.9);opacity:.6}}
+.amb::before{content:'';position:absolute;top:-5%;left:-5%;width:820px;height:820px;border-radius:50%;background:radial-gradient(circle,rgba(47,111,237,0.38) 0%,rgba(47,111,237,0.14) 45%,transparent 72%);filter:blur(40px);animation:a1 14s ease-in-out infinite alternate}
+.amb::after{content:'';position:absolute;bottom:-10%;right:-8%;width:680px;height:680px;border-radius:50%;background:radial-gradient(circle,rgba(22,191,200,0.28) 0%,rgba(47,111,237,0.12) 45%,transparent 72%);filter:blur(40px);animation:a2 18s ease-in-out infinite alternate}
+@keyframes a1{0%{transform:translate(0,0) scale(1);opacity:.75}50%{transform:translate(60px,90px) scale(1.15);opacity:1}100%{transform:translate(130px,40px) scale(1.3);opacity:.75}}
+@keyframes a2{0%{transform:translate(0,0) scale(1.05);opacity:.65}50%{transform:translate(-70px,-60px) scale(.95);opacity:1}100%{transform:translate(-140px,-30px) scale(.85);opacity:.65}}
 @media(prefers-reduced-motion:reduce){.amb::before,.amb::after{animation:none}}
 
 /* NAV */
@@ -656,14 +656,14 @@ html, body {
    (frosted glass) szellel -- visszafogott, nem hivalkodo, csak a nyomas
    pillanataig tart (transition .12s), utana visszaall. */
 .btn-p:active {
-  background: rgba(47, 111, 237, .2);
+  background: rgba(47, 111, 237, .22);
   color: var(--accent2);
-  backdrop-filter: blur(8px) saturate(160%);
-  -webkit-backdrop-filter: blur(8px) saturate(160%);
-  border: 1px solid rgba(47, 111, 237, .35);
-  box-shadow: none;
+  backdrop-filter: blur(10px) saturate(170%);
+  -webkit-backdrop-filter: blur(10px) saturate(170%);
+  border: 1px solid rgba(47, 111, 237, .4);
+  box-shadow: 0 0 28px 6px rgba(47, 111, 237, .4);
   transform: scale(.97);
-  transition: background .12s, transform .12s, color .12s;
+  transition: background .12s, transform .12s, color .12s, box-shadow .12s;
 }
 
 .btn-p:focus-visible,
@@ -689,13 +689,14 @@ html, body {
 }
 
 .btn-s:active {
-  background: rgba(47, 111, 237, .12);
-  border-color: rgba(47, 111, 237, .35);
+  background: rgba(47, 111, 237, .2);
+  border-color: rgba(47, 111, 237, .4);
   color: var(--accent2);
-  backdrop-filter: blur(8px) saturate(160%);
-  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  backdrop-filter: blur(10px) saturate(170%);
+  -webkit-backdrop-filter: blur(10px) saturate(170%);
+  box-shadow: 0 0 24px 5px rgba(47, 111, 237, .32);
   transform: scale(.97);
-  transition: background .12s, transform .12s, color .12s;
+  transition: background .12s, transform .12s, color .12s, box-shadow .12s;
 }
 
 .stats {
@@ -826,19 +827,21 @@ html, body {
   transform: none;
 }
 
-/* v2.6.1 polish (Mick kifejezett kerese, 2. kor): kivalasztaskor ES
-   megnyomaskor is lathato, "uveges" kek fenyles -- nem csak egy vekony
-   szeloldali csik, mint korabban. A szoveg (--text, kozel-fekete)
-   valtozatlan szinu marad, igy vilagos kek attetszo hatteren is jol
-   olvashato. */
+/* v2.6.2 polish (Mick 3. visszajelzese: meg mindig alig latszott a
+   kivalasztott/megnyomott allapot). Most a TELJES hatter halvanyan, de
+   egyertelmuen kek szinre valt (nem csak egy vekony csik), a szoveg
+   (--text, kozel-fekete) valtozatlan szinu marad rajta -- vilagos kek
+   attetszo hatteren tovabbra is jol olvashato a kontraszt miatt -- a
+   szelek pedig lagy, "homalyos" fenyudvart (blur-oztt box-shadow glow-t)
+   kapnak kemeny szegely helyett, ez adja a folyekony-uveges hatast. */
 .opt.sel,
 .sym-opt.sel,
 .sev-btn.sel {
-  background: rgba(47, 111, 237, .16);
-  border-color: var(--accent);
-  box-shadow: inset 3px 0 0 var(--accent), 0 0 0 1px rgba(47, 111, 237, .15), 0 6px 18px rgba(47, 111, 237, .22);
-  backdrop-filter: blur(6px) saturate(160%);
-  -webkit-backdrop-filter: blur(6px) saturate(160%);
+  background: rgba(47, 111, 237, .26);
+  border-color: rgba(47, 111, 237, .4);
+  box-shadow: 0 0 0 1px rgba(47, 111, 237, .18), 0 0 26px 6px rgba(47, 111, 237, .38);
+  backdrop-filter: blur(8px) saturate(170%);
+  -webkit-backdrop-filter: blur(8px) saturate(170%);
   color: var(--text);
 }
 
@@ -850,12 +853,13 @@ html, body {
 .opt:active,
 .sym-opt:active,
 .sev-btn:active {
-  background: rgba(47, 111, 237, .2);
-  border-color: var(--accent);
-  backdrop-filter: blur(8px) saturate(160%);
-  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  background: rgba(47, 111, 237, .34);
+  border-color: rgba(47, 111, 237, .5);
+  box-shadow: 0 0 0 1px rgba(47, 111, 237, .22), 0 0 32px 8px rgba(47, 111, 237, .45);
+  backdrop-filter: blur(10px) saturate(170%);
+  -webkit-backdrop-filter: blur(10px) saturate(170%);
   transform: scale(.98);
-  transition: background .1s, transform .1s;
+  transition: background .1s, transform .1s, box-shadow .1s;
 }
 
 .oi {
