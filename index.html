@@ -60,6 +60,28 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Manrop
 .scr{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;padding-top:92px;position:relative}
 .scr.on{display:flex}
 .wrap{position:relative;z-index:1;width:100%;max-width:660px}
+/* v2.6.4 (Mick + Kozma Peter valos desktop/16:9 screenshotja alapjan
+   javitott bug): a panasz-alapu (9 szakterulet) eredmenyoldal orvos-
+   first marketplace szekcioja (.mk-layout, 3 oszlopos grid: 200px
+   szuro-sav + rugalmas lista + 220px 'miert ez az ajanlas' oldalsav)
+   korabban a szoveges tartalomnak keszult keskeny .wrap-en (max-width:
+   660px) BELUL kapott helyet. A .mk-layout @media(max-width:900px)
+   szabalya a VALODI bongeszo-ablak szelesseget nezi, nem a szulo .wrap
+   szelesseget -- igy minden 900px-nel szelesebb kepernyon (gyakorlatilag
+   MINDEN laptop/desktop, pl. a jellemzo 16:9 formatumu monitorok) a
+   3 oszlopos elrendezes probalt megjelenni, de csak 660px allt
+   rendelkezesre -- a lista-oszlopnak igy kb. 200px vagy meg kevesebb
+   maradt, az orvos-kartyak (avatar+nev+szakterulet+cimke+ar) emiatt
+   szethullottak/egymasra csusztak. Uj, kulon .mk-wrap konteiner a
+   marketplace szekcionak SAJAT, sokkal szelesebb (max 1080px) helyet
+   ad, fuggetlenul a tobbi (cimke/osszegzes/AI-magyarazat) szoveges
+   tartalom olvashato 660px-es oszlopatol -- ld. a HTML-ben, hogy csak a
+   marketplace resz koré kerul. A position:relative;z-index:1 szandekosan
+   ugyanaz, mint a .wrap-en: enelkul a .amb dekorativ hatterelem (pozi-
+   cionalt, z-index:0) a nem-pozicionalt tartalom FOLE festodne a CSS
+   stacking-szabalyok szerint (ld. a korabbi PDF-export @media print
+   javitas jegyzeteit ugyanerrol a jelensegrol). */
+.mk-wrap{position:relative;z-index:1;width:100%;max-width:1080px}
 
 /* LANDING */
 #s-land{padding-top:72px}
@@ -1697,6 +1719,13 @@ input[type=range]::-webkit-slider-thumb {
       </div>
     </div>
 
+  </div>
+  <!-- v2.6.4: a marketplace szekcio SAJAT, szelesebb konteinerben (.mk-wrap,
+       max-width:1080px) -- nem a szoveges tartalom keskeny .wrap-jeben (660px)
+       -- ld. CSS jegyzet a fajl elejen. Csak ezt a szekciot erinti, minden mas
+       (cim/osszegzes/AI-magyarazat/trust-footer) a korabbi keskeny .wrap-ben
+       marad, olvashatosag miatt. -->
+  <div class="mk-wrap">
     <!-- v2.2: orvos-first találati lista (marketplace) — csak panasz-alapú
          területeken; Screeningnél az egyszerű #r-partners-section marad. -->
     <div id="r-marketplace-section" style="display:none">
@@ -1715,6 +1744,8 @@ input[type=range]::-webkit-slider-thumb {
       </div>
       <div id="medsoulyou-booking-mk"></div>
     </div>
+  </div>
+  <div class="wrap">
 
     <div class="sec-lbl">Miért ezek az ajánlások?</div>
     <div class="ai-box">
