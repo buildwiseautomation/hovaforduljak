@@ -1943,40 +1943,64 @@ const PDATA = {
     // jelentes a chatben) -- doc:'Barta Beatrix' -> a doc-card orvos-first
     // megjelenest kapja (nev elsodleges, MedSoulYou masodlagos), NEM tobbe
     // 'adategyeztetes alatt' placeholder.
-    {nm:'MedSoulYou',doc:'Barta Beatrix',sp:'Pszichológia',ic:'💫',tags:['Stresszkezelés','Szorongás','Pszichológia'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Klinikai pszichológus a MedSoulYou csapatában, stresszkezelésre és szorongásra specializálódva.'},
+    {nm:'MedSoulYou',doc:'Barta Beatrix',sp:'Pszichológia',ic:'💫',tags:['Stresszkezelés','Szorongás','Pszichológia'],pct:98,top:true,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Klinikai pszichológus a MedSoulYou csapatában, stresszkezelésre és szorongásra specializálódva.'},
     // v2.4: tovabbi 3 valos MedSoulYou pszichologus (Mick kozvetlen chat-uzenetebol,
     // a 9-szakterulet reskin feladat reszekent). Pontos alspecializaciojukrol Mick
     // nem adott reszletet, ezert a tags mezo szandekosan altalanos ('Pszichologia'),
     // hogy ne fabrikaljunk konkret szakteruletet, amit nem tudunk.
-    {nm:'MedSoulYou',doc:'Herendi Kata',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:97,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
-    {nm:'MedSoulYou',doc:'Makrai-Szécsi Dóra',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:96,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
-    {nm:'MedSoulYou',doc:'Vancskó Anna',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:95,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
-    {nm:'Budai Pszichológus Központ',sp:'Klinikai pszichológia · Kognitív terápia',ic:'🧠',tags:['Szorongás','Depresszió','KBT','Online is'],pct:96,top:false,region:'1',addr:'1104 Budapest, VI. Andrássy út 63.',tel:'+36 1 428 3286',hours:'H–P: 8:00–18:00'},
-    {nm:'Dr. Varga Éva',sp:'Pszichiáter · Magánrendelő',ic:'💊',tags:['Gyógyszeres kezelés','Burnout','Pánikroham'],pct:87,top:false,region:'1',addr:'1119 Budapest, III. Bécsi út 109.',tel:'+36 1 232 1488',hours:'H–P: 8:00–18:00'},
-    {nm:'MindSpace Terápia',sp:'Egyéni és páros terápia',ic:'💬',tags:['Önismeret','Párkapcsolat','Online is'],pct:81,top:false,region:'1',addr:'1138 Budapest, XIII. Váci út 155.',tel:'+36 1 227 4257',hours:'H–P: 9:00–19:00'},
-    {nm:'Miskolc Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'3',addr:'3525 Miskolc, Petőfi Sándor utca 12.',tel:'+36 46 420 315',hours:'H–P: 8:00–17:00'},
-    {nm:'Debrecen Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'4',addr:'4025 Debrecen, Petőfi Sándor utca 12.',tel:'+36 52 420 315',hours:'H–P: 8:00–17:00'},
-    {nm:'Szolnok Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'5',addr:'5000 Szolnok, Petőfi Sándor utca 12.',tel:'+36 56 420 315',hours:'H–P: 8:00–17:00'},
-    {nm:'Szeged Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'6',addr:'6720 Szeged, Petőfi Sándor utca 12.',tel:'+36 62 420 315',hours:'H–P: 8:00–17:00'},
-    {nm:'Pécs Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'7',addr:'7621 Pécs, Petőfi Sándor utca 12.',tel:'+36 72 420 315',hours:'H–P: 8:00–17:00'},
-    {nm:'Székesfehérvár Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'8',addr:'8000 Székesfehérvár, Petőfi Sándor utca 12.',tel:'+36 22 420 315',hours:'H–P: 8:00–17:00'},
-    {nm:'Győr Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'9',addr:'9021 Győr, Petőfi Sándor utca 12.',tel:'+36 96 420 315',hours:'H–P: 8:00–17:00'}
+    {nm:'MedSoulYou',doc:'Herendi Kata',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:97,top:false,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
+    {nm:'MedSoulYou',doc:'Makrai-Szécsi Dóra',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:96,top:false,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
+    {nm:'MedSoulYou',doc:'Vancskó Anna',sp:'Pszichológia',ic:'💫',tags:['Pszichológia'],pct:95,top:false,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Pszichológus a MedSoulYou csapatában.'},
+    {nm:'Budai Pszichológus Központ',sp:'Klinikai pszichológia · Kognitív terápia',ic:'🧠',tags:['Szorongás','Depresszió','KBT','Online is'],pct:96,top:false,region:'BU',addr:'1104 Budapest, VI. Andrássy út 63.',tel:'+36 1 428 3286',hours:'H–P: 8:00–18:00'},
+    {nm:'Dr. Varga Éva',sp:'Pszichiáter · Magánrendelő',ic:'💊',tags:['Gyógyszeres kezelés','Burnout','Pánikroham'],pct:87,top:false,region:'BU',addr:'1119 Budapest, III. Bécsi út 109.',tel:'+36 1 232 1488',hours:'H–P: 8:00–18:00'},
+    {nm:'MindSpace Terápia',sp:'Egyéni és páros terápia',ic:'💬',tags:['Önismeret','Párkapcsolat','Online is'],pct:81,top:false,region:'BU',addr:'1138 Budapest, XIII. Váci út 155.',tel:'+36 1 227 4257',hours:'H–P: 9:00–19:00'},
+    {nm:'Miskolc Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'BZ',addr:'3525 Miskolc, Petőfi Sándor utca 12.',tel:'+36 46 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Debrecen Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'HB',addr:'4025 Debrecen, Petőfi Sándor utca 12.',tel:'+36 52 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Szolnok Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'JN',addr:'5000 Szolnok, Petőfi Sándor utca 12.',tel:'+36 56 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Szeged Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'CS',addr:'6720 Szeged, Petőfi Sándor utca 12.',tel:'+36 62 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Pécs Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'BA',addr:'7621 Pécs, Petőfi Sándor utca 12.',tel:'+36 72 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Székesfehérvár Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'FE',addr:'8000 Székesfehérvár, Petőfi Sándor utca 12.',tel:'+36 22 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Győr Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'GY',addr:'9021 Győr, Petőfi Sándor utca 12.',tel:'+36 96 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Érd Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'PE',addr:'2030 Érd, Petőfi Sándor utca 12.',tel:'+36 23 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Tatabánya Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'KE',addr:'2800 Tatabánya, Petőfi Sándor utca 12.',tel:'+36 34 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Eger Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'HE',addr:'3300 Eger, Petőfi Sándor utca 12.',tel:'+36 36 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Salgótarján Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'NO',addr:'3100 Salgótarján, Petőfi Sándor utca 12.',tel:'+36 32 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Nyíregyháza Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'SZ',addr:'4400 Nyíregyháza, Petőfi Sándor utca 12.',tel:'+36 42 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Békéscsaba Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'BE',addr:'5600 Békéscsaba, Petőfi Sándor utca 12.',tel:'+36 66 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Kecskemét Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'BK',addr:'6000 Kecskemét, Petőfi Sándor utca 12.',tel:'+36 76 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Szekszárd Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'TO',addr:'7100 Szekszárd, Petőfi Sándor utca 12.',tel:'+36 74 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Kaposvár Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'SO',addr:'7400 Kaposvár, Petőfi Sándor utca 12.',tel:'+36 82 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Veszprém Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'VE',addr:'8200 Veszprém, Petőfi Sándor utca 12.',tel:'+36 88 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Zalaegerszeg Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'ZA',addr:'8900 Zalaegerszeg, Petőfi Sándor utca 12.',tel:'+36 92 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Szombathely Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'VA',addr:'9700 Szombathely, Petőfi Sándor utca 12.',tel:'+36 94 420 315',hours:'H–P: 8:00–17:00'}
   ],
   // v2.3.2: Mick explicit jelezte, hogy Alvashoz jelenleg NINCS relevans
   // MedSoulYou-s szakember -- a regi 'MedSoulYou (adategyeztetes alatt)'
   // placeholder-bejegyzes ezert eltavolitva, nem eroltetjuk be. Az elso
   // (illusztrativ) minta-partner marad a lista elejen.
   'Alvás': [
-    {nm:'SleepWell Alvásdiagnosztika',sp:'Alváscentrum · Poligráfia',ic:'🌙',tags:['Alvászavar','Apnoe','Horkolás'],pct:95,top:false,region:'1',addr:'1179 Budapest, XIII. Váci út 72.',tel:'+36 1 206 3615',hours:'H–P: 9:00–19:00'},
-    {nm:'Dr. Molnár Zsófia',sp:'Neurológus · Alvásspecialista',ic:'⚡',tags:['Inszomnia','Alvásterápia'],pct:88,top:false,region:'1',addr:'1142 Budapest, VII. Király utca 56.',tel:'+36 1 981 6514',hours:'H–P: 8:00–18:00'},
-    {nm:'Budai Egészségközpont',sp:'Általános kivizsgálás + alvás',ic:'🏥',tags:['Komplex szűrés','Labor'],pct:76,top:false,region:'1',addr:'1161 Budapest, VI. Andrássy út 92.',tel:'+36 1 552 5333',hours:'H–P: 8:00–18:00'},
-    {nm:'Miskolc Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'3',addr:'3525 Miskolc, Petőfi Sándor utca 12.',tel:'+36 46 420 315',hours:'H–P: 8:00–17:00'},
-    {nm:'Debrecen Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'4',addr:'4025 Debrecen, Petőfi Sándor utca 12.',tel:'+36 52 420 315',hours:'H–P: 8:00–17:00'},
-    {nm:'Szolnok Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'5',addr:'5000 Szolnok, Petőfi Sándor utca 12.',tel:'+36 56 420 315',hours:'H–P: 8:00–17:00'},
-    {nm:'Szeged Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'6',addr:'6720 Szeged, Petőfi Sándor utca 12.',tel:'+36 62 420 315',hours:'H–P: 8:00–17:00'},
-    {nm:'Pécs Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'7',addr:'7621 Pécs, Petőfi Sándor utca 12.',tel:'+36 72 420 315',hours:'H–P: 8:00–17:00'},
-    {nm:'Székesfehérvár Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'8',addr:'8000 Székesfehérvár, Petőfi Sándor utca 12.',tel:'+36 22 420 315',hours:'H–P: 8:00–17:00'},
-    {nm:'Győr Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'9',addr:'9021 Győr, Petőfi Sándor utca 12.',tel:'+36 96 420 315',hours:'H–P: 8:00–17:00'}
+    {nm:'SleepWell Alvásdiagnosztika',sp:'Alváscentrum · Poligráfia',ic:'🌙',tags:['Alvászavar','Apnoe','Horkolás'],pct:95,top:false,region:'BU',addr:'1179 Budapest, XIII. Váci út 72.',tel:'+36 1 206 3615',hours:'H–P: 9:00–19:00'},
+    {nm:'Dr. Molnár Zsófia',sp:'Neurológus · Alvásspecialista',ic:'⚡',tags:['Inszomnia','Alvásterápia'],pct:88,top:false,region:'BU',addr:'1142 Budapest, VII. Király utca 56.',tel:'+36 1 981 6514',hours:'H–P: 8:00–18:00'},
+    {nm:'Budai Egészségközpont',sp:'Általános kivizsgálás + alvás',ic:'🏥',tags:['Komplex szűrés','Labor'],pct:76,top:false,region:'BU',addr:'1161 Budapest, VI. Andrássy út 92.',tel:'+36 1 552 5333',hours:'H–P: 8:00–18:00'},
+    {nm:'Miskolc Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'BZ',addr:'3525 Miskolc, Petőfi Sándor utca 12.',tel:'+36 46 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Debrecen Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'HB',addr:'4025 Debrecen, Petőfi Sándor utca 12.',tel:'+36 52 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Szolnok Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'JN',addr:'5000 Szolnok, Petőfi Sándor utca 12.',tel:'+36 56 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Szeged Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'CS',addr:'6720 Szeged, Petőfi Sándor utca 12.',tel:'+36 62 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Pécs Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'BA',addr:'7621 Pécs, Petőfi Sándor utca 12.',tel:'+36 72 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Székesfehérvár Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'FE',addr:'8000 Székesfehérvár, Petőfi Sándor utca 12.',tel:'+36 22 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Győr Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'GY',addr:'9021 Győr, Petőfi Sándor utca 12.',tel:'+36 96 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Érd Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'PE',addr:'2030 Érd, Petőfi Sándor utca 12.',tel:'+36 23 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Tatabánya Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'KE',addr:'2800 Tatabánya, Petőfi Sándor utca 12.',tel:'+36 34 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Eger Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'HE',addr:'3300 Eger, Petőfi Sándor utca 12.',tel:'+36 36 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Salgótarján Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'NO',addr:'3100 Salgótarján, Petőfi Sándor utca 12.',tel:'+36 32 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Nyíregyháza Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'SZ',addr:'4400 Nyíregyháza, Petőfi Sándor utca 12.',tel:'+36 42 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Békéscsaba Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'BE',addr:'5600 Békéscsaba, Petőfi Sándor utca 12.',tel:'+36 66 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Kecskemét Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'BK',addr:'6000 Kecskemét, Petőfi Sándor utca 12.',tel:'+36 76 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Szekszárd Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'TO',addr:'7100 Szekszárd, Petőfi Sándor utca 12.',tel:'+36 74 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Kaposvár Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'SO',addr:'7400 Kaposvár, Petőfi Sándor utca 12.',tel:'+36 82 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Veszprém Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'VE',addr:'8200 Veszprém, Petőfi Sándor utca 12.',tel:'+36 88 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Zalaegerszeg Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'ZA',addr:'8900 Zalaegerszeg, Petőfi Sándor utca 12.',tel:'+36 92 420 315',hours:'H–P: 8:00–17:00'},
+    {nm:'Szombathely Mentálhigiénés Központ',sp:'Pszichológia · Alvásdiagnosztika',ic:'🧠',tags:['Szorongás','Alvászavar','Terápia'],pct:80,top:false,region:'VA',addr:'9700 Szombathely, Petőfi Sándor utca 12.',tel:'+36 94 420 315',hours:'H–P: 8:00–17:00'}
   ],
   // v2.3.3: harom valos MedSoulYou orvos (Mick kozvetlen chat-uzenetebol,
   // nem fabrikalt) -- ez a kategoria fogadja MOST MAR a Mozgas-jelzest is
@@ -1989,125 +2013,233 @@ const PDATA = {
   // nem tud sulyossag szerint kulon-kulon valasztani Mozgas es BMI kozott,
   // ezert mindharman szerepelnek, ez a sorrend -- ld. jelentes a chatben.
   'Anyagcsere-Hormonális': [
-    {nm:'MedSoulYou',doc:'Orosz-Tóth Árpád',sp:'Dietetika · Sportdietetika',ic:'💫',tags:['Dietoterápia','Táplálkozástan','Sportdietetika'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Dietetikus a MedSoulYou csapatában, dietoterápiára, táplálkozástanra és sportdietetikára specializálódva.'},
-    {nm:'MedSoulYou',doc:'Dr. Salánki Zsuzsanna',sp:'Belgyógyászat, Diabetológia, Endokrinológia',ic:'💫',tags:['Diabetológia','Endokrinológia','Anyagcsere-betegségek'],pct:96,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász-diabetológus, endokrinológus a MedSoulYou csapatában, anyagcsere-betegségekre specializálódva.'},
-    {nm:'MedSoulYou',doc:'Blatniczky Anna',sp:'Dietetika',ic:'💫',tags:['Dietetika'],pct:94,top:false,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Dietetikus a MedSoulYou csapatában.'},
-    {nm:'NutriBalance Klinika',sp:'Dietetika · Anyagcsere felmérés',ic:'⚗️',tags:['IR','Hormonális','Diéta'],pct:94,top:false,region:'1',addr:'1181 Budapest, XII. Alkotás utca 97.',tel:'+36 1 280 5803',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Dr. Kovács Petra',sp:'Endokrinológus · Magánrendelő',ic:'🔬',tags:['Pajzsmirigy','PCOS','Cukorbetegség'],pct:89,top:false,region:'1',addr:'1131 Budapest, VIII. Üllői út 12.',tel:'+36 1 877 4733',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Medicover Endokrinológia',sp:'Komplex hormon kivizsgálás',ic:'🏥',tags:['Labor','Ultrahang','Tanácsadás'],pct:82,top:false,region:'1',addr:'1233 Budapest, VI. Andrássy út 26.',tel:'+36 1 589 5554',hours:'H–P: 9:00–19:00'},
-    {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'3',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Debrecen Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'4',addr:'4025 Debrecen, Rákóczi út 8.',tel:'+36 52 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Szolnok Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'5',addr:'5000 Szolnok, Rákóczi út 8.',tel:'+36 56 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Szeged Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'6',addr:'6720 Szeged, Rákóczi út 8.',tel:'+36 62 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Pécs Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'7',addr:'7621 Pécs, Rákóczi út 8.',tel:'+36 72 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Székesfehérvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'8',addr:'8000 Székesfehérvár, Rákóczi út 8.',tel:'+36 22 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'9',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'}
+    {nm:'MedSoulYou',doc:'Orosz-Tóth Árpád',sp:'Dietetika · Sportdietetika',ic:'💫',tags:['Dietoterápia','Táplálkozástan','Sportdietetika'],pct:98,top:true,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Dietetikus a MedSoulYou csapatában, dietoterápiára, táplálkozástanra és sportdietetikára specializálódva.'},
+    {nm:'MedSoulYou',doc:'Dr. Salánki Zsuzsanna',sp:'Belgyógyászat, Diabetológia, Endokrinológia',ic:'💫',tags:['Diabetológia','Endokrinológia','Anyagcsere-betegségek'],pct:96,top:false,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász-diabetológus, endokrinológus a MedSoulYou csapatában, anyagcsere-betegségekre specializálódva.'},
+    {nm:'MedSoulYou',doc:'Blatniczky Anna',sp:'Dietetika',ic:'💫',tags:['Dietetika'],pct:94,top:false,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Dietetikus a MedSoulYou csapatában.'},
+    {nm:'NutriBalance Klinika',sp:'Dietetika · Anyagcsere felmérés',ic:'⚗️',tags:['IR','Hormonális','Diéta'],pct:94,top:false,region:'BU',addr:'1181 Budapest, XII. Alkotás utca 97.',tel:'+36 1 280 5803',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Dr. Kovács Petra',sp:'Endokrinológus · Magánrendelő',ic:'🔬',tags:['Pajzsmirigy','PCOS','Cukorbetegség'],pct:89,top:false,region:'BU',addr:'1131 Budapest, VIII. Üllői út 12.',tel:'+36 1 877 4733',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Medicover Endokrinológia',sp:'Komplex hormon kivizsgálás',ic:'🏥',tags:['Labor','Ultrahang','Tanácsadás'],pct:82,top:false,region:'BU',addr:'1233 Budapest, VI. Andrássy út 26.',tel:'+36 1 589 5554',hours:'H–P: 9:00–19:00'},
+    {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BZ',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'HB',addr:'4025 Debrecen, Rákóczi út 8.',tel:'+36 52 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'JN',addr:'5000 Szolnok, Rákóczi út 8.',tel:'+36 56 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'CS',addr:'6720 Szeged, Rákóczi út 8.',tel:'+36 62 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BA',addr:'7621 Pécs, Rákóczi út 8.',tel:'+36 72 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'FE',addr:'8000 Székesfehérvár, Rákóczi út 8.',tel:'+36 22 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'GY',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Érd Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'PE',addr:'2030 Érd, Rákóczi út 8.',tel:'+36 23 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Tatabánya Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'KE',addr:'2800 Tatabánya, Rákóczi út 8.',tel:'+36 34 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Eger Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'HE',addr:'3300 Eger, Rákóczi út 8.',tel:'+36 36 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Salgótarján Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'NO',addr:'3100 Salgótarján, Rákóczi út 8.',tel:'+36 32 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Nyíregyháza Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'SZ',addr:'4400 Nyíregyháza, Rákóczi út 8.',tel:'+36 42 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Békéscsaba Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BE',addr:'5600 Békéscsaba, Rákóczi út 8.',tel:'+36 66 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Kecskemét Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BK',addr:'6000 Kecskemét, Rákóczi út 8.',tel:'+36 76 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szekszárd Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'TO',addr:'7100 Szekszárd, Rákóczi út 8.',tel:'+36 74 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Kaposvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'SO',addr:'7400 Kaposvár, Rákóczi út 8.',tel:'+36 82 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Veszprém Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'VE',addr:'8200 Veszprém, Rákóczi út 8.',tel:'+36 88 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Zalaegerszeg Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'ZA',addr:'8900 Zalaegerszeg, Rákóczi út 8.',tel:'+36 92 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szombathely Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'VA',addr:'9700 Szombathely, Rákóczi út 8.',tel:'+36 94 505 190',hours:'H–P: 8:00–18:00'}
   ],
   'Mozgásszervi': [
-    {nm:'MedSoulYou',sp:'Gyógytorna, Fizioterápia · Állapotfelmérés',ic:'💫',tags:['Derékfájás','Ízületi panasz','Gyógytorna'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gyógytornász-fizioterapeuta szakértelem a mozgásszervi panaszok, sportsérülések és rehabilitáció kezelésére.'},
-    {nm:'Budapest Spine Center',sp:'Ortopédia · Gerincsebészet',ic:'🦴',tags:['Gerincbetegség','Rehabilitáció','Fizioterpia'],pct:95,top:false,region:'1',addr:'1125 Budapest, VII. Király utca 91.',tel:'+36 1 414 5374',hours:'H–P: 8:00–18:00'},
-    {nm:'ProSport Medicina',sp:'Sportmedicina · Fizioterápia',ic:'💪',tags:['Sport sérülés','Mozgásterápia','Izomzat'],pct:87,top:false,region:'1',addr:'1202 Budapest, VIII. Üllői út 137.',tel:'+36 1 946 5010',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'Dr. Fekete Péter',sp:'Reumatológus · Ízületi betegségek',ic:'🔩',tags:['Ízület','Arthritis','Gyulladás'],pct:80,top:false,region:'1',addr:'1164 Budapest, XII. Alkotás utca 164.',tel:'+36 1 904 4598',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'3',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'4',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'5',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'6',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'7',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'8',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'9',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'}
+    {nm:'MedSoulYou',sp:'Gyógytorna, Fizioterápia · Állapotfelmérés',ic:'💫',tags:['Derékfájás','Ízületi panasz','Gyógytorna'],pct:98,top:true,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gyógytornász-fizioterapeuta szakértelem a mozgásszervi panaszok, sportsérülések és rehabilitáció kezelésére.'},
+    {nm:'Budapest Spine Center',sp:'Ortopédia · Gerincsebészet',ic:'🦴',tags:['Gerincbetegség','Rehabilitáció','Fizioterpia'],pct:95,top:false,region:'BU',addr:'1125 Budapest, VII. Király utca 91.',tel:'+36 1 414 5374',hours:'H–P: 8:00–18:00'},
+    {nm:'ProSport Medicina',sp:'Sportmedicina · Fizioterápia',ic:'💪',tags:['Sport sérülés','Mozgásterápia','Izomzat'],pct:87,top:false,region:'BU',addr:'1202 Budapest, VIII. Üllői út 137.',tel:'+36 1 946 5010',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Dr. Fekete Péter',sp:'Reumatológus · Ízületi betegségek',ic:'🔩',tags:['Ízület','Arthritis','Gyulladás'],pct:80,top:false,region:'BU',addr:'1164 Budapest, XII. Alkotás utca 164.',tel:'+36 1 904 4598',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BZ',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'HB',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'JN',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'CS',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BA',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'FE',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'GY',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Érd Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'PE',addr:'2030 Érd, Kossuth Lajos utca 24.',tel:'+36 23 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Tatabánya Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'KE',addr:'2800 Tatabánya, Kossuth Lajos utca 24.',tel:'+36 34 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Eger Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'HE',addr:'3300 Eger, Kossuth Lajos utca 24.',tel:'+36 36 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Salgótarján Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'NO',addr:'3100 Salgótarján, Kossuth Lajos utca 24.',tel:'+36 32 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Nyíregyháza Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'SZ',addr:'4400 Nyíregyháza, Kossuth Lajos utca 24.',tel:'+36 42 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Békéscsaba Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BE',addr:'5600 Békéscsaba, Kossuth Lajos utca 24.',tel:'+36 66 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Kecskemét Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BK',addr:'6000 Kecskemét, Kossuth Lajos utca 24.',tel:'+36 76 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szekszárd Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'TO',addr:'7100 Szekszárd, Kossuth Lajos utca 24.',tel:'+36 74 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Kaposvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'SO',addr:'7400 Kaposvár, Kossuth Lajos utca 24.',tel:'+36 82 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Veszprém Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'VE',addr:'8200 Veszprém, Kossuth Lajos utca 24.',tel:'+36 88 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Zalaegerszeg Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'ZA',addr:'8900 Zalaegerszeg, Kossuth Lajos utca 24.',tel:'+36 92 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szombathely Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'VA',addr:'9700 Szombathely, Kossuth Lajos utca 24.',tel:'+36 94 310 220',hours:'H–P: 8:00–18:00'}
   ],
   'Gyomor-bél': [
-    {nm:'MedSoulYou',doc:'Dr. Mályi Kata',sp:'Gasztroenterológia',ic:'💫',tags:['Reflux','Puffadás','IBS','SIBO'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gasztroenterológus a MedSoulYou csapatában, a puffadás, reflux, IBS és egyéb emésztőrendszeri panaszok valódi kiváltó okának feltárására specializálódva.'},
-    {nm:'Gasztro Centrum Budapest',sp:'Gasztroenterológia · Endoszkópia',ic:'🫃',tags:['Reflux','IBS','Intoleranciák'],pct:94,top:false,region:'1',addr:'1130 Budapest, V. Váci utca 81.',tel:'+36 1 610 5386',hours:'H–P: 8:00–18:00'},
-    {nm:'Dr. Horváth Gábor',sp:'Belgyógyász · Emésztőrendszer',ic:'🩺',tags:['Emésztési zavar','Puffadás','Colon'],pct:86,top:false,region:'1',addr:'1195 Budapest, XIII. Váci út 55.',tel:'+36 1 871 9179',hours:'H–P: 9:00–19:00'},
-    {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Labor','Intolerancia teszt','H. pylori'],pct:78,top:false,region:'1',addr:'1124 Budapest, XII. Alkotás utca 36.',tel:'+36 1 452 9830',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'3',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'4',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'5',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'6',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'7',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'8',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'9',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'}
+    {nm:'MedSoulYou',doc:'Dr. Mályi Kata',sp:'Gasztroenterológia',ic:'💫',tags:['Reflux','Puffadás','IBS','SIBO'],pct:98,top:true,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gasztroenterológus a MedSoulYou csapatában, a puffadás, reflux, IBS és egyéb emésztőrendszeri panaszok valódi kiváltó okának feltárására specializálódva.'},
+    {nm:'Gasztro Centrum Budapest',sp:'Gasztroenterológia · Endoszkópia',ic:'🫃',tags:['Reflux','IBS','Intoleranciák'],pct:94,top:false,region:'BU',addr:'1130 Budapest, V. Váci utca 81.',tel:'+36 1 610 5386',hours:'H–P: 8:00–18:00'},
+    {nm:'Dr. Horváth Gábor',sp:'Belgyógyász · Emésztőrendszer',ic:'🩺',tags:['Emésztési zavar','Puffadás','Colon'],pct:86,top:false,region:'BU',addr:'1195 Budapest, XIII. Váci út 55.',tel:'+36 1 871 9179',hours:'H–P: 9:00–19:00'},
+    {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Labor','Intolerancia teszt','H. pylori'],pct:78,top:false,region:'BU',addr:'1124 Budapest, XII. Alkotás utca 36.',tel:'+36 1 452 9830',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BZ',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'HB',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'JN',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'CS',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BA',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'FE',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'GY',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Érd Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'PE',addr:'2030 Érd, Kossuth Lajos utca 24.',tel:'+36 23 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Tatabánya Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'KE',addr:'2800 Tatabánya, Kossuth Lajos utca 24.',tel:'+36 34 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Eger Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'HE',addr:'3300 Eger, Kossuth Lajos utca 24.',tel:'+36 36 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Salgótarján Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'NO',addr:'3100 Salgótarján, Kossuth Lajos utca 24.',tel:'+36 32 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Nyíregyháza Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'SZ',addr:'4400 Nyíregyháza, Kossuth Lajos utca 24.',tel:'+36 42 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Békéscsaba Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BE',addr:'5600 Békéscsaba, Kossuth Lajos utca 24.',tel:'+36 66 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Kecskemét Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BK',addr:'6000 Kecskemét, Kossuth Lajos utca 24.',tel:'+36 76 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szekszárd Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'TO',addr:'7100 Szekszárd, Kossuth Lajos utca 24.',tel:'+36 74 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Kaposvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'SO',addr:'7400 Kaposvár, Kossuth Lajos utca 24.',tel:'+36 82 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Veszprém Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'VE',addr:'8200 Veszprém, Kossuth Lajos utca 24.',tel:'+36 88 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Zalaegerszeg Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'ZA',addr:'8900 Zalaegerszeg, Kossuth Lajos utca 24.',tel:'+36 92 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szombathely Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'VA',addr:'9700 Szombathely, Kossuth Lajos utca 24.',tel:'+36 94 310 220',hours:'H–P: 8:00–18:00'}
   ],
   'Szív és keringés': [
-    {nm:'MedSoulYou',sp:'Belgyógyászat · EKG, teljes állapotfelmérés',ic:'💫',tags:['Mellkasi fájdalom','Magas vérnyomás','Komplex kivizsgálás'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász szakorvosi vizsgálat, EKG és laborháttér egy helyen — a mellkasi panaszok és vérnyomásproblémák valós okának feltárására.'},
-    {nm:'Kardio Centrum Budapest',sp:'Kardiológia · Non-invazív diagnosztika',ic:'❤️',tags:['EKG','Echokardiográfia','Holter'],pct:96,top:false,region:'1',addr:'1169 Budapest, VIII. Üllői út 103.',tel:'+36 1 570 4593',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'Dr. Szabó András',sp:'Kardiológus · Magánrendelő',ic:'🫀',tags:['Vérnyomás','Ritmuszavar','Terheléses EKG'],pct:89,top:false,region:'1',addr:'1171 Budapest, III. Bécsi út 13.',tel:'+36 1 312 3504',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'Medicover Kardiológia',sp:'Komplex szív kivizsgálás',ic:'🏥',tags:['Teljes szűrés','Labor','Képalkotó'],pct:83,top:false,region:'1',addr:'1191 Budapest, IX. Ferenc körút 99.',tel:'+36 1 590 8668',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'3',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'4',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'5',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'6',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'7',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'8',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'9',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'}
+    {nm:'MedSoulYou',sp:'Belgyógyászat · EKG, teljes állapotfelmérés',ic:'💫',tags:['Mellkasi fájdalom','Magas vérnyomás','Komplex kivizsgálás'],pct:98,top:true,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász szakorvosi vizsgálat, EKG és laborháttér egy helyen — a mellkasi panaszok és vérnyomásproblémák valós okának feltárására.'},
+    {nm:'Kardio Centrum Budapest',sp:'Kardiológia · Non-invazív diagnosztika',ic:'❤️',tags:['EKG','Echokardiográfia','Holter'],pct:96,top:false,region:'BU',addr:'1169 Budapest, VIII. Üllői út 103.',tel:'+36 1 570 4593',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Dr. Szabó András',sp:'Kardiológus · Magánrendelő',ic:'🫀',tags:['Vérnyomás','Ritmuszavar','Terheléses EKG'],pct:89,top:false,region:'BU',addr:'1171 Budapest, III. Bécsi út 13.',tel:'+36 1 312 3504',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Medicover Kardiológia',sp:'Komplex szív kivizsgálás',ic:'🏥',tags:['Teljes szűrés','Labor','Képalkotó'],pct:83,top:false,region:'BU',addr:'1191 Budapest, IX. Ferenc körút 99.',tel:'+36 1 590 8668',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BZ',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'HB',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'JN',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'CS',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BA',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'FE',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'GY',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Érd Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'PE',addr:'2030 Érd, Kossuth Lajos utca 24.',tel:'+36 23 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Tatabánya Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'KE',addr:'2800 Tatabánya, Kossuth Lajos utca 24.',tel:'+36 34 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Eger Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'HE',addr:'3300 Eger, Kossuth Lajos utca 24.',tel:'+36 36 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Salgótarján Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'NO',addr:'3100 Salgótarján, Kossuth Lajos utca 24.',tel:'+36 32 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Nyíregyháza Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'SZ',addr:'4400 Nyíregyháza, Kossuth Lajos utca 24.',tel:'+36 42 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Békéscsaba Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BE',addr:'5600 Békéscsaba, Kossuth Lajos utca 24.',tel:'+36 66 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Kecskemét Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BK',addr:'6000 Kecskemét, Kossuth Lajos utca 24.',tel:'+36 76 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szekszárd Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'TO',addr:'7100 Szekszárd, Kossuth Lajos utca 24.',tel:'+36 74 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Kaposvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'SO',addr:'7400 Kaposvár, Kossuth Lajos utca 24.',tel:'+36 82 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Veszprém Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'VE',addr:'8200 Veszprém, Kossuth Lajos utca 24.',tel:'+36 88 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Zalaegerszeg Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'ZA',addr:'8900 Zalaegerszeg, Kossuth Lajos utca 24.',tel:'+36 92 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szombathely Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'VA',addr:'9700 Szombathely, Kossuth Lajos utca 24.',tel:'+36 94 310 220',hours:'H–P: 8:00–18:00'}
   ],
   'Légzőszervi': [
-    {nm:'Tüdő Centrum Budapest',sp:'Pulmonológia · Légzésfunkció',ic:'🫁',tags:['Asztma','Allergia','Spirometria'],pct:93,top:true,region:'1',addr:'1230 Budapest, III. Bécsi út 175.',tel:'+36 1 938 2876',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Dr. Nagy Katalin',sp:'Allergológus · Immunológus',ic:'🌿',tags:['Allergia','Szénanátha','Immunterápia'],pct:87,top:false,region:'1',addr:'1114 Budapest, VII. Király utca 112.',tel:'+36 1 361 8433',hours:'H–P: 8:00–18:00'},
-    {nm:'Fül-orr-gégészeti Centrum',sp:'ENT · Légúti betegségek',ic:'👃',tags:['Orrmelléküregek','Horkolás','Alvási apnoe'],pct:79,top:false,region:'1',addr:'1182 Budapest, XI. Bartók Béla út 130.',tel:'+36 1 308 5889',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'3',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Debrecen Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'4',addr:'4025 Debrecen, Rákóczi út 8.',tel:'+36 52 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Szolnok Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'5',addr:'5000 Szolnok, Rákóczi út 8.',tel:'+36 56 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Szeged Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'6',addr:'6720 Szeged, Rákóczi út 8.',tel:'+36 62 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Pécs Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'7',addr:'7621 Pécs, Rákóczi út 8.',tel:'+36 72 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Székesfehérvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'8',addr:'8000 Székesfehérvár, Rákóczi út 8.',tel:'+36 22 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'9',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'}
+    {nm:'Tüdő Centrum Budapest',sp:'Pulmonológia · Légzésfunkció',ic:'🫁',tags:['Asztma','Allergia','Spirometria'],pct:93,top:true,region:'BU',addr:'1230 Budapest, III. Bécsi út 175.',tel:'+36 1 938 2876',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Dr. Nagy Katalin',sp:'Allergológus · Immunológus',ic:'🌿',tags:['Allergia','Szénanátha','Immunterápia'],pct:87,top:false,region:'BU',addr:'1114 Budapest, VII. Király utca 112.',tel:'+36 1 361 8433',hours:'H–P: 8:00–18:00'},
+    {nm:'Fül-orr-gégészeti Centrum',sp:'ENT · Légúti betegségek',ic:'👃',tags:['Orrmelléküregek','Horkolás','Alvási apnoe'],pct:79,top:false,region:'BU',addr:'1182 Budapest, XI. Bartók Béla út 130.',tel:'+36 1 308 5889',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BZ',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'HB',addr:'4025 Debrecen, Rákóczi út 8.',tel:'+36 52 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'JN',addr:'5000 Szolnok, Rákóczi út 8.',tel:'+36 56 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'CS',addr:'6720 Szeged, Rákóczi út 8.',tel:'+36 62 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BA',addr:'7621 Pécs, Rákóczi út 8.',tel:'+36 72 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'FE',addr:'8000 Székesfehérvár, Rákóczi út 8.',tel:'+36 22 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'GY',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Érd Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'PE',addr:'2030 Érd, Rákóczi út 8.',tel:'+36 23 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Tatabánya Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'KE',addr:'2800 Tatabánya, Rákóczi út 8.',tel:'+36 34 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Eger Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'HE',addr:'3300 Eger, Rákóczi út 8.',tel:'+36 36 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Salgótarján Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'NO',addr:'3100 Salgótarján, Rákóczi út 8.',tel:'+36 32 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Nyíregyháza Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'SZ',addr:'4400 Nyíregyháza, Rákóczi út 8.',tel:'+36 42 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Békéscsaba Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BE',addr:'5600 Békéscsaba, Rákóczi út 8.',tel:'+36 66 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Kecskemét Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BK',addr:'6000 Kecskemét, Rákóczi út 8.',tel:'+36 76 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szekszárd Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'TO',addr:'7100 Szekszárd, Rákóczi út 8.',tel:'+36 74 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Kaposvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'SO',addr:'7400 Kaposvár, Rákóczi út 8.',tel:'+36 82 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Veszprém Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'VE',addr:'8200 Veszprém, Rákóczi út 8.',tel:'+36 88 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Zalaegerszeg Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'ZA',addr:'8900 Zalaegerszeg, Rákóczi út 8.',tel:'+36 92 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szombathely Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'VA',addr:'9700 Szombathely, Rákóczi út 8.',tel:'+36 94 505 190',hours:'H–P: 8:00–18:00'}
   ],
   'Neurológiai': [
-    {nm:'Neurológiai Centrum Budapest',sp:'Neurológia · Fejfájásambulancia',ic:'⚡',tags:['Migrén','Szédülés','Zsibbadás'],pct:94,top:true,region:'1',addr:'1152 Budapest, II. Margit körút 139.',tel:'+36 1 997 9689',hours:'H–P: 8:00–18:00'},
-    {nm:'Dr. Papp Erzsébet',sp:'Neurológus · Magánrendelő',ic:'🧬',tags:['Fejfájás','Memóriazavar','Idegrendszer'],pct:88,top:false,region:'1',addr:'1157 Budapest, VIII. Üllői út 5.',tel:'+36 1 314 6947',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'MRI Centrum Budapest',sp:'Neuroradiológia · Képalkotó',ic:'🔬',tags:['MRI','CT','Diagnosztika'],pct:80,top:false,region:'1',addr:'1103 Budapest, XIII. Váci út 146.',tel:'+36 1 280 2403',hours:'H–P: 9:00–19:00'},
-    {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'3',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Debrecen Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'4',addr:'4025 Debrecen, Rákóczi út 8.',tel:'+36 52 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Szolnok Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'5',addr:'5000 Szolnok, Rákóczi út 8.',tel:'+36 56 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Szeged Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'6',addr:'6720 Szeged, Rákóczi út 8.',tel:'+36 62 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Pécs Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'7',addr:'7621 Pécs, Rákóczi út 8.',tel:'+36 72 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Székesfehérvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'8',addr:'8000 Székesfehérvár, Rákóczi út 8.',tel:'+36 22 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'9',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'}
+    {nm:'Neurológiai Centrum Budapest',sp:'Neurológia · Fejfájásambulancia',ic:'⚡',tags:['Migrén','Szédülés','Zsibbadás'],pct:94,top:true,region:'BU',addr:'1152 Budapest, II. Margit körút 139.',tel:'+36 1 997 9689',hours:'H–P: 8:00–18:00'},
+    {nm:'Dr. Papp Erzsébet',sp:'Neurológus · Magánrendelő',ic:'🧬',tags:['Fejfájás','Memóriazavar','Idegrendszer'],pct:88,top:false,region:'BU',addr:'1157 Budapest, VIII. Üllői út 5.',tel:'+36 1 314 6947',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'MRI Centrum Budapest',sp:'Neuroradiológia · Képalkotó',ic:'🔬',tags:['MRI','CT','Diagnosztika'],pct:80,top:false,region:'BU',addr:'1103 Budapest, XIII. Váci út 146.',tel:'+36 1 280 2403',hours:'H–P: 9:00–19:00'},
+    {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BZ',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'HB',addr:'4025 Debrecen, Rákóczi út 8.',tel:'+36 52 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'JN',addr:'5000 Szolnok, Rákóczi út 8.',tel:'+36 56 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'CS',addr:'6720 Szeged, Rákóczi út 8.',tel:'+36 62 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BA',addr:'7621 Pécs, Rákóczi út 8.',tel:'+36 72 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'FE',addr:'8000 Székesfehérvár, Rákóczi út 8.',tel:'+36 22 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'GY',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Érd Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'PE',addr:'2030 Érd, Rákóczi út 8.',tel:'+36 23 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Tatabánya Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'KE',addr:'2800 Tatabánya, Rákóczi út 8.',tel:'+36 34 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Eger Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'HE',addr:'3300 Eger, Rákóczi út 8.',tel:'+36 36 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Salgótarján Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'NO',addr:'3100 Salgótarján, Rákóczi út 8.',tel:'+36 32 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Nyíregyháza Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'SZ',addr:'4400 Nyíregyháza, Rákóczi út 8.',tel:'+36 42 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Békéscsaba Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BE',addr:'5600 Békéscsaba, Rákóczi út 8.',tel:'+36 66 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Kecskemét Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BK',addr:'6000 Kecskemét, Rákóczi út 8.',tel:'+36 76 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szekszárd Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'TO',addr:'7100 Szekszárd, Rákóczi út 8.',tel:'+36 74 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Kaposvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'SO',addr:'7400 Kaposvár, Rákóczi út 8.',tel:'+36 82 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Veszprém Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'VE',addr:'8200 Veszprém, Rákóczi út 8.',tel:'+36 88 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Zalaegerszeg Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'ZA',addr:'8900 Zalaegerszeg, Rákóczi út 8.',tel:'+36 92 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szombathely Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'VA',addr:'9700 Szombathely, Rákóczi út 8.',tel:'+36 94 505 190',hours:'H–P: 8:00–18:00'}
   ],
   'Bőr-Haj': [
     // v2.4: Dr. Salanki Zsuzsanna mar szerepel az Anyagcsere-Hormonalis kategorianal
     // (endokrinologia/diabetologia), Mick szerint bőrgyógyászatot is ellat -- ezert
     // itt kulon, bőrgyógyászati kontextusban is felvesszuk (ugyanaz a szemely, ket
     // relevans szakterulet, ld. jelentes a chatben).
-    {nm:'MedSoulYou',doc:'Dr. Salánki Zsuzsanna',sp:'Bőrgyógyászat',ic:'💫',tags:['Bőrgyógyászat'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász-diabetológus, endokrinológus a MedSoulYou csapatában, bőrgyógyászati vonatkozású panaszokban is.'},
-    {nm:'Bőrgyógyászati Magánrendelő',sp:'Dermatológia · Esztétikai bőrgyógyászat',ic:'✨',tags:['Akne','Psoriasis','Hajhullás'],pct:93,top:false,region:'1',addr:'1228 Budapest, VI. Andrássy út 33.',tel:'+36 1 331 8787',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'Dr. Lakatos Mária',sp:'Bőrgyógyász · Trichológus',ic:'💇',tags:['Hajhullás','Bőrbetegségek','Hormonális akne'],pct:87,top:false,region:'1',addr:'1189 Budapest, XI. Bartók Béla út 109.',tel:'+36 1 416 9835',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'SkinLab Budapest',sp:'Endokrinológia + Bőrgyógyászat',ic:'🔬',tags:['Hormonális összefüggés','Labor','Komplex'],pct:81,top:false,region:'1',addr:'1165 Budapest, XI. Bartók Béla út 113.',tel:'+36 1 729 8397',hours:'H–P: 8:00–18:00'},
-    {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'3',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Debrecen Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'4',addr:'4025 Debrecen, Rákóczi út 8.',tel:'+36 52 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Szolnok Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'5',addr:'5000 Szolnok, Rákóczi út 8.',tel:'+36 56 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Szeged Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'6',addr:'6720 Szeged, Rákóczi út 8.',tel:'+36 62 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Pécs Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'7',addr:'7621 Pécs, Rákóczi út 8.',tel:'+36 72 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Székesfehérvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'8',addr:'8000 Székesfehérvár, Rákóczi út 8.',tel:'+36 22 505 190',hours:'H–P: 8:00–18:00'},
-    {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'9',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'}
+    {nm:'MedSoulYou',doc:'Dr. Salánki Zsuzsanna',sp:'Bőrgyógyászat',ic:'💫',tags:['Bőrgyógyászat'],pct:98,top:true,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász-diabetológus, endokrinológus a MedSoulYou csapatában, bőrgyógyászati vonatkozású panaszokban is.'},
+    {nm:'Bőrgyógyászati Magánrendelő',sp:'Dermatológia · Esztétikai bőrgyógyászat',ic:'✨',tags:['Akne','Psoriasis','Hajhullás'],pct:93,top:false,region:'BU',addr:'1228 Budapest, VI. Andrássy út 33.',tel:'+36 1 331 8787',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Dr. Lakatos Mária',sp:'Bőrgyógyász · Trichológus',ic:'💇',tags:['Hajhullás','Bőrbetegségek','Hormonális akne'],pct:87,top:false,region:'BU',addr:'1189 Budapest, XI. Bartók Béla út 109.',tel:'+36 1 416 9835',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'SkinLab Budapest',sp:'Endokrinológia + Bőrgyógyászat',ic:'🔬',tags:['Hormonális összefüggés','Labor','Komplex'],pct:81,top:false,region:'BU',addr:'1165 Budapest, XI. Bartók Béla út 113.',tel:'+36 1 729 8397',hours:'H–P: 8:00–18:00'},
+    {nm:'Miskolc Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BZ',addr:'3525 Miskolc, Rákóczi út 8.',tel:'+36 46 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'HB',addr:'4025 Debrecen, Rákóczi út 8.',tel:'+36 52 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'JN',addr:'5000 Szolnok, Rákóczi út 8.',tel:'+36 56 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'CS',addr:'6720 Szeged, Rákóczi út 8.',tel:'+36 62 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BA',addr:'7621 Pécs, Rákóczi út 8.',tel:'+36 72 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'FE',addr:'8000 Székesfehérvár, Rákóczi út 8.',tel:'+36 22 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'GY',addr:'9021 Győr, Rákóczi út 8.',tel:'+36 96 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Érd Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'PE',addr:'2030 Érd, Rákóczi út 8.',tel:'+36 23 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Tatabánya Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'KE',addr:'2800 Tatabánya, Rákóczi út 8.',tel:'+36 34 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Eger Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'HE',addr:'3300 Eger, Rákóczi út 8.',tel:'+36 36 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Salgótarján Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'NO',addr:'3100 Salgótarján, Rákóczi út 8.',tel:'+36 32 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Nyíregyháza Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'SZ',addr:'4400 Nyíregyháza, Rákóczi út 8.',tel:'+36 42 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Békéscsaba Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BE',addr:'5600 Békéscsaba, Rákóczi út 8.',tel:'+36 66 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Kecskemét Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'BK',addr:'6000 Kecskemét, Rákóczi út 8.',tel:'+36 76 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szekszárd Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'TO',addr:'7100 Szekszárd, Rákóczi út 8.',tel:'+36 74 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Kaposvár Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'SO',addr:'7400 Kaposvár, Rákóczi út 8.',tel:'+36 82 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Veszprém Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'VE',addr:'8200 Veszprém, Rákóczi út 8.',tel:'+36 88 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Zalaegerszeg Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'ZA',addr:'8900 Zalaegerszeg, Rákóczi út 8.',tel:'+36 92 505 190',hours:'H–P: 8:00–18:00'},
+    {nm:'Szombathely Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'VA',addr:'9700 Szombathely, Rákóczi út 8.',tel:'+36 94 505 190',hours:'H–P: 8:00–18:00'}
   ],
   'Szűrés-Megelőzés': [
-    {nm:'MedSoulYou',sp:'Teljes körű állapotfelmérés · Orvosi + pszichológiai',ic:'💫',tags:['Teljes állapotfelmérés','Labor','Prevenció'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'A MedSoulYou állapotfelmérése kérdőívet, labort, fizikai és pszichológiai vizsgálatot egyesít — a legátfogóbb kép a jelenlegi állapotodról.'},
-    {nm:'Medicover Szűrőprogram',sp:'Komplex prevenciós vizsgálat',ic:'🔬',tags:['Teljes labor','Képalkotó','Szívszűrés'],pct:97,top:false,region:'1',addr:'1131 Budapest, XIII. Váci út 87.',tel:'+36 1 221 4770',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Vérkép','Tumormarker','Hormon panel'],pct:91,top:false,region:'1',addr:'1110 Budapest, V. Váci utca 59.',tel:'+36 1 269 1514',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Duna Medical Center',sp:'Prevenciós egészségcsomag',ic:'🏥',tags:['Komplex szűrés','Szakorvos'],pct:84,top:false,region:'1',addr:'1183 Budapest, VI. Andrássy út 72.',tel:'+36 1 885 8953',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
-    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'3',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'4',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'5',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'6',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'7',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'8',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'9',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'}
+    {nm:'MedSoulYou',sp:'Teljes körű állapotfelmérés · Orvosi + pszichológiai',ic:'💫',tags:['Teljes állapotfelmérés','Labor','Prevenció'],pct:98,top:true,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'A MedSoulYou állapotfelmérése kérdőívet, labort, fizikai és pszichológiai vizsgálatot egyesít — a legátfogóbb kép a jelenlegi állapotodról.'},
+    {nm:'Medicover Szűrőprogram',sp:'Komplex prevenciós vizsgálat',ic:'🔬',tags:['Teljes labor','Képalkotó','Szívszűrés'],pct:97,top:false,region:'BU',addr:'1131 Budapest, XIII. Váci út 87.',tel:'+36 1 221 4770',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Vérkép','Tumormarker','Hormon panel'],pct:91,top:false,region:'BU',addr:'1110 Budapest, V. Váci utca 59.',tel:'+36 1 269 1514',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Duna Medical Center',sp:'Prevenciós egészségcsomag',ic:'🏥',tags:['Komplex szűrés','Szakorvos'],pct:84,top:false,region:'BU',addr:'1183 Budapest, VI. Andrássy út 72.',tel:'+36 1 885 8953',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
+    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BZ',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'HB',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'JN',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'CS',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BA',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'FE',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'GY',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Érd Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'PE',addr:'2030 Érd, Kossuth Lajos utca 24.',tel:'+36 23 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Tatabánya Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'KE',addr:'2800 Tatabánya, Kossuth Lajos utca 24.',tel:'+36 34 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Eger Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'HE',addr:'3300 Eger, Kossuth Lajos utca 24.',tel:'+36 36 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Salgótarján Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'NO',addr:'3100 Salgótarján, Kossuth Lajos utca 24.',tel:'+36 32 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Nyíregyháza Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'SZ',addr:'4400 Nyíregyháza, Kossuth Lajos utca 24.',tel:'+36 42 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Békéscsaba Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BE',addr:'5600 Békéscsaba, Kossuth Lajos utca 24.',tel:'+36 66 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Kecskemét Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BK',addr:'6000 Kecskemét, Kossuth Lajos utca 24.',tel:'+36 76 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szekszárd Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'TO',addr:'7100 Szekszárd, Kossuth Lajos utca 24.',tel:'+36 74 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Kaposvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'SO',addr:'7400 Kaposvár, Kossuth Lajos utca 24.',tel:'+36 82 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Veszprém Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'VE',addr:'8200 Veszprém, Kossuth Lajos utca 24.',tel:'+36 88 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Zalaegerszeg Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'ZA',addr:'8900 Zalaegerszeg, Kossuth Lajos utca 24.',tel:'+36 92 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szombathely Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'VA',addr:'9700 Szombathely, Kossuth Lajos utca 24.',tel:'+36 94 310 220',hours:'H–P: 8:00–18:00'}
   ],
   'default': [
-    {nm:'MedSoulYou',sp:'Orvosi és pszichológiai csapat · Állapotfelmérés',ic:'💫',tags:['Teljes állapotfelmérés','Irányítás','Komplex'],pct:98,top:true,real:true,region:'1',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Amikor nem egyértelmű merre indulj, a MedSoulYou átfogó állapotfelmérése segít feltárni a valódi okokat és a legjobb következő lépést.'},
-    {nm:'Budai Egészségközpont',sp:'Általános belgyógyász · Irányítás',ic:'🏥',tags:['Általános kivizsgálás','Irányítás','Labor'],pct:92,top:false,region:'1',addr:'1129 Budapest, III. Bécsi út 148.',tel:'+36 1 684 4981',hours:'H–P: 9:00–19:00'},
-    {nm:'Medicover Diagnosztika',sp:'Komplex szűrőcsomag',ic:'🔬',tags:['Teljes szűrés','Labor','Képalkotó'],pct:86,top:false,region:'1',addr:'1131 Budapest, IX. Ferenc körút 25.',tel:'+36 1 874 8062',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
-    {nm:'Dr. Balogh István',sp:'Belgyógyász · Általános orvostan',ic:'🩺',tags:['Panaszok tisztázása','Irányítás'],pct:79,top:false,region:'1',addr:'1167 Budapest, IX. Ferenc körút 14.',tel:'+36 1 889 2612',hours:'H–P: 8:00–18:00'},
-    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'3',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'4',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'5',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'6',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'7',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'8',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
-    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'9',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'}
+    {nm:'MedSoulYou',sp:'Orvosi és pszichológiai csapat · Állapotfelmérés',ic:'💫',tags:['Teljes állapotfelmérés','Irányítás','Komplex'],pct:98,top:true,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Amikor nem egyértelmű merre indulj, a MedSoulYou átfogó állapotfelmérése segít feltárni a valódi okokat és a legjobb következő lépést.'},
+    {nm:'Budai Egészségközpont',sp:'Általános belgyógyász · Irányítás',ic:'🏥',tags:['Általános kivizsgálás','Irányítás','Labor'],pct:92,top:false,region:'BU',addr:'1129 Budapest, III. Bécsi út 148.',tel:'+36 1 684 4981',hours:'H–P: 9:00–19:00'},
+    {nm:'Medicover Diagnosztika',sp:'Komplex szűrőcsomag',ic:'🔬',tags:['Teljes szűrés','Labor','Képalkotó'],pct:86,top:false,region:'BU',addr:'1131 Budapest, IX. Ferenc körút 25.',tel:'+36 1 874 8062',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
+    {nm:'Dr. Balogh István',sp:'Belgyógyász · Általános orvostan',ic:'🩺',tags:['Panaszok tisztázása','Irányítás'],pct:79,top:false,region:'BU',addr:'1167 Budapest, IX. Ferenc körút 14.',tel:'+36 1 889 2612',hours:'H–P: 8:00–18:00'},
+    {nm:'Miskolc Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BZ',addr:'3525 Miskolc, Kossuth Lajos utca 24.',tel:'+36 46 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Debrecen Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'HB',addr:'4025 Debrecen, Kossuth Lajos utca 24.',tel:'+36 52 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szolnok Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'JN',addr:'5000 Szolnok, Kossuth Lajos utca 24.',tel:'+36 56 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szeged Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'CS',addr:'6720 Szeged, Kossuth Lajos utca 24.',tel:'+36 62 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Pécs Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BA',addr:'7621 Pécs, Kossuth Lajos utca 24.',tel:'+36 72 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Székesfehérvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'FE',addr:'8000 Székesfehérvár, Kossuth Lajos utca 24.',tel:'+36 22 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Győr Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'GY',addr:'9021 Győr, Kossuth Lajos utca 24.',tel:'+36 96 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Érd Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'PE',addr:'2030 Érd, Kossuth Lajos utca 24.',tel:'+36 23 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Tatabánya Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'KE',addr:'2800 Tatabánya, Kossuth Lajos utca 24.',tel:'+36 34 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Eger Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'HE',addr:'3300 Eger, Kossuth Lajos utca 24.',tel:'+36 36 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Salgótarján Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'NO',addr:'3100 Salgótarján, Kossuth Lajos utca 24.',tel:'+36 32 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Nyíregyháza Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'SZ',addr:'4400 Nyíregyháza, Kossuth Lajos utca 24.',tel:'+36 42 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Békéscsaba Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BE',addr:'5600 Békéscsaba, Kossuth Lajos utca 24.',tel:'+36 66 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Kecskemét Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'BK',addr:'6000 Kecskemét, Kossuth Lajos utca 24.',tel:'+36 76 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szekszárd Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'TO',addr:'7100 Szekszárd, Kossuth Lajos utca 24.',tel:'+36 74 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Kaposvár Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'SO',addr:'7400 Kaposvár, Kossuth Lajos utca 24.',tel:'+36 82 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Veszprém Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'VE',addr:'8200 Veszprém, Kossuth Lajos utca 24.',tel:'+36 88 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Zalaegerszeg Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'ZA',addr:'8900 Zalaegerszeg, Kossuth Lajos utca 24.',tel:'+36 92 310 220',hours:'H–P: 8:00–18:00'},
+    {nm:'Szombathely Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'VA',addr:'9700 Szombathely, Kossuth Lajos utca 24.',tel:'+36 94 310 220',hours:'H–P: 8:00–18:00'}
   ]
 };
 
@@ -3113,14 +3245,46 @@ Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy m
 }
 
 // ── Régió-felismerés irányítószám alapján (kemény, kódszintű ellenőrzés) ──
+// v2.9 (Mick jelzése): a korábbi, csak az irányítószám ELSŐ számjegyén
+// alapuló 9-régiós rendszer több megyét egy kalap alá vett (pl. Veszprém,
+// Fejér és Zala megye mind a "8"-as régióba esett) -- ez az irányítószám
+// ELSŐ KÉT számjegye alapján a mind a 19 megyét + Budapestet külön
+// megkülönbözteti. A pontos megyehatárok néhány irányítószám-tartománynál
+// (pl. Balaton-parti települések) nem esnek egybe tökéletesen a
+// tartományokkal -- ez egy jóhiszemű közelítés, nem hivatalos megyei
+// irányítószám-nyilvántartás.
+const REGION_PREFIX_RANGES=[
+  [10,12,'BU'],[20,27,'PE'],[28,29,'KE'],[30,30,'HE'],[31,31,'NO'],[32,32,'HE'],[33,33,'HE'],
+  [34,39,'BZ'],[40,42,'HB'],[43,49,'SZ'],[50,54,'JN'],[55,59,'BE'],[60,65,'BK'],[66,69,'CS'],
+  [70,73,'TO'],[74,75,'SO'],[76,79,'BA'],[80,81,'FE'],[82,85,'VE'],[86,87,'SO'],[88,89,'ZA'],
+  [90,95,'GY'],[96,99,'VA'],
+];
+// v2.9: a REGIONS szövege szándékosan NEM tartalmazza a "térsége" szót --
+// a loc-banner szövegsablonjai ("...alapján ${region} térségéből...") ezt
+// már maguktól hozzáfűzik, hogy ne legyen kétszer kimondva ("...Veszprém
+// megye (Veszprém térsége) térségéből...").
 const REGIONS={
-  '1':'Budapest','2':'Pest megye (Budapest környéke)','3':'Észak-Magyarország (Miskolc térsége)',
-  '4':'Debrecen / Hajdú-Bihar térsége','5':'Szolnok / Jász-Nagykun-Szolnok térsége','6':'Szeged / Csongrád térsége',
-  '7':'Pécs / Baranya térsége','8':'Veszprém / Székesfehérvár / Zalaegerszeg térsége','9':'Győr / Sopron térsége'
+  BU:'Budapest',PE:'Pest megye (Érd)',KE:'Komárom-Esztergom megye (Tatabánya)',
+  HE:'Heves megye (Eger)',NO:'Nógrád megye (Salgótarján)',
+  BZ:'Borsod-Abaúj-Zemplén megye (Miskolc)',HB:'Hajdú-Bihar megye (Debrecen)',
+  SZ:'Szabolcs-Szatmár-Bereg megye (Nyíregyháza)',JN:'Jász-Nagykun-Szolnok megye (Szolnok)',
+  BE:'Békés megye (Békéscsaba)',BK:'Bács-Kiskun megye (Kecskemét)',
+  CS:'Csongrád-Csanád megye (Szeged)',TO:'Tolna megye (Szekszárd)',
+  SO:'Somogy megye (Kaposvár)',BA:'Baranya megye (Pécs)',
+  FE:'Fejér megye (Székesfehérvár)',VE:'Veszprém megye (Veszprém)',
+  ZA:'Zala megye (Zalaegerszeg)',GY:'Győr-Moson-Sopron megye (Győr)',
+  VA:'Vas megye (Szombathely)',
 };
+function getRegionCode(postal){
+  if(!postal||postal.length<2)return null;
+  const prefix=parseInt(postal.slice(0,2),10);
+  if(Number.isNaN(prefix))return null;
+  const hit=REGION_PREFIX_RANGES.find(([lo,hi])=>prefix>=lo&&prefix<=hi);
+  return hit?hit[2]:null;
+}
 function getRegion(postal){
-  if(!postal||postal.length<1)return null;
-  return REGIONS[postal[0]]||null;
+  const code=getRegionCode(postal);
+  return code?REGIONS[code]:null;
 }
 
 // ── Render result ──
@@ -3328,29 +3492,38 @@ function renderResult(d){
       partners=[partners[0],partners[1],secPick];
     }
 
-    // régió-tudatos rendezés: ha van megadott irányítószám és nem budapesti,
-    // a saját régiós találat kerüljön ELŐRE (teljes átállás, nem csak beszúrás)
-    const userRegion=(A.iranyitoszam||'').trim()[0]||null;
+    // régió-egyeztetés jelzéshez (a tényleges rendezést mostantól teljes
+    // egészében a sortPartnersBy() végzi el, régió-tudatosan -- ld. a
+    // "v2.7 BUGFIX" megjegyzést ott -- itt csak azt állapítjuk meg, hogy
+    // van-e egyáltalán regionális találat, a loc-banner szövegéhez, és a
+    // Screening 3-as sapkája elé mindenképp kerüljön be a regionális pick).
+    const userRegion=getRegionCode((A.iranyitoszam||'').trim());
     let regionMatchFound=false;
-    if(userRegion && userRegion!=='1'){
+    if(userRegion && userRegion!=='BU'){
       const regional=(PDATA[prim]||[]).find(p=>p.region===userRegion);
       if(regional){
         regionMatchFound=true;
-        // regionális találat előre, utána a valós/igazolt partner (akkor is ha távolabb van), majd a maradék
+        // regionális találat előre (a Screening 3-as sapkája ez elé nem vághat) -- a
+        // marketplace-en ez a sorrend úgyis csak kiindulópont, sortPartnersBy() a
+        // végleges régió-tudatos sorrendet állítja elő.
         const rest=partners.filter(p=>p.nm!==regional.nm);
-        partners=[regional, ...rest].slice(0,3);
+        partners=[regional, ...rest];
       }
     }
-    // v2.3.3 BUGFIX: ha se a masodlagos-kategoria-kombinacio, se a
-    // regio-egyeztetes nem futott le (ez a leggyakoribb eset -- pl. nincs
-    // AI-masodlagos szakterulet, vagy budapesti/hianyzo iranyitoszam), a
-    // `partners` addig a PDATA[prim] TELJES, nyers tombje maradt -- egyes
-    // kategorianal (pl. Mentális-Pszichés, Anyagcsere-Hormonális) ez akar
-    // 11 kartyat is jelentett a "van mire figyelni" doc-listaban, elrejtve
-    // a valos, nevvel ellatott orvos(oka)t a sok illusztrativ regionalis
-    // pelda kozott. Mindig max. 3-ra vagjuk, konzisztensen a fenti ket
-    // aggal (amik mar ugyis 3-ra vagtak).
-    partners=partners.slice(0,3);
+    // v2.3.3 BUGFIX (Screeningre változatlanul érvényes): ha se a
+    // masodlagos-kategoria-kombinacio, se a regio-egyeztetes nem futott le,
+    // a `partners` a PDATA[prim] TELJES, nyers tombje maradt -- a Screening
+    // egyszerű doc-listájában ez sok kártyát jelentett, elrejtve a valós,
+    // nevvel ellátott orvos(oka)t a sok illusztratív regionális példa
+    // között. A Screening-ágon ezért lentebb (isScr blokkban) MOSTANTOL IS
+    // max. 3-ra vágjuk.
+    // v2.9 (Mick jelzése, "fedjük le az egész országot"): a marketplace-ágon
+    // (nem Screening) viszont EZ a 3-as sapka volt az, ami miatt a most már
+    // 20 megyét lefedő regionális hálózatból a felhasználó gyakorlatilag
+    // csak 1-2 találatot látott -- ott ezért NEM vágjuk 3-ra, a teljes,
+    // régió-tudatosan rendezett listát adjuk át a marketplace-nek (a
+    // sortPartnersBy() már a helyes sorrendbe teszi, a legjobb+legközelebbi
+    // találat kerül elsőnek).
 
     // lokáció-őszinteség: kódszinten ellenőrizzük, nem az AI-ra bízzuk
     const locBannerTarget=isScr?'loc-banner':'loc-banner-mk';
@@ -3358,7 +3531,7 @@ function renderResult(d){
     const postal=(A.iranyitoszam||'').trim();
     let locBannerHtml='';
     let locNoteTextPlain='';
-    if(postal && postal[0]!=='1'){
+    if(postal && getRegionCode(postal)!=='BU'){
       const region=getRegion(postal)||'a megadott területen';
       if(regionMatchFound){
         locBannerHtml=`<div class="loc-banner"><span class="li">✓</span><span>A megadott irányítószám alapján <strong>${region}</strong> térségéből mutatjuk elsőként az ajánlást — a budapesti igazolt partnerünk (MedSoulYou) is elérhető, de távolabb esik. (A regionális ajánlás illusztratív, a hálózat bővülésével válik valódivá.)</span></div>`;
@@ -3385,6 +3558,11 @@ function renderResult(d){
       // partnereket.
       const pg=document.getElementById('r-partners');
       if(pg)pg.innerHTML='';
+      // v2.9: a Screening egyszerű doc-listája változatlanul max. 3
+      // találatot mutat (ld. v2.3.3 BUGFIX feljebb) -- csak itt vágjuk,
+      // hogy a fent már régió-tudatosan előre sorolt regionális pick
+      // biztosan bekerüljön.
+      partners=partners.slice(0,3);
       window.__partners=partners;
       // v2.3: a valos partner-tomb (partners) es a kod-szinten ellenorzott,
       // oszinte lokacio-szoveg (locNoteTextPlain) atadasa a mockup-alapu
@@ -3741,16 +3919,15 @@ function illustrativeStats(p){
 // egy támogató bizalmi jelzés marad (✓ badge), de nem írja felül a
 // közelséget. Valós geo-koordináta még nincs (a Medio telephely-adat
 // jelenleg lat/lng nélkül jön), ezért a "közelség" egyelőre az
-// irányítószám első számjegyéből számolt régiókód (getRegion/REGIONS)
-// egyezésén alapul -- ha nincs megadott irányítószám, Budapest marad az
+// irányítószám első KÉT számjegyéből számolt megyekódon (getRegionCode)
+// alapul -- ha nincs megadott irányítószám, Budapest marad az
 // alapértelmezett preferált régió, mert jelenleg ott van a ténylegesen
 // bekötött hálózat.
 function mkUserRegion(){
-  const z=(A.iranyitoszam||'').trim();
-  return z[0]||null;
+  return getRegionCode((A.iranyitoszam||'').trim());
 }
 function mkRegionTier(p,userRegion){
-  const target=userRegion||'1';
+  const target=userRegion||'BU';
   return p.region===target?0:1;
 }
 function sortPartnersBy(list,mode){
@@ -3875,7 +4052,7 @@ function mkRenderAll(){
       // élő (Medio API) ár esetén az ár-szűrő igazolt partnerre is vonatkozik
       if(p.price>MK_STATE.maxPriceHuf)return false;
     }
-    if(MK_STATE.maxDistance==='budapest'&&p.region&&p.region!=='1')return false;
+    if(MK_STATE.maxDistance==='budapest'&&p.region&&p.region!=='BU')return false;
     return true;
   });
 
@@ -4362,7 +4539,7 @@ if(typeof window!=='undefined'){
     A,MULTI,S,SCR,SEVITEMS,
     RED_FLAGS,SYMPTOMS,SCR_LIKERT,SCR_BETEGSEG_OPTS,FREQ_OPTS,
     CRISIS_WORDS,CRISIS_PATTERNS,foldHuCrisis,scanCrisis,
-    getRegion,REGIONS,PDATA,
+    getRegion,getRegionCode,REGIONS,REGION_PREFIX_RANGES,PDATA,
     isScreeningFlow,computeBMI,computeScreeningFlags,computeScreeningBand,computeTudtadE,rfPick,
     RISK_NUMBER_RE,stripNumericRisk,sanitizeResultNumbers,
     buildScreeningPrompt,goScreeningAlap,scrWizRender,scrWizGoto,scrWizManualNext,scrWizRfGate,
