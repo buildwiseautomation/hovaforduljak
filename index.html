@@ -2197,7 +2197,17 @@ const PDATA = {
     {nm:'Szombathely Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'VA',addr:'9700 Szombathely, Rákóczi út 8.',tel:'+36 94 505 190',hours:'H–P: 8:00–18:00'}
   ],
   'Szűrés-Megelőzés': [
-    {nm:'MedSoulYou',sp:'Teljes körű állapotfelmérés · Orvosi + pszichológiai',ic:'💫',tags:['Teljes állapotfelmérés','Labor','Prevenció'],pct:98,top:true,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'A MedSoulYou állapotfelmérése kérdőívet, labort, fizikai és pszichológiai vizsgálatot egyesít — a legátfogóbb kép a jelenlegi állapotodról.'},
+    // v2.9 (Mick jelzése): a Szűrés-Megelőzés kategória a legtöbb esetben
+    // NEM tudatos választás, hanem "fallback" -- akkor kerül ide valaki,
+    // ha KONKRÉT panasszal indult, de az AI nem tudta egyértelműen egy
+    // szűkebb szakterülethez kötni. Ilyenkor a drága, átfogó
+    // állapotfelmérési csomagot NEM szabad az "AI top ajánlásaként"
+    // feltüntetni (megtévesztő lenne, hiszen épp az a baj, hogy nem
+    // egyértelmű a kép) -- ezért alacsonyabb pct + noAutoTop:true, ami
+    // kiveszi a sortPartnersBy() 'match' módjának automatikus
+    // igazolt-partner-előnyéből (ld. ott a megjegyzést). Továbbra is
+    // látható és foglalható marad, csak nem tolakszik előre.
+    {nm:'MedSoulYou',sp:'Teljes körű állapotfelmérés · Orvosi + pszichológiai',ic:'💫',tags:['Teljes állapotfelmérés','Labor','Prevenció'],pct:74,real:true,noAutoTop:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'A MedSoulYou állapotfelmérése kérdőívet, labort, fizikai és pszichológiai vizsgálatot egyesít — a legátfogóbb kép a jelenlegi állapotodról.'},
     {nm:'Medicover Szűrőprogram',sp:'Komplex prevenciós vizsgálat',ic:'🔬',tags:['Teljes labor','Képalkotó','Szívszűrés'],pct:97,top:false,region:'BU',addr:'1131 Budapest, XIII. Váci út 87.',tel:'+36 1 221 4770',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
     {nm:'Synlab Budapest',sp:'Labordiagnosztika',ic:'🧪',tags:['Vérkép','Tumormarker','Hormon panel'],pct:91,top:false,region:'BU',addr:'1110 Budapest, V. Váci utca 59.',tel:'+36 1 269 1514',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
     {nm:'Duna Medical Center',sp:'Prevenciós egészségcsomag',ic:'🏥',tags:['Komplex szűrés','Szakorvos'],pct:84,top:false,region:'BU',addr:'1183 Budapest, VI. Andrássy út 72.',tel:'+36 1 885 8953',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
@@ -3962,8 +3972,14 @@ function sortPartnersBy(list,mode){
     }
     // 'match' módban az igazolt partner AZONOS régiós csoporton belül kap
     // enyhe előnyt (bizalmi jelzés), de a régió-egyezésen nem léphet át.
+    // v2.9 (Mick jelzése): a p.noAutoTop:true jelzésű bejegyzés (pl. a
+    // Szűrés-Megelőzés drága, átfogó csomagja, ami leggyakrabban egy
+    // bizonytalan AI-kategorizálás "fallback"-jaként jelenik meg, nem
+    // tudatos választásként) NEM kap automatikus igazolt-partner-előnyt --
+    // marad látható és foglalható, de a pct-je szerint versenyez a
+    // többivel, nem tolakszik az élre pusztán a "igazolt" jelzés miatt.
     if(mode==='match'){
-      const byRealBonus=(a.p.real?0:1)-(b.p.real?0:1);
+      const byRealBonus=((a.p.real&&!a.p.noAutoTop)?0:1)-((b.p.real&&!b.p.noAutoTop)?0:1);
       if(byRealBonus!==0)return byRealBonus;
     }
     const m=byModeMetric(a,b);
