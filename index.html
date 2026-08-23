@@ -313,7 +313,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .match-ring-caption strong{color:var(--text2)}
 .ai-metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0 4px}
 .ai-metric-box{background:var(--card2);border-radius:12px;padding:12px 14px;text-align:center}
-.ai-metric-val{font-family:'Manrope',sans-serif;font-weight:700;font-size:1rem;color:var(--text)}
+/* v2.9 (Mick jelzése, mobil screenshot): védőháló, hogy egy hibásan túl
+   hosszú AI-mező (pl. urgency_label mondattá hízva a rövid címke helyett)
+   se törhesse szét a 3-oszlopos csempesort egyenlőtlen magasságra -- a
+   promptban is javítva a gyökérok (ld. urgency_label instrukció), ez itt
+   a másodlagos, CSS-szintű biztosíték. */
+.ai-metric-val{font-family:'Manrope',sans-serif;font-weight:700;font-size:1rem;color:var(--text);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;word-break:break-word}
 .ai-metric-lbl{font-size:.68rem;color:var(--text3);margin-top:3px}
 .ai-causes{display:flex;flex-direction:column;gap:8px}
 .ai-cause-card{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--card2);border-radius:11px;padding:11px 14px}
@@ -3132,7 +3137,7 @@ Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy m
   "title": "Személyre szabott, 5-8 szavas cím, SOHA szám vagy százalék nélkül",
   "summary": "3-4 mondatos, empatikus, felfedező hangú összefoglaló a fenti ágnak megfelelően — szám és százalék nélkül",
   "urgency": "low|medium|high",
-  "urgency_label": "Magyar szöveg, pl. 'Nem sürgős, de érdemes megnézetni' — szám nélkül",
+  "urgency_label": "RÖVID, max. 2-4 szavas magyar címke egy statisztika-csempébe, pl. 'Nem sürgős', 'Érdemes megnézetni', 'Sürgős' — SOHA teljes mondat vagy magyarázat (azt az urgency_reason mező adja), szám nélkül",
   "urgency_reason": "1 mondatos magyarázat, szám és százalék nélkül",
   "profile_chips": [
     {"label": "Típus", "value": "pl. Kockázati tényező alapú felmérés"},
@@ -3202,7 +3207,7 @@ Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy m
   "title": "Személyre szabott, 5-8 szavas cím (pl. 'Mentális terhelés és alvásproblémák kombinációja')",
   "summary": "3-4 mondatos, empatikus összefoglaló. Tükrözd vissza mit hallottál, mutass rá a fő mintára. Emberi, természetes hang.",
   "urgency": "low|medium|high",
-  "urgency_label": "Magyar szöveg pl. 'Nem sürgős, de érdemes 2-4 héten belül lépni'",
+  "urgency_label": "RÖVID, max. 2-4 szavas magyar címke egy statisztika-csempébe, pl. 'Nem sürgős', 'Érdemes 2-4 héten belül lépni', 'Sürgős' — SOHA teljes mondat vagy klinikai részletezés (azt az urgency_reason mező adja)",
   "urgency_reason": "1 mondatos magyarázat miért pont ez az urgencia szint",
   "profile_chips": [
     {"label": "Panasz típusa", "value": "pl. Mentális + Alvás"},
