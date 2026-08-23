@@ -1,12 +1,12 @@
 // api/medsoulyou-doctors.js
 //
-// GET /api/medsoulyou-doctors?category=Bőr-Haj
+// GET /api/medsoulyou-doctors?category=Mentális-Pszichés
 //
 // Visszaadja az adott HovaForduljak belépési területhez a medio-mapping.json
 // alapján ténylegesen bekötött Medio-orvosokat, élő árral (Services -
 // "Querying services with amounts" végpont) és telephely-adattal. Ha az adott
-// területhez nincs beállítva Medio-azonosító, "available: false"-t ad vissza
-// — a frontend ilyenkor a meglévő statikus/illusztratív adatnál marad.
+// területhez nincs beállítva Medio-azonosító (üres tömb), "available: false"-t
+// ad vissza — a frontend ilyenkor a meglévő statikus/illusztratív adatnál marad.
 
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
@@ -28,8 +28,8 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: 'Hiányzó "category" paraméter.' });
     }
 
-  const entry = mapping.specialtyMap[category];
-    if (!mapping.locationId || !entry || !entry.specializationId) {
+  const picks = mapping.specialtyMap[category];
+    if (!mapping.locationId || !Array.isArray(picks) || !picks.length) {
           return res.status(200).json({ available: false, doctors: [], location: null });
     }
 
@@ -41,25 +41,25 @@ export default async function handler(req, res) {
               ]);
 
         const location = locations.find((l) => String(l.id) === String(mapping.locationId)) || null;
+        const doctorsById = new Map(doctors.map((d) => [String(d.id), d]));
 
-        const matched = doctors.filter(
-              (doc) =>
-                    (doc.institutions || []).some((i) => String(i) === String(mapping.locationId)) &&
-                    (doc.specializations || []).some((s) => String(s) === String(entry.specializationId))
-            );
-
-        const doctorList = matched.map((doc) => {
-                const amt = amounts.find(
-                      (a) =>
-                            String(a.doctor_id) === String(doc.id) &&
-                            String(a.specialization_id) === String(entry.specializationId)
-                    );
-                return {
-                        doctorId: doc.id,
-                        name: doc.name,
-                        price: amt ? amt.amount : null,
-                };
-        });
+        const doctorList = picks
+              .map((pick) => {
+                      const doc = doctorsById.get(String(pick.doctorId));
+                      if (!doc) return null;
+                      const amt = amounts.find(
+                              (a) =>
+                                    String(a.doctor_id) === String(pick.doctorId) &&
+                                    String(a.specialization_id) === String(pick.specializationId)
+                            );
+                      return {
+                              doctorId: pick.doctorId,
+                              specializationId: pick.specializationId,
+                              name: doc.name,
+                              price: amt ? amt.amount : null,
+                      };
+              })
+              .filter(Boolean);
 
         const address = location ? [location.address, location.city].filter(Boolean).join(', ') : '';
 

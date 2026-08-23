@@ -3959,6 +3959,15 @@ async function mkFetchLiveSlots(category){
     return {available:false,slots:[]};
   }
 }
+// Ékezet/kötőjel/szóköz-független névnormalizálás -- a PDATA-ban Mick már
+// korábban kézzel felvitte a valós MedSoulYou-orvosok egy részét (pl.
+// "Makrai-Szécsi Dóra"), a Medio API viszont enyhén más írásmóddal adja
+// vissza ugyanazt a nevet ("Makrai - Szécsi Dóra") -- enélkül a normalizálás
+// nélkül ugyanaz az orvos duplikáltan jelenne meg (egyszer a statikus
+// bejegyzésből, egyszer az élő adatból újonnan beszúrva).
+function mkNormName(s){
+  return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]/g,'');
+}
 async function mkEnhanceWithLiveData(category,partnersRef){
   const [data,slotData]=await Promise.all([mkFetchLiveDoctors(category),mkFetchLiveSlots(category)]);
   if(!data.available||!data.doctors||!data.doctors.length)return;
@@ -3970,27 +3979,53 @@ async function mkEnhanceWithLiveData(category,partnersRef){
   // kategóriába szúrjon be élő adatot.
   const base=window.__mkBase;
   if(!base||base!==partnersRef)return;
-  const target=base.find(p=>p.real&&!p.live);
-  if(!target)return;
-  const [first,...more]=data.doctors;
-  target.doc=first.name;
-  target.price=first.price||null;
-  target.live=true;
-  if(data.location&&data.location.address)target.addr=data.location.address;
-  const firstSlot=(slotData.available&&slotData.slots&&slotData.slots.length)
-    ?slotData.slots.slice().sort((a,b)=>new Date(a.date)-new Date(b.date))[0]
-    :null;
-  if(firstSlot){
-    target.nextSlotLabel=mkFormatSlotLabel(firstSlot.date);
-    target.nextSlotDays=Math.max(0,Math.round((new Date(firstSlot.date)-new Date())/86400000));
-  }
-  // ha egy területhez több élő orvos is bekötött, a maradékot is felvesszük
-  // — a sortPartnersBy() a rendezéskor úgyis a legrelevánsabb/legközelebbi
-  // találatokat emeli ki élre.
-  more.slice(0,2).forEach((doc,i)=>{
-    base.splice(base.indexOf(target)+1+i,0,{
-      ...target,doc:doc.name,price:doc.price||null,pct:Math.max(50,(target.pct||90)-((i+1)*2)),
+
+  const slotsByDoctor=new Map();
+  if(slotData.available&&slotData.slots){
+    slotData.slots.forEach(s=>{
+      const list=slotsByDoctor.get(String(s.doctorId))||[];
+      list.push(s);
+      slotsByDoctor.set(String(s.doctorId),list);
     });
+  }
+  function nextSlotFor(doctorId){
+    const list=slotsByDoctor.get(String(doctorId));
+    if(!list||!list.length)return null;
+    return list.slice().sort((a,b)=>new Date(a.date)-new Date(b.date))[0];
+  }
+
+  const template=base.find(p=>p.real)||base[0];
+  // Egy kategóriának legfeljebb egy "adategyeztetés alatt" (real, de doc
+  // nélküli) helyőrző bejegyzése van a PDATA-ban -- ezt az ELSŐ élő
+  // orvosnál frissítjük IN PLACE, nem klónozzuk, különben duplikáció
+  // keletkezne (a helyőrző megmaradna változatlanul, mellette egy új kártya).
+  let unusedPlaceholder=base.find(p=>p.real&&!p.doc&&!p.live);
+  data.doctors.forEach((doc,i)=>{
+    const normLive=mkNormName(doc.name);
+    // előbb megpróbáljuk a MEGLÉVŐ (Mick által korábban felvitt, névvel
+    // ellátott) bejegyzést frissíteni élő adattal; ha nincs ilyen, a
+    // névtelen helyőrzőt használjuk fel; csak ha egyik sincs, szúrunk be
+    // egy ÚJ kártyát.
+    let match=base.find(p=>p.real&&p.doc&&mkNormName(p.doc)===normLive);
+    if(!match&&unusedPlaceholder){
+      match=unusedPlaceholder;
+      unusedPlaceholder=null;
+    }
+    if(!match){
+      match={...template,doc:doc.name,pct:Math.max(50,(template.pct||90)-i*2)};
+      base.splice(base.indexOf(template)+1+i,0,match);
+    }
+    match.doc=doc.name;
+    match.doctorId=doc.doctorId;
+    match.specializationId=doc.specializationId;
+    match.price=doc.price||null;
+    match.live=true;
+    if(data.location&&data.location.address)match.addr=data.location.address;
+    const slot=nextSlotFor(doc.doctorId);
+    if(slot){
+      match.nextSlotLabel=mkFormatSlotLabel(slot.date);
+      match.nextSlotDays=Math.max(0,Math.round((new Date(slot.date)-new Date())/86400000));
+    }
   });
   mkRenderAll();
 }

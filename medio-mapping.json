@@ -1,16 +1,29 @@
 {
-    "_megjegyzes": "2026-08-23: Medio (Laci) létrehozott egy dedikált TESZT-sandboxot (\"Hovaforduljak.hu teszt\", locationId 2802) 2 teszt-orvossal, 2 lefedett szakterülettel (Bőrgyógyászat, Kardiológia). Ez NEM a valódi MedSoulYou-adat — csak a Medio Channels API bekötésének leteszteléséhez lett létrehozva. A 2 lefedett kategória lentebb ki van töltve valódi (teszt-sandboxbeli) azonosítókkal, a maradék 8 üres, amíg Medio nem adja meg a tényleges MedSoulYou telephely/szakterület adatait (vagy nem bővíti ezt a teszt-locationt a többi kategóriára).",
-    "locationId": "2802",
+    "_megjegyzes": "2026-08-23: Laci elküldte a MedSoulYou TÉNYLEGES, éles Medio-fiókját (medsoulyouapi@mymedio.hu) -- ez lecseréli a korábbi 'Hovaforduljak.hu teszt' sandboxot (locationId 2802), ami sose volt valós MedSoulYou-adat. A valódi telephely id-je 2322. A specialtyMap kategóriánként egy TÖMBÖT tartalmaz {doctorId, specializationId} párokból -- azért tömb és nem egyetlen pár, mert egy kategóriához több MedSoulYou-orvos is tartozhat (pl. 4 pszichológus), és mert ugyanaz az orvos több kategóriában is szerepelhet MÁS-MÁS konkrét specializationId-vel (pl. Dr. Salánki Zsuzsanna belgyógyász-konzultációja az Anyagcsere-Hormonálisban, állapotfelmérési csomagja a Szűrés-Megelőzésben). Csak azok a kategóriák vannak kitöltve, ahol a MedSoulYou 8 orvosa között TÉNYLEG van releváns szakember -- a többi (Alvás, Mozgásszervi, Szív és keringés, Légzőszervi, Neurológiai, Bőr-Haj) szándékosan üres, mert ott jelenleg nincs MedSoulYou-s szakorvos a Medio rendszerében -- ne fabrikálj hozzájuk párosítást.",
+    "locationId": "2322",
     "specialtyMap": {
-          "Mentális-Pszichés": { "specializationId": "", "doctorId": "" },
-          "Alvás": { "specializationId": "", "doctorId": "" },
-          "Anyagcsere-Hormonális": { "specializationId": "", "doctorId": "" },
-          "Mozgásszervi": { "specializationId": "", "doctorId": "" },
-          "Gyomor-bél": { "specializationId": "", "doctorId": "" },
-          "Szív és keringés": { "specializationId": "10144454", "doctorId": "466910" },
-          "Légzőszervi": { "specializationId": "", "doctorId": "" },
-          "Neurológiai": { "specializationId": "", "doctorId": "" },
-          "Bőr-Haj": { "specializationId": "10144453", "doctorId": "466910" },
-          "Szűrés-Megelőzés": { "specializationId": "", "doctorId": "" }
+          "Mentális-Pszichés": [
+                { "doctorId": 456878, "specializationId": 10090786 },
+                { "doctorId": 456647, "specializationId": 10101512 },
+                { "doctorId": 453547, "specializationId": 10087651 },
+                { "doctorId": 455874, "specializationId": 10087558 }
+          ],
+          "Alvás": [],
+          "Anyagcsere-Hormonális": [
+                { "doctorId": 459018, "specializationId": 10103650 },
+                { "doctorId": 459019, "specializationId": 10118708 },
+                { "doctorId": 453541, "specializationId": 10075962 }
+          ],
+          "Mozgásszervi": [],
+          "Gyomor-bél": [
+                { "doctorId": 460915, "specializationId": 10110927 }
+          ],
+          "Szív és keringés": [],
+          "Légzőszervi": [],
+          "Neurológiai": [],
+          "Bőr-Haj": [],
+          "Szűrés-Megelőzés": [
+                { "doctorId": 453541, "specializationId": 10118636 }
+          ]
     }
 }

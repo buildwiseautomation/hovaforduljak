@@ -1,12 +1,14 @@
 // api/medsoulyou-slots.js
 //
-// GET /api/medsoulyou-slots?category=Mozgásszervi&startDate=...&endDate=...
+// GET /api/medsoulyou-slots?category=Mentális-Pszichés&startDate=...&endDate=...
 //
 // Visszaadja a MedSoulYou tényleges, szabad időpontjait az adott
-// HovaForduljak belépési területhez. Ha az adott területhez még nincs
-// beállítva Medio-azonosító a medio-mapping.json-ban, "available: false"-t ad
-// vissza — ilyenkor a frontend a jelenlegi (nem-API-s) foglalási linket
-// mutassa fallbackként.
+// HovaForduljak belépési területhez -- ha egy kategóriához több MedSoulYou-
+// orvos is tartozik (ld. medio-mapping.json), mindegyikük szabad
+// időpontjait lekérdezi és egyben adja vissza. Ha az adott területhez még
+// nincs beállítva Medio-azonosító, "available: false"-t ad vissza --
+// ilyenkor a frontend a jelenlegi (nem-API-s) foglalási linket mutassa
+// fallbackként.
 
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
@@ -28,8 +30,8 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: 'Hiányzó "category" paraméter.' });
     }
 
-  const entry = mapping.specialtyMap[category];
-    if (!mapping.locationId || !entry || !entry.specializationId) {
+  const picks = mapping.specialtyMap[category];
+    if (!mapping.locationId || !Array.isArray(picks) || !picks.length) {
           return res.status(200).json({
                   available: false,
                   slots: [],
@@ -38,13 +40,18 @@ export default async function handler(req, res) {
     }
 
   try {
-        const slots = await getFreeSlots({
-                locationId: mapping.locationId,
-                specializationId: entry.specializationId,
-                doctorId: entry.doctorId || undefined,
-                startDate: startDate || new Date().toISOString(),
-                endDate: endDate || undefined,
-        });
+        const perDoctor = await Promise.all(
+              picks.map((pick) =>
+                    getFreeSlots({
+                            locationId: mapping.locationId,
+                            specializationId: pick.specializationId,
+                            doctorId: pick.doctorId,
+                            startDate: startDate || new Date().toISOString(),
+                            endDate: endDate || undefined,
+                    })
+                  )
+            );
+        const slots = perDoctor.flat();
         res.status(200).json({ available: true, slots });
   } catch (err) {
         res.status(500).json({ available: false, slots: [], error: err.message });

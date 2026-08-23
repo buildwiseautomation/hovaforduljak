@@ -1,11 +1,18 @@
 // api/medsoulyou-book.js
 //
 // POST /api/medsoulyou-book
-// Body: { category, doctorId?, date, length, patientName, patientPhone,
-//         patientEmail, patientDateOfBirth, patientBirthPlace, patientGender,
-//         patientMothersName, patientTAJ, patientIdNumber?, billingCountry,
-//         billingZip, billingSettlement, billingAddress, billingHouseNr?,
-//         billingFloorDoor?, patientComment?, consent: true }
+// Body: { category, doctorId, specializationId, date, length, patientName,
+//         patientPhone, patientEmail, patientDateOfBirth, patientBirthPlace,
+//         patientGender, patientMothersName, patientTAJ, patientIdNumber?,
+//         billingCountry, billingZip, billingSettlement, billingAddress,
+//         billingHouseNr?, billingFloorDoor?, patientComment?, consent: true }
+//
+// doctorId/specializationId a kiválasztott szabad időponttól (Medio /slots
+// válaszából) származik -- egy kategóriához több MedSoulYou-orvos is
+// tartozhat (ld. medio-mapping.json), ezért ezeket a payload adja meg, nem
+// egy kategória-szintű alapértelmezés; a végpont csak azt ellenőrzi, hogy a
+// megadott doctorId/specializationId pár szerepel-e az adott kategóriához
+// jóváhagyott listában.
 //
 // Valós MedSoulYou-időpontot foglal a Medio API-n keresztül.
 //
@@ -32,6 +39,8 @@ const mapping = JSON.parse(
 
 const REQUIRED_FIELDS = [
     'category',
+    'doctorId',
+    'specializationId',
     'date',
     'length',
     'patientName',
@@ -76,17 +85,25 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: `Hiányzó mezők: ${missing.join(', ')}` });
     }
 
-  const entry = mapping.specialtyMap[payload.category];
-    if (!mapping.locationId || !entry || !entry.specializationId) {
+  const picks = mapping.specialtyMap[payload.category];
+    if (!mapping.locationId || !Array.isArray(picks) || !picks.length) {
           return res.status(400).json({
                   error: 'Ehhez a szakterülethez jelenleg nincs beállítva MedSoulYou-foglalás.',
+          });
+    }
+  const approved = picks.some(
+        (p) => String(p.doctorId) === String(payload.doctorId) && String(p.specializationId) === String(payload.specializationId)
+      );
+    if (!approved) {
+          return res.status(400).json({
+                  error: 'A megadott orvos/szakterület nem tartozik ehhez a MedSoulYou-kategóriához.',
           });
     }
 
   const booking = {
         locationId: mapping.locationId,
-        specializationId: entry.specializationId,
-        doctorId: payload.doctorId || entry.doctorId,
+        specializationId: payload.specializationId,
+        doctorId: payload.doctorId,
         date: payload.date,
         length: Number(payload.length),
         patientName: payload.patientName,
