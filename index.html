@@ -3731,40 +3731,64 @@ function illustrativeStats(p){
     waitDays:scrPseudoInt(seed+'d',1,21)
   };
 }
-// Igazolt (p.real) partnerek rangsorolása: elsődlegesen klinikai relevancia
-// (pct — ezt már most is a szakterület-egyezés alapján állítjuk be az egyes
-// bejegyzéseknél), másodlagosan közelség. Valós geo-koordináta még nincs
-// (a Medio telephely-adat jelenleg lat/lng nélkül jön), ezért a "közelség"
-// egyelőre a region==='1' (Budapest) jelzőn alapul — ha lesz valós
-// koordináta, itt bővíthető távolság-számításra.
-function mkRankReal(realList){
-  return realList
-    .map((p,i)=>({p,i}))
-    .sort((a,b)=>{
-      const byPct=(b.p.pct||0)-(a.p.pct||0);
-      if(byPct!==0)return byPct;
-      const byRegion=((a.p.region==='1')?0:1)-((b.p.region==='1')?0:1);
-      if(byRegion!==0)return byRegion;
-      return a.i-b.i; // stabil, eredeti sorrend döntetlennél
-    })
-    .map(x=>x.p);
+// v2.7 BUGFIX (Mick jelzése): korábban ez a függvény az "igazolt" (p.real)
+// partnert MINDIG a lista élére tolta, függetlenül attól, hogy a
+// renderResult() régió-tudatos előválogatása (irányítószám alapján) már
+// előre besorolt egy hozzá közelebbi (de nem-partner) találatot -- emiatt
+// pl. egy székesfehérvári irányítószámmal is mindig a budapesti MedSoulYou
+// jelent meg elsőként. A cél mindig a felhasználóhoz LEGKÖZELEBBI, a
+// panaszhoz LEGJOBBAN illő szakember/klinika -- az "igazolt partner" jelzés
+// egy támogató bizalmi jelzés marad (✓ badge), de nem írja felül a
+// közelséget. Valós geo-koordináta még nincs (a Medio telephely-adat
+// jelenleg lat/lng nélkül jön), ezért a "közelség" egyelőre az
+// irányítószám első számjegyéből számolt régiókód (getRegion/REGIONS)
+// egyezésén alapul -- ha nincs megadott irányítószám, Budapest marad az
+// alapértelmezett preferált régió, mert jelenleg ott van a ténylegesen
+// bekötött hálózat.
+function mkUserRegion(){
+  const z=(A.iranyitoszam||'').trim();
+  return z[0]||null;
 }
-// Rendezés — a legjobb (legrelevánsabb + legközelebbi) MAX. 3 igazolt
-// (p.real) partner mindig legfelül marad kiemelve; egy esetleges 4.+
-// igazolt partner nem tűnik el, csak közvetlenül utánuk kerül (továbbra is
-// "Igazolt partner" jelöléssel), a többi a választott szempont szerint
-// rendeződik újra alattuk.
+function mkRegionTier(p,userRegion){
+  const target=userRegion||'1';
+  return p.region===target?0:1;
+}
 function sortPartnersBy(list,mode){
-  const rankedReal=mkRankReal(list.filter(p=>p.real));
-  const real=rankedReal.slice(0,3);
-  const overflowReal=rankedReal.slice(3);
-  const rest=list.filter(p=>!p.real).slice();
-  if(mode==='rating')rest.sort((a,b)=>parseFloat(illustrativeStats(b).rating)-parseFloat(illustrativeStats(a).rating));
-  else if(mode==='price')rest.sort((a,b)=>illustrativeStats(a).priceHuf-illustrativeStats(b).priceHuf);
-  else if(mode==='fastest')rest.sort((a,b)=>illustrativeStats(a).waitDays-illustrativeStats(b).waitDays);
-  else if(mode==='closest')rest.sort((a,b)=>((a.region==='1')?0:1)-((b.region==='1')?0:1));
-  else rest.sort((a,b)=>b.pct-a.pct); // 'match' (alapértelmezett)
-  return [...real, ...overflowReal, ...rest];
+  const userRegion=mkUserRegion();
+  const withMeta=list.map((p,i)=>({p,i,tier:mkRegionTier(p,userRegion)}));
+  function byModeMetric(a,b){
+    if(mode==='rating'){
+      const ar=a.p.real?-Infinity:parseFloat(illustrativeStats(a.p).rating);
+      const br=b.p.real?-Infinity:parseFloat(illustrativeStats(b.p).rating);
+      return br-ar;
+    }
+    if(mode==='price'){
+      const ap=a.p.real?(a.p.price??Infinity):illustrativeStats(a.p).priceHuf;
+      const bp=b.p.real?(b.p.price??Infinity):illustrativeStats(b.p).priceHuf;
+      return ap-bp;
+    }
+    if(mode==='fastest'){
+      const aw=a.p.real?Infinity:illustrativeStats(a.p).waitDays;
+      const bw=b.p.real?Infinity:illustrativeStats(b.p).waitDays;
+      return aw-bw;
+    }
+    return (b.p.pct||0)-(a.p.pct||0); // 'match' és 'closest' alapértelmezetten egyezés szerint -- a régió-tier már kezeli a közelséget
+  }
+  withMeta.sort((a,b)=>{
+    if(mode==='match'||mode==='closest'){
+      if(a.tier!==b.tier)return a.tier-b.tier; // azonos régió mindig előrébb
+    }
+    // 'match' módban az igazolt partner AZONOS régiós csoporton belül kap
+    // enyhe előnyt (bizalmi jelzés), de a régió-egyezésen nem léphet át.
+    if(mode==='match'){
+      const byRealBonus=(a.p.real?0:1)-(b.p.real?0:1);
+      if(byRealBonus!==0)return byRealBonus;
+    }
+    const m=byModeMetric(a,b);
+    if(m!==0)return m;
+    return a.i-b.i; // stabil, eredeti sorrend döntetlennél
+  });
+  return withMeta.map(x=>x.p);
 }
 
 const MK_SORT_TABS=[
@@ -3868,10 +3892,13 @@ function mkRenderAll(){
   // jobb oldali panel: "miért ajánljuk" + gyors statisztika
   const sideEl=document.getElementById('mk-side');
   if(sideEl){
+    const hasUserRegion=!!mkUserRegion();
     const reasons=[
       d.explanation?d.explanation:'A válaszaid alapján ez a szakterület illik legjobban a leírt panaszhoz.',
       'A sürgősségi szint és a tünet-egyezés alapján rangsoroltuk a találatokat.',
-      'Az igazolt partner mindig előre kerül — nála ellenőrzött az elérhetőség és a szakterület.'
+      hasUserRegion
+        ? 'Elsőként a megadott irányítószámodhoz legközelebbi találatokat mutatjuk — az igazolt partnereket ✓ jelöléssel emeljük ki.'
+        : 'Az igazolt partnereket ✓ jelöléssel emeljük ki — nála ellenőrzött az elérhetőség és a szakterület.'
     ];
     const withStats=list.filter(p=>!p.real);
     const avgRating=withStats.length?(withStats.reduce((s,p)=>s+parseFloat(illustrativeStats(p).rating),0)/withStats.length).toFixed(1):'–';
@@ -4272,7 +4299,7 @@ if(typeof window!=='undefined'){
     scrLikertPick,scrBetegsegPick,scrCheckOptionalSkips,
     renderResult,restart,submit,goSymptoms,showQ,
     computePreventionTips,SCR_PREVENTION_TIPS,SCR_HERO_AREA_PHRASE,SCR_LIKERT_TO_SPECIALTY,scrFlagToSpecialty,
-    illustrativeStats,sortPartnersBy,mkRankReal,MK_STATE,MK_SORT_TABS,renderMarketplace,mkSetSort,
+    illustrativeStats,sortPartnersBy,mkUserRegion,mkRegionTier,MK_STATE,MK_SORT_TABS,renderMarketplace,mkSetSort,
     mkSetMinRating,mkSetMaxPrice,mkSetDistance,mkToggleVerifiedOnly,mkToggleInsurance,
     mkSetPayMode,mkToggleSave,mkFetchLiveDoctors,mkEnhanceWithLiveData,
     renderAiReport,renderPrivatePublic,choosePrivatePublic,
