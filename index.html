@@ -3768,8 +3768,8 @@ function sortPartnersBy(list,mode){
       return ap-bp;
     }
     if(mode==='fastest'){
-      const aw=a.p.real?Infinity:illustrativeStats(a.p).waitDays;
-      const bw=b.p.real?Infinity:illustrativeStats(b.p).waitDays;
+      const aw=a.p.real?(a.p.nextSlotDays??Infinity):illustrativeStats(a.p).waitDays;
+      const bw=b.p.real?(b.p.nextSlotDays??Infinity):illustrativeStats(b.p).waitDays;
       return aw-bw;
     }
     return (b.p.pct||0)-(a.p.pct||0); // 'match' és 'closest' alapértelmezetten egyezés szerint -- a régió-tier már kezeli a közelséget
@@ -3935,8 +3935,32 @@ async function mkFetchLiveDoctors(category){
     return {available:false,doctors:[]};
   }
 }
+// v2.8: legközelebbi szabad időpont felirata a mar meglevo, tesztelt
+// /api/medsoulyou-slots vegpontbol -- csak megjelenitesi cel, nem
+// foglal semmit, es a mar korabban letiltott TAJ-adatgyujtes-utat
+// (medsoulyou-widget.js) sem erinti.
+function mkFormatSlotLabel(iso){
+  const d=new Date(iso);
+  const now=new Date();
+  const startOfDay=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate());
+  const diffDays=Math.round((startOfDay(d)-startOfDay(now))/86400000);
+  const time=d.toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'});
+  if(diffDays===0)return `ma ${time}`;
+  if(diffDays===1)return `holnap ${time}`;
+  const date=d.toLocaleDateString('hu-HU',{month:'long',day:'numeric'});
+  return `${date}, ${time}`;
+}
+async function mkFetchLiveSlots(category){
+  try{
+    const res=await fetch(`/api/medsoulyou-slots?category=${encodeURIComponent(category)}`);
+    return await res.json();
+  }catch(e){
+    console.error('MedSoulYou élő időpont hiba:',e);
+    return {available:false,slots:[]};
+  }
+}
 async function mkEnhanceWithLiveData(category,partnersRef){
-  const data=await mkFetchLiveDoctors(category);
+  const [data,slotData]=await Promise.all([mkFetchLiveDoctors(category),mkFetchLiveSlots(category)]);
   if(!data.available||!data.doctors||!data.doctors.length)return;
   // csak akkor alkalmazzuk, ha még mindig ugyanaz a renderelt lista van
   // érvényben (referencia-egyezés) -- ha a felhasználó időközben új
@@ -3953,9 +3977,16 @@ async function mkEnhanceWithLiveData(category,partnersRef){
   target.price=first.price||null;
   target.live=true;
   if(data.location&&data.location.address)target.addr=data.location.address;
+  const firstSlot=(slotData.available&&slotData.slots&&slotData.slots.length)
+    ?slotData.slots.slice().sort((a,b)=>new Date(a.date)-new Date(b.date))[0]
+    :null;
+  if(firstSlot){
+    target.nextSlotLabel=mkFormatSlotLabel(firstSlot.date);
+    target.nextSlotDays=Math.max(0,Math.round((new Date(firstSlot.date)-new Date())/86400000));
+  }
   // ha egy területhez több élő orvos is bekötött, a maradékot is felvesszük
-  // — a mkRankReal() a rendezéskor úgyis a legjobb (legrelevánsabb +
-  // legközelebbi) 3-at emeli ki élre.
+  // — a sortPartnersBy() a rendezéskor úgyis a legrelevánsabb/legközelebbi
+  // találatokat emeli ki élre.
   more.slice(0,2).forEach((doc,i)=>{
     base.splice(base.indexOf(target)+1+i,0,{
       ...target,doc:doc.name,price:doc.price||null,pct:Math.max(50,(target.pct||90)-((i+1)*2)),
@@ -3981,7 +4012,11 @@ function mkCardHtml(p,isFirstNonReal,idx){
   const priceBlock=p.real
     ? `<div class="mk-price">${p.price?mkFmtHuf(p.price):'Ár egyeztetés alapján'}</div>`
     : `<div class="mk-price">${mkFmtHuf(st.priceHuf)}</div>`;
-  const waitBlock=p.real?'':`<div class="mk-wait">${st.waitDays} napon belül</div>`;
+  // v2.8: valos partnernel, ha van elo szabad idopont-adatunk (p.nextSlotLabel),
+  // azt mutatjuk oszinten -- soha nem fabrikalt "X napon belul" szoveget.
+  const waitBlock=p.real
+    ? (p.nextSlotLabel?`<div class="mk-wait">Legközelebb: ${p.nextSlotLabel}</div>`:'')
+    : `<div class="mk-wait">${st.waitDays} napon belül</div>`;
   const verifiedTag=p.real?'<div class="mk-verified-tag">✓ Igazolt partner</div>':'';
   // Badge-tag: az igazolt partner mindig ✓-ot kap; az első nem-igazolt
   // találat a jelenlegi rendezési szempontnak megfelelő címkét kapja
