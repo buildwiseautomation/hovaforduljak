@@ -163,7 +163,13 @@
                                         btn.type = 'button';
                                         btn.className = 'msy-slot-btn';
                                         btn.textContent = formatTime(slot.date);
-                                        btn.addEventListener('click', () => openBookingModal(category, slot, options));
+                                        // SZÁNDÉKOSAN NEM openBookingModal() (TAJ-szám/születési adat bekérő
+                                        // űrlap) -- amíg nincs jogász/DPO jóváhagyás a beteg-adatok GDPR-
+                                        // megfelelő gyűjtésére/továbbítására (ld. api/medsoulyou-book.js teteje),
+                                        // a szabad időpont kattintása a meglévő, adatot NEM gyűjtő külső
+                                        // MedSoulYou-oldalra visz, ugyanúgy mint az "nincs elérhető időpont"
+                                        // eset. Amint megvan a jóváhagyás, ez visszaállítható openBookingModal()-ra.
+                                        btn.addEventListener('click', () => window.open('https://medsoulyou.mymedio.hu', '_blank', 'noopener'));
                                         slotsWrap.appendChild(btn);
                             });
 
@@ -173,8 +179,6 @@
 
       body.appendChild(daysWrap);
    }
-
-}
 
     function openBookingModal(category, slot, options) {
       injectStyles();

@@ -1,16 +1,16 @@
 {
-    "_megjegyzes": "Töltsd ki a MedSoulYou tényleges Medio-azonosítóival! Ehhez hívd meg egyszer a /api/medsoulyou-discover?key=A_TE_TITKOS_KULCSOD végpontot (miután beállítottad a MEDIO_* env változókat) — az visszaadja a Medio-ban regisztrált location-öket, szakterületeket és orvosokat. Keresd ki köztük a MedSoulYou telephelyét, és párosítsd a saját 10 belépési területünket a hozzá legközelebb álló Medio specializationId-vel.",
-    "locationId": "",
+    "_megjegyzes": "2026-08-23: Medio (Laci) létrehozott egy dedikált TESZT-sandboxot (\"Hovaforduljak.hu teszt\", locationId 2802) 2 teszt-orvossal, 2 lefedett szakterülettel (Bőrgyógyászat, Kardiológia). Ez NEM a valódi MedSoulYou-adat — csak a Medio Channels API bekötésének leteszteléséhez lett létrehozva. A 2 lefedett kategória lentebb ki van töltve valódi (teszt-sandboxbeli) azonosítókkal, a maradék 8 üres, amíg Medio nem adja meg a tényleges MedSoulYou telephely/szakterület adatait (vagy nem bővíti ezt a teszt-locationt a többi kategóriára).",
+    "locationId": "2802",
     "specialtyMap": {
           "Mentális-Pszichés": { "specializationId": "", "doctorId": "" },
           "Alvás": { "specializationId": "", "doctorId": "" },
           "Anyagcsere-Hormonális": { "specializationId": "", "doctorId": "" },
           "Mozgásszervi": { "specializationId": "", "doctorId": "" },
           "Gyomor-bél": { "specializationId": "", "doctorId": "" },
-          "Szív és keringés": { "specializationId": "", "doctorId": "" },
+          "Szív és keringés": { "specializationId": "10144454", "doctorId": "466910" },
           "Légzőszervi": { "specializationId": "", "doctorId": "" },
           "Neurológiai": { "specializationId": "", "doctorId": "" },
-          "Bőr-Haj": { "specializationId": "", "doctorId": "" },
+          "Bőr-Haj": { "specializationId": "10144453", "doctorId": "466910" },
           "Szűrés-Megelőzés": { "specializationId": "", "doctorId": "" }
     }
 }

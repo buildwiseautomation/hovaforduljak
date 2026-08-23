@@ -3403,7 +3403,9 @@ function renderResult(d){
       // Screening render mutatta, ne maradjon lathato).
       const scr2Hide=document.getElementById('scr-v2');
       if(scr2Hide)scr2Hide.style.display='none';
-      renderMarketplace(partners, prim, d);
+      const mkPartnersRef=partners.map(p=>({...p}));
+      renderMarketplace(mkPartnersRef, prim, d);
+      mkEnhanceWithLiveData(prim, mkPartnersRef);
       renderAiReport(d, partners);
       renderPrivatePublic(d);
       // v2.4: 9 hagyomanyos szakterulet reskin -- also sticky CTA + trust-footer,
@@ -3729,18 +3731,40 @@ function illustrativeStats(p){
     waitDays:scrPseudoInt(seed+'d',1,21)
   };
 }
-// Rendezés — a valós (p.real) partner MINDIG legfelül marad (ő az egyetlen
-// igazolt, ellenőrzött adatú találat), a többi a választott szempont
-// szerint rendeződik újra alatta.
+// Igazolt (p.real) partnerek rangsorolása: elsődlegesen klinikai relevancia
+// (pct — ezt már most is a szakterület-egyezés alapján állítjuk be az egyes
+// bejegyzéseknél), másodlagosan közelség. Valós geo-koordináta még nincs
+// (a Medio telephely-adat jelenleg lat/lng nélkül jön), ezért a "közelség"
+// egyelőre a region==='1' (Budapest) jelzőn alapul — ha lesz valós
+// koordináta, itt bővíthető távolság-számításra.
+function mkRankReal(realList){
+  return realList
+    .map((p,i)=>({p,i}))
+    .sort((a,b)=>{
+      const byPct=(b.p.pct||0)-(a.p.pct||0);
+      if(byPct!==0)return byPct;
+      const byRegion=((a.p.region==='1')?0:1)-((b.p.region==='1')?0:1);
+      if(byRegion!==0)return byRegion;
+      return a.i-b.i; // stabil, eredeti sorrend döntetlennél
+    })
+    .map(x=>x.p);
+}
+// Rendezés — a legjobb (legrelevánsabb + legközelebbi) MAX. 3 igazolt
+// (p.real) partner mindig legfelül marad kiemelve; egy esetleges 4.+
+// igazolt partner nem tűnik el, csak közvetlenül utánuk kerül (továbbra is
+// "Igazolt partner" jelöléssel), a többi a választott szempont szerint
+// rendeződik újra alattuk.
 function sortPartnersBy(list,mode){
-  const real=list.filter(p=>p.real);
+  const rankedReal=mkRankReal(list.filter(p=>p.real));
+  const real=rankedReal.slice(0,3);
+  const overflowReal=rankedReal.slice(3);
   const rest=list.filter(p=>!p.real).slice();
   if(mode==='rating')rest.sort((a,b)=>parseFloat(illustrativeStats(b).rating)-parseFloat(illustrativeStats(a).rating));
   else if(mode==='price')rest.sort((a,b)=>illustrativeStats(a).priceHuf-illustrativeStats(b).priceHuf);
   else if(mode==='fastest')rest.sort((a,b)=>illustrativeStats(a).waitDays-illustrativeStats(b).waitDays);
   else if(mode==='closest')rest.sort((a,b)=>((a.region==='1')?0:1)-((b.region==='1')?0:1));
   else rest.sort((a,b)=>b.pct-a.pct); // 'match' (alapértelmezett)
-  return [...real, ...rest];
+  return [...real, ...overflowReal, ...rest];
 }
 
 const MK_SORT_TABS=[
@@ -3789,7 +3813,7 @@ function mkRenderAll(){
         <div class="mk-chip-row">${[0,3.5,4,4.5].map(v=>`<div class="mk-chip${MK_STATE.minRating===v?' sel':''}" onclick="mkSetMinRating(${v})">${v===0?'Mind':v+'★+'}</div>`).join('')}</div>
       </div>
       <div class="mk-filter-grp">
-        <div class="mk-filter-lbl">Ár (illusztratív, max.)</div>
+        <div class="mk-filter-lbl">Ár (max.)</div>
         <div class="mk-chip-row">${[20000,35000,60000].map(v=>`<div class="mk-chip${MK_STATE.maxPriceHuf===v?' sel':''}" onclick="mkSetMaxPrice(${v})">${(v/1000)}e Ft alatt</div>`).join('')}</div>
       </div>
       <div class="mk-filter-grp">
@@ -3823,6 +3847,9 @@ function mkRenderAll(){
       const st=illustrativeStats(p);
       if(st.rating!==null&&parseFloat(st.rating)<MK_STATE.minRating)return false;
       if(st.priceHuf!==null&&st.priceHuf>MK_STATE.maxPriceHuf)return false;
+    }else if(p.price){
+      // élő (Medio API) ár esetén az ár-szűrő igazolt partnerre is vonatkozik
+      if(p.price>MK_STATE.maxPriceHuf)return false;
     }
     if(MK_STATE.maxDistance==='budapest'&&p.region&&p.region!=='1')return false;
     return true;
@@ -3861,6 +3888,55 @@ function mkRenderAll(){
   }
   window.__partners=list;
 }
+
+// v2.7: élő Medio-adat (orvos név, ár, telephely) beillesztése azokhoz az
+// igazolt (real) bejegyzésekhez, amelyekhez a medio-mapping.json ténylegesen
+// tartalmaz Medio-azonosítót. NEM blokkolja az első renderelést (a
+// mkRenderAll() már lefutott statikus/illusztratív adattal, mire ez a hívás
+// elindul) — ha az API hibázik vagy nincs bekötve az adott terület, a
+// meglévő statikus adat marad látható, csendes fallbackkel.
+const MK_LIVE_CACHE={};
+async function mkFetchLiveDoctors(category){
+  if(MK_LIVE_CACHE[category])return MK_LIVE_CACHE[category];
+  try{
+    const res=await fetch(`/api/medsoulyou-doctors?category=${encodeURIComponent(category)}`);
+    const data=await res.json();
+    MK_LIVE_CACHE[category]=data;
+    return data;
+  }catch(e){
+    console.error('MedSoulYou élő adat hiba:',e);
+    return {available:false,doctors:[]};
+  }
+}
+async function mkEnhanceWithLiveData(category,partnersRef){
+  const data=await mkFetchLiveDoctors(category);
+  if(!data.available||!data.doctors||!data.doctors.length)return;
+  // csak akkor alkalmazzuk, ha még mindig ugyanaz a renderelt lista van
+  // érvényben (referencia-egyezés) -- ha a felhasználó időközben új
+  // eredményt kért (pl. gyorsan újraindította a tesztet), a
+  // window.__mkBase már egy másik kategória tömbjére mutat, és ez a
+  // (lekésett) hívás csendben nem csinál semmit, hogy ne a rossz
+  // kategóriába szúrjon be élő adatot.
+  const base=window.__mkBase;
+  if(!base||base!==partnersRef)return;
+  const target=base.find(p=>p.real&&!p.live);
+  if(!target)return;
+  const [first,...more]=data.doctors;
+  target.doc=first.name;
+  target.price=first.price||null;
+  target.live=true;
+  if(data.location&&data.location.address)target.addr=data.location.address;
+  // ha egy területhez több élő orvos is bekötött, a maradékot is felvesszük
+  // — a mkRankReal() a rendezéskor úgyis a legjobb (legrelevánsabb +
+  // legközelebbi) 3-at emeli ki élre.
+  more.slice(0,2).forEach((doc,i)=>{
+    base.splice(base.indexOf(target)+1+i,0,{
+      ...target,doc:doc.name,price:doc.price||null,pct:Math.max(50,(target.pct||90)-((i+1)*2)),
+    });
+  });
+  mkRenderAll();
+}
+
 function mkCardHtml(p,isFirstNonReal,idx){
   const st=illustrativeStats(p);
   const nameBlock=p.doc
@@ -4196,9 +4272,10 @@ if(typeof window!=='undefined'){
     scrLikertPick,scrBetegsegPick,scrCheckOptionalSkips,
     renderResult,restart,submit,goSymptoms,showQ,
     computePreventionTips,SCR_PREVENTION_TIPS,SCR_HERO_AREA_PHRASE,SCR_LIKERT_TO_SPECIALTY,scrFlagToSpecialty,
-    illustrativeStats,sortPartnersBy,MK_STATE,MK_SORT_TABS,renderMarketplace,mkSetSort,
+    illustrativeStats,sortPartnersBy,mkRankReal,MK_STATE,MK_SORT_TABS,renderMarketplace,mkSetSort,
     mkSetMinRating,mkSetMaxPrice,mkSetDistance,mkToggleVerifiedOnly,mkToggleInsurance,
-    mkSetPayMode,mkToggleSave,renderAiReport,renderPrivatePublic,choosePrivatePublic,
+    mkSetPayMode,mkToggleSave,mkFetchLiveDoctors,mkEnhanceWithLiveData,
+    renderAiReport,renderPrivatePublic,choosePrivatePublic,
     downloadReportPdf,shareReportWithDoctor,PP_ROWS,
     SV2_DOC_SORT_TABS,SV2_DOC_STATE,sv2DocCardHtml,sv2RenderDocList,sv2SetDocSort
   };

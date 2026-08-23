@@ -53,6 +53,18 @@ export default async function handler(req, res) {
           return res.status(405).json({ error: 'Method not allowed' });
     }
 
+  // 2026-08-23: a frontend widget SZÁNDÉKOSAN nem hívja ezt a végpontot --
+  // amíg nincs jogász/DPO jóváhagyás a beteg-adatok (TAJ, születési adat
+  // stb.) GDPR-megfelelő gyűjtésére/továbbítására (ld. a fájl tetején lévő
+  // megjegyzés), ez a végpont is explicit blokkolva van, hogy közvetlen
+  // hívással se lehessen megkerülni a UI-s tiltást. Töröld ezt a blokkot,
+  // ha megvan a jóváhagyás.
+  if (!process.env.MEDIO_BOOKING_LEGAL_APPROVED) {
+        return res.status(403).json({
+                error: 'A foglalási funkció jogi/DPO jóváhagyásig ideiglenesen inaktív.',
+        });
+  }
+
   const payload = req.body || {};
 
   if (payload.consent !== true && payload.consent !== 'true') {
