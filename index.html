@@ -3980,7 +3980,15 @@ const MK_SORT_TABS=[
   {key:'price',lbl:'Legalacsonyabb ár'},
   {key:'fastest',lbl:'Leggyorsabb időpont'}
 ];
-const MK_STATE={sort:'match',verifiedOnly:false,minRating:0,maxPriceHuf:60000,maxDistance:'orszagos',insurance:[],payMode:null,saved:{}};
+// v2.9 BUGFIX (Mick jelzése): a maxPriceHuf alapértelmezett sapkája
+// (60000) korábban ártalmatlan volt, mert az illusztratív demo-árak
+// sosem lépték túl a 45000-et -- mióta viszont valós (élő, Medio API-s)
+// árak is megjelennek (pl. egy átfogó állapotfelmérési csomag 69000
+// Ft-ért), ez a sapka CSENDBEN, a felhasználó tudta nélkül kiszűrte a
+// valós, igazolt partnert a listából, és nem is volt mód feloldani (a
+// szűrő-csempék között nem volt "Mind" opció). Az alapértelmezett
+// állapot mostantól "Mind" (nincs ár-sapka), a szűrés opt-in.
+const MK_STATE={sort:'match',verifiedOnly:false,minRating:0,maxPriceHuf:Infinity,maxDistance:'orszagos',insurance:[],payMode:null,saved:{}};
 
 function mkFmtHuf(n){return n.toLocaleString('hu-HU')+' Ft-tól';}
 
@@ -4020,7 +4028,7 @@ function mkRenderAll(){
       </div>
       <div class="mk-filter-grp">
         <div class="mk-filter-lbl">Ár (max.)</div>
-        <div class="mk-chip-row">${[20000,35000,60000].map(v=>`<div class="mk-chip${MK_STATE.maxPriceHuf===v?' sel':''}" onclick="mkSetMaxPrice(${v})">${(v/1000)}e Ft alatt</div>`).join('')}</div>
+        <div class="mk-chip-row">${[Infinity,20000,35000,60000,100000].map(v=>`<div class="mk-chip${MK_STATE.maxPriceHuf===v?' sel':''}" onclick="mkSetMaxPrice(${v===Infinity?"Infinity":v})">${v===Infinity?'Mind':(v/1000)+'e Ft alatt'}</div>`).join('')}</div>
       </div>
       <div class="mk-filter-grp">
         <div class="mk-filter-lbl">Távolság</div>
