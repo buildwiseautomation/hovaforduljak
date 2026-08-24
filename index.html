@@ -446,6 +446,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .mk-save-btn{width:42px;background:var(--card2);border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:1rem;transition:border-color .15s}
 .mk-save-btn.saved{color:var(--red);border-color:var(--red)}
 .mk-illustrative{font-size:.68rem;color:var(--text3);font-style:italic;margin-top:8px}
+/* v2.9 (Mick jelzése): lenyitható "Szabad időpontok" fül az élő (API-val
+   bekötött) partnerek kártyáján -- a tényleges foglalás mindig a klinika
+   saját oldalán történik (nincs saját adatgyűjtés), ld. mkCardHtml(). */
+.mk-slots-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:9px 12px;margin-top:10px;font-family:'Manrope',sans-serif;font-size:.78rem;font-weight:600;color:var(--text);cursor:pointer;transition:border-color .15s}
+.mk-slots-toggle:hover{border-color:var(--accent)}
+.mk-slots-chev{font-size:.65rem;color:var(--text3)}
+.mk-slots-panel{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding:10px;background:var(--card2);border-radius:10px}
+.mk-slot-chip{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-family:'Manrope',sans-serif;font-size:.76rem;font-weight:500;color:var(--text);cursor:pointer;transition:all .15s}
+.mk-slot-chip:hover{border-color:var(--accent);color:var(--accent)}
+.mk-slots-note{width:100%;font-size:.68rem;color:var(--text3);margin-top:4px}
 .mk-side{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
 @media(max-width:900px){.mk-side{order:3}}
 .mk-side-lbl{font-size:.72rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
@@ -1355,16 +1365,16 @@ input[type=range]::-webkit-slider-thumb {
       <p class="q-why">Itt még csak a fő irányt keressük — a következő lépésben pontosítjuk a konkrét tüneteket.</p>
       <div class="multi-hint">Jelölhetsz többet is</div>
       <div class="opts" id="teruletek">
-        <div class="opt" onclick="mpick(this,'terület','Szív és keringés')"><div class="oi">❤️</div><div><div class="ol">Szív és keringés</div><div class="od">Mellkasi érzés, szívverés</div></div></div>
-        <div class="opt" onclick="mpick(this,'terület','Légzőszervi')"><div class="oi">🫁</div><div><div class="ol">Légzőszervi</div><div class="od">Légszomj, köhögés, allergia</div></div></div>
-        <div class="opt" onclick="mpick(this,'terület','Mozgásszervi')"><div class="oi">🦴</div><div><div class="ol">Mozgásszervi</div><div class="od">Fájdalom, merevség, ízület</div></div></div>
-        <div class="opt" onclick="mpick(this,'terület','Gyomor-bél')"><div class="oi">🫃</div><div><div class="ol">Emésztőrendszer</div><div class="od">Puffadás, reflux, emésztés</div></div></div>
-        <div class="opt" onclick="mpick(this,'terület','Mentális-Pszichés')"><div class="oi">🧠</div><div><div class="ol">Mentális, érzelmi</div><div class="od">Szorongás, hangulat, stressz</div></div></div>
-        <div class="opt" onclick="mpick(this,'terület','Alvás')"><div class="oi">🌙</div><div><div class="ol">Alvás</div><div class="od">Elalvás, ébredés, fáradtság</div></div></div>
-        <div class="opt" onclick="mpick(this,'terület','Anyagcsere-Hormonális')"><div class="oi">⚗️</div><div><div class="ol">Anyagcsere, hormon</div><div class="od">Súlyváltozás, fáradtság, ciklus</div></div></div>
-        <div class="opt" onclick="mpick(this,'terület','Bőr-Haj')"><div class="oi">✨</div><div><div class="ol">Bőr, haj</div><div class="od">Akne, hajhullás, bőrtünetek</div></div></div>
-        <div class="opt" onclick="mpick(this,'terület','Neurológiai')"><div class="oi">⚡</div><div><div class="ol">Neurológiai</div><div class="od">Fejfájás, szédülés, zsibbadás</div></div></div>
-        <div class="opt" onclick="mpick(this,'terület','Szűrés-Megelőzés')"><div class="oi">🔬</div><div><div class="ol">Szűrés, megelőzés</div><div class="od">Nem érzek különös panaszt</div></div></div>
+        <div class="opt" onclick="pickTerulet(this,'Szív és keringés')"><div class="oi">❤️</div><div><div class="ol">Szív és keringés</div><div class="od">Mellkasi érzés, szívverés</div></div></div>
+        <div class="opt" onclick="pickTerulet(this,'Légzőszervi')"><div class="oi">🫁</div><div><div class="ol">Légzőszervi</div><div class="od">Légszomj, köhögés, allergia</div></div></div>
+        <div class="opt" onclick="pickTerulet(this,'Mozgásszervi')"><div class="oi">🦴</div><div><div class="ol">Mozgásszervi</div><div class="od">Fájdalom, merevség, ízület</div></div></div>
+        <div class="opt" onclick="pickTerulet(this,'Gyomor-bél')"><div class="oi">🫃</div><div><div class="ol">Emésztőrendszer</div><div class="od">Puffadás, reflux, emésztés</div></div></div>
+        <div class="opt" onclick="pickTerulet(this,'Mentális-Pszichés')"><div class="oi">🧠</div><div><div class="ol">Mentális, érzelmi</div><div class="od">Szorongás, hangulat, stressz</div></div></div>
+        <div class="opt" onclick="pickTerulet(this,'Alvás')"><div class="oi">🌙</div><div><div class="ol">Alvás</div><div class="od">Elalvás, ébredés, fáradtság</div></div></div>
+        <div class="opt" onclick="pickTerulet(this,'Anyagcsere-Hormonális')"><div class="oi">⚗️</div><div><div class="ol">Anyagcsere, hormon</div><div class="od">Súlyváltozás, fáradtság, ciklus</div></div></div>
+        <div class="opt" onclick="pickTerulet(this,'Bőr-Haj')"><div class="oi">✨</div><div><div class="ol">Bőr, haj</div><div class="od">Akne, hajhullás, bőrtünetek</div></div></div>
+        <div class="opt" onclick="pickTerulet(this,'Neurológiai')"><div class="oi">⚡</div><div><div class="ol">Neurológiai</div><div class="od">Fejfájás, szédülés, zsibbadás</div></div></div>
+        <div class="opt" id="opt-szures-megelozes" onclick="pickTerulet(this,'Szűrés-Megelőzés')"><div class="oi">🔬</div><div><div class="ol">Szűrés, megelőzés</div><div class="od">Nem érzek különös panaszt</div></div></div>
       </div>
       <div class="mini-comment">
         <label class="mc-label" for="cm-terulet">+ Van más is, ami nincs a listában? (opcionális)</label>
@@ -2427,6 +2437,30 @@ function mpick(el,key,val){
   if(el.classList.contains('sel')){if(!MULTI[key].includes(val))MULTI[key].push(val)}
   else{MULTI[key]=MULTI[key].filter(v=>v!==val)}
   A[key]=(MULTI[key]||[]).join(', ')||'';
+}
+// v2.9 (Mick + tesztelő jelzése): a "Szűrés, megelőzés" opció a Q3
+// terület-választón korábban szabadon kombinálható volt más konkrét
+// panasz-területekkel, holott ez a választás egy TELJESEN KÜLÖN
+// kérdéssorra (a dedikált Screening almodulra, ld. isScreeningFlow())
+// navigál -- kombinálva más területekkel értelmezhetetlen/zavaró
+// eredményt adott. Mostantól kölcsönösen kizáró: ha ezt választod, minden
+// más kijelölés törlődik; ha bármi mást választasz, ez törlődik.
+function pickTerulet(el,val){
+  const SCREENING_VAL='Szűrés-Megelőzés';
+  const group=document.getElementById('teruletek');
+  const wasSel=el.classList.contains('sel');
+  if(val===SCREENING_VAL && !wasSel){
+    group.querySelectorAll('.opt.sel').forEach(o=>{if(o!==el)o.classList.remove('sel')});
+    MULTI['terület']=[];
+  }else if(val!==SCREENING_VAL){
+    const idx=(MULTI['terület']||[]).indexOf(SCREENING_VAL);
+    if(idx!==-1){
+      MULTI['terület'].splice(idx,1);
+      const screeningOpt=document.getElementById('opt-szures-megelozes');
+      if(screeningOpt)screeningOpt.classList.remove('sel');
+    }
+  }
+  mpick(el,'terület',val);
 }
 function sevpick(el,val){
   const scope=el.closest('.sev-scale')||document;
@@ -4020,7 +4054,7 @@ const MK_SORT_TABS=[
 // valós, igazolt partnert a listából, és nem is volt mód feloldani (a
 // szűrő-csempék között nem volt "Mind" opció). Az alapértelmezett
 // állapot mostantól "Mind" (nincs ár-sapka), a szűrés opt-in.
-const MK_STATE={sort:'match',verifiedOnly:false,minRating:0,maxPriceHuf:Infinity,maxDistance:'orszagos',insurance:[],payMode:null,saved:{}};
+const MK_STATE={sort:'match',verifiedOnly:false,minRating:0,maxPriceHuf:Infinity,maxDistance:'orszagos',insurance:[],payMode:null,saved:{},expandedSlots:{}};
 
 function mkFmtHuf(n){return n.toLocaleString('hu-HU')+' Ft-tól';}
 
@@ -4248,6 +4282,12 @@ async function mkEnhanceWithLiveData(category,partnersRef){
       match.nextSlotLabel=mkFormatSlotLabel(slot.date);
       match.nextSlotDays=Math.max(0,Math.round((new Date(slot.date)-new Date())/86400000));
     }
+    // v2.9 (Mick jelzése): a kártyán lenyitható "Szabad időpontok" fülhöz
+    // az adott orvos összes (nem csak a legközelebbi) élő szabad
+    // időpontja kell, dátum szerint rendezve -- max. 8, hogy ne legyen
+    // kezelhetetlenül hosszú a lista.
+    const allSlots=(slotsByDoctor.get(String(doc.doctorId))||[]).slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
+    match.slots=allSlots.slice(0,8).map(s=>({date:s.date,label:mkFormatSlotLabel(s.date)}));
   });
   mkRenderAll();
 }
@@ -4291,6 +4331,20 @@ function mkCardHtml(p,isFirstNonReal,idx){
   const profileLinkBlock=p.profileUrl?`<a class="mk-profile-link" href="${p.profileUrl}" target="_blank" rel="noopener">Részletes adatlap →</a>`:'';
   const saved=MK_STATE.saved[p.nm]?' saved':'';
   const savedIc=MK_STATE.saved[p.nm]?'♥':'♡';
+  // v2.9 (Mick jelzése): lenyitható "Szabad időpontok" fül, KIZÁRÓLAG az
+  // élő (Medio API-val bekötött) partnereknél, akiknél ténylegesen van
+  // szabad időpont-adatunk. A tényleges foglalás mindig a klinika saját
+  // oldalán történik (nincs saját TAJ-adatgyűjtés, ld. korábbi
+  // GDPR-döntés) -- egy konkrét időpontra kattintva oda navigálunk ki.
+  const slotsKey=p.doc||p.nm;
+  const hasSlots=p.real&&Array.isArray(p.slots)&&p.slots.length>0;
+  const slotsExpanded=hasSlots&&!!MK_STATE.expandedSlots[slotsKey];
+  const slotsToggleBlock=hasSlots
+    ?`<button type="button" class="mk-slots-toggle" onclick="mkToggleSlots('${slotsKey.replace(/'/g,"\\'")}')">🕒 Szabad időpontok (${p.slots.length})<span class="mk-slots-chev">${slotsExpanded?'▲':'▼'}</span></button>`
+    :'';
+  const slotsPanelBlock=hasSlots&&slotsExpanded
+    ?`<div class="mk-slots-panel">${p.slots.map(s=>`<button type="button" class="mk-slot-chip" onclick="window.open('${p.bookingUrl||'https://medsoulyou.mymedio.hu'}','_blank','noopener')">${s.label}</button>`).join('')}<div class="mk-slots-note">A választott időpontra a ${p.nm} saját foglalási oldalán tudsz jelentkezni.</div></div>`
+    :'';
   return `<div class="mk-card${p.top?' top':''}${p.real?' real':''}">
     ${badge}
     <div class="mk-card-top">
@@ -4311,12 +4365,15 @@ function mkCardHtml(p,isFirstNonReal,idx){
     </div>
     ${why}
     ${illustrativeNote}
+    ${slotsToggleBlock}
+    ${slotsPanelBlock}
     <div class="mk-actions">
       <button class="mk-book-btn" onclick="${p.real?`openBooking(${idx})`:'void(0)'}">📅 Időpont foglalása</button>
       <button class="mk-save-btn${saved}" onclick="mkToggleSave('${(p.nm||'').replace(/'/g,"\\'")}')">${savedIc}</button>
     </div>
   </div>`;
 }
+function mkToggleSlots(key){MK_STATE.expandedSlots[key]=!MK_STATE.expandedSlots[key];mkRenderAll();}
 function mkSetSort(key){MK_STATE.sort=key;mkRenderAll();}
 function mkSetMinRating(v){MK_STATE.minRating=v;mkRenderAll();}
 function mkSetMaxPrice(v){MK_STATE.maxPriceHuf=v;mkRenderAll();}
@@ -4588,12 +4645,12 @@ if(typeof window!=='undefined'){
     isScreeningFlow,computeBMI,computeScreeningFlags,computeScreeningBand,computeTudtadE,rfPick,
     RISK_NUMBER_RE,stripNumericRisk,sanitizeResultNumbers,
     buildScreeningPrompt,goScreeningAlap,scrWizRender,scrWizGoto,scrWizManualNext,scrWizRfGate,
-    scrLikertPick,scrBetegsegPick,scrCheckOptionalSkips,
+    scrLikertPick,scrBetegsegPick,scrCheckOptionalSkips,pickTerulet,
     renderResult,restart,submit,goSymptoms,showQ,
     computePreventionTips,SCR_PREVENTION_TIPS,SCR_HERO_AREA_PHRASE,SCR_LIKERT_TO_SPECIALTY,scrFlagToSpecialty,
     illustrativeStats,sortPartnersBy,mkUserRegion,mkRegionTier,MK_STATE,MK_SORT_TABS,renderMarketplace,mkSetSort,
     mkSetMinRating,mkSetMaxPrice,mkSetDistance,mkToggleVerifiedOnly,mkToggleInsurance,
-    mkSetPayMode,mkToggleSave,mkFetchLiveDoctors,mkEnhanceWithLiveData,
+    mkSetPayMode,mkToggleSave,mkToggleSlots,mkFetchLiveDoctors,mkEnhanceWithLiveData,
     renderAiReport,renderPrivatePublic,choosePrivatePublic,
     downloadReportPdf,shareReportWithDoctor,PP_ROWS,
     SV2_DOC_SORT_TABS,SV2_DOC_STATE,sv2DocCardHtml,sv2RenderDocList,sv2SetDocSort
