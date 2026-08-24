@@ -1639,6 +1639,18 @@ input[type=range]::-webkit-slider-thumb {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
           <span>Ez az eredmény tájékoztató jellegű, nem ad diagnózist és nem méri fel számszerűen az egyéni kockázatodat. Sürgős, életveszélyt jelentő tünet esetén azonnal hívd a <b>112</b>-t.</span>
         </div>
+        <!-- v2.9 (Mick kérése): a panasz-alapú AI-jelentéshez ("AI JELENTÉS"
+             kártya, ai-metric-row) hasonló designú összegző statisztika-sor a
+             Screeningnél is -- DE tartalomban szándékosan NEM azonos: a
+             buildScreeningPrompt() KRITIKUS szabálya szerint itt SOSEM
+             jelenhet meg numerikus kockázati érték vagy egyezési %
+             (MDR-orvostechnikai-eszköz-minősítési ok), ezért nincs
+             match-ring/%, csak minőségi (szöveges) csempék -- ld.
+             renderResult() isScr ága, ami tölti fel. -->
+        <div class="ai-report-card" id="sv2-stats-card" style="display:none">
+          <div class="sec-lbl">Összegzés</div>
+          <div class="ai-metric-row" id="sv2-metric-row"></div>
+        </div>
         <div class="sec-head"><h2>Hogyan áll össze ez a kép</h2><span id="sv2-cat-count"></span></div>
         <div class="cat-card" id="sv2-cat-card"></div>
         <div class="sec-head" id="sv2-tips-head" style="display:none"><h2>Ajánlott következő lépések</h2></div>
@@ -3453,6 +3465,7 @@ function renderResult(d){
     if(rsc1)rsc1.style.display='none';
     if(rt1)rt1.style.display='none';
     renderScreeningV2('clear', [], '');
+    sv2RenderStats(d, []);
   }else{
     if(tipsWrap){tipsWrap.style.display='none';tipsWrap.innerHTML='';}
 
@@ -3646,6 +3659,7 @@ function renderResult(d){
       if(rsc2)rsc2.style.display='none';
       if(rt2)rt2.style.display='none';
       renderScreeningV2('flag', partners, locNoteTextPlain);
+      sv2RenderStats(d, SCR.flags||[]);
       // v2.9 (Mick jelzése): a Screening eredményoldalán is jelenjen meg a
       // teljes marketplace (szűrők + élő időpont-foglalás/mélylink),
       // UGYANÚGY mint a panasz-alapú kérdéssor végén -- a
@@ -3805,6 +3819,24 @@ function sv2SetDocSort(key){
     sortTabsEl.innerHTML=SV2_DOC_SORT_TABS.map(t=>`<div class="mk-tab${SV2_DOC_STATE.sort===t.key?' sel':''}" onclick="sv2SetDocSort('${t.key}')">${t.lbl}</div>`).join('');
   }
   sv2RenderDocList();
+}
+// v2.9 (Mick kérése): a panasz-alapú "AI JELENTÉS" kártya 3-csempés
+// statisztika-sorával azonos DESIGN-ú összegzés a Screeningnek is --
+// tartalomban szándékosan eltér (nincs %/match-ring, ld. buildScreeningPrompt()
+// KRITIKUS szabálya a numerikus kockázati érték tilalmáról). `d` az AI-válasz
+// (renderResult()-ból kapja), `flags` a ténylegesen jelzett kategóriák.
+function sv2RenderStats(d,flags){
+  const card=document.getElementById('sv2-stats-card');
+  const row=document.getElementById('sv2-metric-row');
+  if(!card||!row)return;
+  card.style.display='';
+  const flaggedNames=(flags||[]).map(f=>f.area);
+  const metrics=[
+    {val:d.urgency_label||'–',lbl:'Sürgősségi szint'},
+    {val:flaggedNames.length?flaggedNames.join(', '):'Nincs kiemelt terület',lbl:'Jelzett területek'},
+    {val:(d.next_steps&&d.next_steps[0]&&d.next_steps[0].title)||'–',lbl:'Következő lépés'},
+  ];
+  row.innerHTML=metrics.map(m=>`<div class="ai-metric-box"><div class="ai-metric-val">${m.val}</div><div class="ai-metric-lbl">${m.lbl}</div></div>`).join('');
 }
 function renderScreeningV2(mode, partners, locNoteText){
   const isFlag=mode==='flag';
@@ -4715,7 +4747,7 @@ if(typeof window!=='undefined'){
     mkSetPayMode,mkToggleSave,mkToggleSlots,mkFetchLiveDoctors,mkEnhanceWithLiveData,mkBookingUrl,mkRatingSliderLabel,mkPriceSliderLabel,
     renderAiReport,renderPrivatePublic,choosePrivatePublic,
     downloadReportPdf,shareReportWithDoctor,PP_ROWS,
-    SV2_DOC_SORT_TABS,SV2_DOC_STATE,sv2DocCardHtml,sv2RenderDocList,sv2SetDocSort
+    SV2_DOC_SORT_TABS,SV2_DOC_STATE,sv2DocCardHtml,sv2RenderDocList,sv2SetDocSort,sv2RenderStats
   };
 }
 </script>
