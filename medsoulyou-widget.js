@@ -105,6 +105,21 @@
          return d.toLocaleDateString('hu-HU', { month: 'long', day: 'numeric', weekday: 'long' });
    }
 
+   // v2.9 (Mick jelzése): a szabad időpontra kattintva NE az általános
+   // mymedio.hu főoldalra vigyen, hanem konkrétan ARRA az orvosra és
+   // időpontra -- a MedSoulYou oldala ezt query-paraméterekkel támogatja
+   // (leellenőrizve valódi böngészőben), pontosan a Medio API-ból már
+   // ismert mezőkkel (specializationId, doctorId, locationId, date).
+   function buildMedSoulYouDeepLink(slot) {
+         if (slot && slot.doctorId && slot.specializationId && slot.locationId && slot.date) {
+               const datePart = slot.date.slice(0, 10);
+               const timePart = slot.date.slice(11, 16);
+               const selectedTime = encodeURIComponent(`${datePart} ${timePart}`);
+               return `https://medsoulyou.mymedio.hu/appointment-confirm?specializationId=${slot.specializationId}&doctorId=${slot.doctorId}&selectedTime=${selectedTime}&institutionId=${slot.locationId}`;
+         }
+         return 'https://medsoulyou.mymedio.hu';
+   }
+
    async function render(container, category, options) {
          options = options || {};
          injectStyles();
@@ -167,9 +182,10 @@
                                         // űrlap) -- amíg nincs jogász/DPO jóváhagyás a beteg-adatok GDPR-
                                         // megfelelő gyűjtésére/továbbítására (ld. api/medsoulyou-book.js teteje),
                                         // a szabad időpont kattintása a meglévő, adatot NEM gyűjtő külső
-                                        // MedSoulYou-oldalra visz, ugyanúgy mint az "nincs elérhető időpont"
-                                        // eset. Amint megvan a jóváhagyás, ez visszaállítható openBookingModal()-ra.
-                                        btn.addEventListener('click', () => window.open('https://medsoulyou.mymedio.hu', '_blank', 'noopener'));
+                                        // MedSoulYou-oldalra visz. v2.9: konkrétan ARRA az orvosra/időpontra
+                                        // mutató mélylinkkel (leellenőrizve valódi böngészőben, hogy a
+                                        // mymedio.hu ezt támogatja) -- nem csak az általános főoldalra.
+                                        btn.addEventListener('click', () => window.open(buildMedSoulYouDeepLink(slot), '_blank', 'noopener'));
                                         slotsWrap.appendChild(btn);
                             });
 

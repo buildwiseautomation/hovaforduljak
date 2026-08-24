@@ -391,6 +391,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .mk-chip{font-size:.72rem;color:var(--text2);background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:5px 10px;cursor:pointer}
 .mk-chip.sel{background:var(--teal-soft);color:var(--teal);border-color:var(--teal)}
 .mk-toggle-row{display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:var(--text2)}
+/* v2.9 (Mick jelzése): fix ár/értékelés-sávok helyett csúszka -- egyszerű,
+   platformfüggetlen <input type="range"> stílus, a meglévő accent-színnel. */
+.mk-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:var(--border);outline:none;margin:4px 0 8px;cursor:pointer}
+.mk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);border:2px solid var(--card);box-shadow:0 0 0 1px var(--accent);cursor:pointer}
+.mk-slider::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);border:2px solid var(--card);box-shadow:0 0 0 1px var(--accent);cursor:pointer}
+.mk-slider-val{font-size:.74rem;color:var(--text2);font-weight:600}
 .mk-list-wrap{min-width:0}
 .mk-list{display:flex;flex-direction:column;gap:12px}
 .mk-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px;position:relative;overflow:hidden}
@@ -3623,6 +3629,9 @@ function renderResult(d){
       // partnereket.
       const pg=document.getElementById('r-partners');
       if(pg)pg.innerHTML='';
+      // v2.9: a marketplace-hívásnak a TELJES, régió-tudatosan rendezett
+      // listára van szüksége (ld. lentebb) -- ezt a vágás ELŐTT mentjük el.
+      const fullPartnersForScr=partners;
       // v2.9: a Screening egyszerű doc-listája változatlanul max. 3
       // találatot mutat (ld. v2.3.3 BUGFIX feljebb) -- csak itt vágjuk,
       // hogy a fent már régió-tudatosan előre sorolt regionális pick
@@ -3637,6 +3646,19 @@ function renderResult(d){
       if(rsc2)rsc2.style.display='none';
       if(rt2)rt2.style.display='none';
       renderScreeningV2('flag', partners, locNoteTextPlain);
+      // v2.9 (Mick jelzése): a Screening eredményoldalán is jelenjen meg a
+      // teljes marketplace (szűrők + élő időpont-foglalás/mélylink),
+      // UGYANÚGY mint a panasz-alapú kérdéssor végén -- a
+      // renderScreeningV2() saját, egyszerű sv2-doc-list-je (max. 3 kártya,
+      // szűrő nélkül) helyett/mellett. A duplikált-ajánlás hiba elkerülése
+      // végett (ld. v2.3 BUGFIX feljebb) a régi, egyszerű doc-listát
+      // elrejtjük, amint a marketplace átveszi a helyét.
+      const sv2DocSection=document.getElementById('sv2-doc-section');
+      if(sv2DocSection)sv2DocSection.style.display='none';
+      if(mkSection)mkSection.style.display='';
+      const mkPartnersRefScr=fullPartnersForScr.map(p=>({...p}));
+      renderMarketplace(mkPartnersRefScr, prim, d);
+      mkEnhanceWithLiveData(prim, mkPartnersRefScr);
     }else{
       // v2.2: panasz-alapú területek — orvos-first marketplace + AI
       // jelentés + Magán vs. Állami összevetés.
@@ -4090,11 +4112,17 @@ function mkRenderAll(){
     filtersEl.innerHTML=`
       <div class="mk-filter-grp">
         <div class="mk-filter-lbl">Minimum értékelés</div>
-        <div class="mk-chip-row">${[0,3.5,4,4.5].map(v=>`<div class="mk-chip${MK_STATE.minRating===v?' sel':''}" onclick="mkSetMinRating(${v})">${v===0?'Mind':v+'★+'}</div>`).join('')}</div>
+        <input type="range" class="mk-slider" min="0" max="5" step="0.5" value="${MK_STATE.minRating}"
+          oninput="document.getElementById('mk-rating-val').textContent=mkRatingSliderLabel(this.value)"
+          onchange="mkSetMinRating(Number(this.value))">
+        <div class="mk-slider-val" id="mk-rating-val">${mkRatingSliderLabel(MK_STATE.minRating)}</div>
       </div>
       <div class="mk-filter-grp">
         <div class="mk-filter-lbl">Ár (max.)</div>
-        <div class="mk-chip-row">${[Infinity,20000,35000,60000,100000].map(v=>`<div class="mk-chip${MK_STATE.maxPriceHuf===v?' sel':''}" onclick="mkSetMaxPrice(${v===Infinity?"Infinity":v})">${v===Infinity?'Mind':(v/1000)+'e Ft alatt'}</div>`).join('')}</div>
+        <input type="range" class="mk-slider" min="5000" max="125000" step="5000" value="${MK_STATE.maxPriceHuf===Infinity?125000:MK_STATE.maxPriceHuf}"
+          oninput="document.getElementById('mk-price-val').textContent=mkPriceSliderLabel(this.value)"
+          onchange="mkSetMaxPrice(Number(this.value)>=125000?Infinity:Number(this.value))">
+        <div class="mk-slider-val" id="mk-price-val">${mkPriceSliderLabel(MK_STATE.maxPriceHuf===Infinity?125000:MK_STATE.maxPriceHuf)}</div>
       </div>
       <div class="mk-filter-grp">
         <div class="mk-filter-lbl">Távolság</div>
@@ -4206,6 +4234,24 @@ function mkFormatSlotLabel(iso){
   const date=d.toLocaleDateString('hu-HU',{month:'long',day:'numeric'});
   return `${date}, ${time}`;
 }
+// v2.9 (Mick jelzése): NE a MedSoulYou általános foglalási főoldalára
+// vigyen a kattintás, hanem KONKRÉTAN arra az orvosra és időpontra, amit
+// itt kiválasztott -- a MedSoulYou oldala (mymedio.hu) ezt ténylegesen
+// támogatja query-paraméterekkel (leellenőrizve valódi böngészőben):
+// /appointment-confirm?specializationId=X&doctorId=Y&selectedTime=
+// "ÉÉÉÉ-HH-NN OO:PP"&institutionId=Z -- pontosan azokkal a mezőkkel,
+// amik már megvannak nekünk a Medio API-ból. Ha bármelyik hiányzik
+// (pl. még nincs élő adat egy orvosnál), csendben visszaesik az
+// általános bookingUrl-re.
+function mkBookingUrl(p,slotIso){
+  if(p.doctorId&&p.specializationId&&p.institutionId&&slotIso){
+    const datePart=slotIso.slice(0,10);
+    const timePart=slotIso.slice(11,16);
+    const selectedTime=encodeURIComponent(`${datePart} ${timePart}`);
+    return `https://medsoulyou.mymedio.hu/appointment-confirm?specializationId=${p.specializationId}&doctorId=${p.doctorId}&selectedTime=${selectedTime}&institutionId=${p.institutionId}`;
+  }
+  return p.bookingUrl||'https://medsoulyou.mymedio.hu';
+}
 async function mkFetchLiveSlots(category){
   try{
     const res=await fetch(`/api/medsoulyou-slots?category=${encodeURIComponent(category)}`);
@@ -4277,10 +4323,12 @@ async function mkEnhanceWithLiveData(category,partnersRef){
     match.price=doc.price||null;
     match.live=true;
     if(data.location&&data.location.address)match.addr=data.location.address;
+    if(data.location&&data.location.id)match.institutionId=data.location.id;
     const slot=nextSlotFor(doc.doctorId);
     if(slot){
       match.nextSlotLabel=mkFormatSlotLabel(slot.date);
       match.nextSlotDays=Math.max(0,Math.round((new Date(slot.date)-new Date())/86400000));
+      match.nextSlotIso=slot.date;
     }
     // v2.9 (Mick jelzése): a kártyán lenyitható "Szabad időpontok" fülhöz
     // az adott orvos összes (nem csak a legközelebbi) élő szabad
@@ -4343,7 +4391,7 @@ function mkCardHtml(p,isFirstNonReal,idx){
     ?`<button type="button" class="mk-slots-toggle" onclick="mkToggleSlots('${slotsKey.replace(/'/g,"\\'")}')">🕒 Szabad időpontok (${p.slots.length})<span class="mk-slots-chev">${slotsExpanded?'▲':'▼'}</span></button>`
     :'';
   const slotsPanelBlock=hasSlots&&slotsExpanded
-    ?`<div class="mk-slots-panel">${p.slots.map(s=>`<button type="button" class="mk-slot-chip" onclick="window.open('${p.bookingUrl||'https://medsoulyou.mymedio.hu'}','_blank','noopener')">${s.label}</button>`).join('')}<div class="mk-slots-note">A választott időpontra a ${p.nm} saját foglalási oldalán tudsz jelentkezni.</div></div>`
+    ?`<div class="mk-slots-panel">${p.slots.map(s=>`<button type="button" class="mk-slot-chip" onclick="window.open('${mkBookingUrl(p,s.date)}','_blank','noopener')">${s.label}</button>`).join('')}<div class="mk-slots-note">A kiválasztott időpontra egyből a(z) ${p.doc||p.nm} foglalási oldalára jutsz.</div></div>`
     :'';
   return `<div class="mk-card${p.top?' top':''}${p.real?' real':''}">
     ${badge}
@@ -4377,6 +4425,17 @@ function mkToggleSlots(key){MK_STATE.expandedSlots[key]=!MK_STATE.expandedSlots[
 function mkSetSort(key){MK_STATE.sort=key;mkRenderAll();}
 function mkSetMinRating(v){MK_STATE.minRating=v;mkRenderAll();}
 function mkSetMaxPrice(v){MK_STATE.maxPriceHuf=v;mkRenderAll();}
+// v2.9 (Mick jelzése): fix chip-gombok helyett csúszka -- ezek a
+// feliratok az oninput (húzás közben, csak a szöveget frissíti) és az
+// onchange (elengedéskor, ténylegesen szűr) eseményekhez is kellenek.
+function mkRatingSliderLabel(v){
+  const n=Number(v);
+  return n<=0?'Mind':n+'★+';
+}
+function mkPriceSliderLabel(v){
+  const n=Number(v);
+  return n>=125000?'Mind (nincs felső határ)':n.toLocaleString('hu-HU')+' Ft alatt';
+}
 function mkSetDistance(v){MK_STATE.maxDistance=v;mkRenderAll();}
 function mkToggleVerifiedOnly(v){MK_STATE.verifiedOnly=v;mkRenderAll();}
 function mkToggleInsurance(o){
@@ -4574,9 +4633,12 @@ function resultStickyCtaClick(){
 function openBooking(idx){
   const p=(window.__partners||[])[idx];
   if(!p)return;
-  // Valódi partner (pl. MedSoulYou) -> tényleges foglalási oldalra visz, nem demo modal
+  // Valódi partner (pl. MedSoulYou) -> tényleges foglalási oldalra visz, nem demo modal.
+  // v2.9: ha van élő legközelebbi időpont-adatunk, egyenesen ARRA az
+  // orvosra/időpontra mutató mélylinket adjuk (mkBookingUrl), nem csak az
+  // általános foglalási főoldalt.
   if(p.real && p.bookingUrl){
-    window.open(p.bookingUrl,'_blank','noopener');
+    window.open(mkBookingUrl(p,p.nextSlotIso),'_blank','noopener');
     return;
   }
   document.getElementById('bk-name').textContent=p.nm;
@@ -4650,7 +4712,7 @@ if(typeof window!=='undefined'){
     computePreventionTips,SCR_PREVENTION_TIPS,SCR_HERO_AREA_PHRASE,SCR_LIKERT_TO_SPECIALTY,scrFlagToSpecialty,
     illustrativeStats,sortPartnersBy,mkUserRegion,mkRegionTier,MK_STATE,MK_SORT_TABS,renderMarketplace,mkSetSort,
     mkSetMinRating,mkSetMaxPrice,mkSetDistance,mkToggleVerifiedOnly,mkToggleInsurance,
-    mkSetPayMode,mkToggleSave,mkToggleSlots,mkFetchLiveDoctors,mkEnhanceWithLiveData,
+    mkSetPayMode,mkToggleSave,mkToggleSlots,mkFetchLiveDoctors,mkEnhanceWithLiveData,mkBookingUrl,mkRatingSliderLabel,mkPriceSliderLabel,
     renderAiReport,renderPrivatePublic,choosePrivatePublic,
     downloadReportPdf,shareReportWithDoctor,PP_ROWS,
     SV2_DOC_SORT_TABS,SV2_DOC_STATE,sv2DocCardHtml,sv2RenderDocList,sv2SetDocSort
