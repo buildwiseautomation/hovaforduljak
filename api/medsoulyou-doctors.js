@@ -61,7 +61,15 @@ export default async function handler(req, res) {
               })
               .filter(Boolean);
 
-        const address = location ? [location.address, location.city].filter(Boolean).join(', ') : '';
+        // v2.9 (Mick jelzése, "pontos lokációt megkapjunk"): korábban csak
+        // az utcanevet + várost fűztük össze (pl. "Újházy utca, Budapest"),
+        // a Medio location-objektum zip/houseNr/floorDoor mezőit figyelmen
+        // kívül hagyva -- most a teljes, pontos címet állítjuk össze, a
+        // meglévő statikus adatokkal megegyező formátumban
+        // ("1119 Budapest, Újházi utca 12.").
+        const address = location
+          ? `${[location.zip, location.city].filter(Boolean).join(' ')}, ${location.address || ''}${location.houseNr ? ' ' + location.houseNr + '.' : ''}${location.floorDoor ? ' ' + location.floorDoor : ''}`.trim()
+          : '';
 
         res.status(200).json({
                 available: doctorList.length > 0,

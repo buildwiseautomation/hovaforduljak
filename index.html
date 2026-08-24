@@ -409,7 +409,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .mk-badge-tag{display:inline-flex;font-size:.62rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:5px;background:var(--accent-soft);color:var(--accent2);margin-bottom:10px}
 .mk-info{flex:1;min-width:0}
 .mk-nm{font-weight:700;font-size:.96rem;color:var(--text)}
-.mk-clinic-ctx{font-size:.76rem;color:var(--text3);margin-top:1px}
+/* v2.9 (Mick jelzése): a partner klinika neve mostantól tudatosan NAGYON
+   pici alcím -- az orvos neve a hangsúlyos, elsődleges elem, a klinika
+   csak háttér-kontextus. */
+.mk-clinic-ctx{font-size:.62rem;color:var(--text3);margin-top:1px;text-transform:uppercase;letter-spacing:.03em}
 .mk-sp{font-size:.78rem;color:var(--text3);margin-top:2px}
 .mk-rating-row{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:.78rem;color:var(--text2)}
 .mk-rating-row .stars{color:var(--warm)}
@@ -1142,7 +1145,7 @@ input[type=range]::-webkit-slider-thumb {
    neve (pl. "MedSoulYou") KOZVETLENUL a nev alatt, alcimkent is jelenjen
    meg (nem csak a cim-sorban lentebb), hogy azonnal lassak, melyik
    klinikahoz tartozik. Ugyanaz a mintazat, mint a marketplace .mk-clinic-ctx. */
-.scr-v2 .doc-clinic-name{font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-top:2px}
+.scr-v2 .doc-clinic-name{font-size:9.5px;font-weight:600;color:var(--ink-soft);margin-top:2px;text-transform:uppercase;letter-spacing:.03em}
 .scr-v2 .doc-clinic{font-size:12px;color:var(--ink-soft);margin-top:2px;display:flex;align-items:center;gap:5px}
 .scr-v2 .doc-price{font-size:12.5px;font-weight:600;color:var(--ink);margin-top:6px}
 .scr-v2 .doc-profile-link{display:inline-block;font-size:12.5px;font-weight:600;color:var(--color-action);text-decoration:none;margin-top:9px}
@@ -2045,7 +2048,12 @@ const PDATA = {
     {nm:'Szombathely Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'VA',addr:'9700 Szombathely, Rákóczi út 8.',tel:'+36 94 505 190',hours:'H–P: 8:00–18:00'}
   ],
   'Mozgásszervi': [
-    {nm:'MedSoulYou',sp:'Gyógytorna, Fizioterápia · Állapotfelmérés',ic:'💫',tags:['Derékfájás','Ízületi panasz','Gyógytorna'],pct:98,top:true,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Gyógytornász-fizioterapeuta szakértelem a mozgásszervi panaszok, sportsérülések és rehabilitáció kezelésére.'},
+    // v2.9 (Mick jelzése): a korábbi 'MedSoulYou (adategyeztetés alatt)'
+    // placeholder-bejegyzés törölve -- a valódi Medio API-adatból ma már
+    // tudjuk, hogy a MedSoulYou 8 orvosa között NINCS gyógytornász/
+    // fizioterapeuta, tehát ezt a szakterületet nem tudják megoldani. Ne
+    // ajánljunk klinikát olyan problémára, amivel ténylegesen nem
+    // foglalkoznak -- ugyanez a minta, mint az Alvás kategóriánál korábban.
     {nm:'Budapest Spine Center',sp:'Ortopédia · Gerincsebészet',ic:'🦴',tags:['Gerincbetegség','Rehabilitáció','Fizioterpia'],pct:95,top:false,region:'BU',addr:'1125 Budapest, VII. Király utca 91.',tel:'+36 1 414 5374',hours:'H–P: 8:00–18:00'},
     {nm:'ProSport Medicina',sp:'Sportmedicina · Fizioterápia',ic:'💪',tags:['Sport sérülés','Mozgásterápia','Izomzat'],pct:87,top:false,region:'BU',addr:'1202 Budapest, VIII. Üllői út 137.',tel:'+36 1 946 5010',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
     {nm:'Dr. Fekete Péter',sp:'Reumatológus · Ízületi betegségek',ic:'🔩',tags:['Ízület','Arthritis','Gyulladás'],pct:80,top:false,region:'BU',addr:'1164 Budapest, XII. Alkotás utca 164.',tel:'+36 1 904 4598',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
@@ -2095,7 +2103,13 @@ const PDATA = {
     {nm:'Szombathely Egészségközpont',sp:'Általános belgyógyászat · Komplex kivizsgálás',ic:'🏥',tags:['Általános kivizsgálás','Labor','Irányítás'],pct:82,top:false,region:'VA',addr:'9700 Szombathely, Kossuth Lajos utca 24.',tel:'+36 94 310 220',hours:'H–P: 8:00–18:00'}
   ],
   'Szív és keringés': [
-    {nm:'MedSoulYou',sp:'Belgyógyászat · EKG, teljes állapotfelmérés',ic:'💫',tags:['Mellkasi fájdalom','Magas vérnyomás','Komplex kivizsgálás'],pct:98,top:true,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász szakorvosi vizsgálat, EKG és laborháttér egy helyen — a mellkasi panaszok és vérnyomásproblémák valós okának feltárására.'},
+    // v2.9 (Mick jelzése): a korábbi 'MedSoulYou (adategyeztetés alatt)'
+    // placeholder-bejegyzés törölve -- a valódi Medio API-adatból tudjuk,
+    // hogy a MedSoulYou 8 orvosa között nincs kifejezetten kardiológiára
+    // (EKG, echokardiográfia) specializálódott szakember -- Dr. Salánki
+    // Zsuzsanna belgyógyász, de az ő bookolható Medio-szolgáltatásai
+    // között sincs EKG/kardiológiai vizsgálat. Ne állítsunk olyat, amit
+    // nem tudunk visszaigazolni az élő adatból.
     {nm:'Kardio Centrum Budapest',sp:'Kardiológia · Non-invazív diagnosztika',ic:'❤️',tags:['EKG','Echokardiográfia','Holter'],pct:96,top:false,region:'BU',addr:'1169 Budapest, VIII. Üllői út 103.',tel:'+36 1 570 4593',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
     {nm:'Dr. Szabó András',sp:'Kardiológus · Magánrendelő',ic:'🫀',tags:['Vérnyomás','Ritmuszavar','Terheléses EKG'],pct:89,top:false,region:'BU',addr:'1171 Budapest, III. Bécsi út 13.',tel:'+36 1 312 3504',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
     {nm:'Medicover Kardiológia',sp:'Komplex szív kivizsgálás',ic:'🏥',tags:['Teljes szűrés','Labor','Képalkotó'],pct:83,top:false,region:'BU',addr:'1191 Budapest, IX. Ferenc körút 99.',tel:'+36 1 590 8668',hours:'H–Cs: 8:00–19:00, P: 8:00–16:00'},
@@ -2168,11 +2182,13 @@ const PDATA = {
     {nm:'Szombathely Szakrendelő',sp:'Bőrgyógyászat, Endokrinológia, Neurológia',ic:'🔬',tags:['Bőrgyógyászat','Hormonális','Neurológia'],pct:79,top:false,region:'VA',addr:'9700 Szombathely, Rákóczi út 8.',tel:'+36 94 505 190',hours:'H–P: 8:00–18:00'}
   ],
   'Bőr-Haj': [
-    // v2.4: Dr. Salanki Zsuzsanna mar szerepel az Anyagcsere-Hormonalis kategorianal
-    // (endokrinologia/diabetologia), Mick szerint bőrgyógyászatot is ellat -- ezert
-    // itt kulon, bőrgyógyászati kontextusban is felvesszuk (ugyanaz a szemely, ket
-    // relevans szakterulet, ld. jelentes a chatben).
-    {nm:'MedSoulYou',doc:'Dr. Salánki Zsuzsanna',sp:'Bőrgyógyászat',ic:'💫',tags:['Bőrgyógyászat'],pct:98,top:true,real:true,region:'BU',bookingUrl:'https://medsoulyou.mymedio.hu/index',addr:'1119 Budapest, Újházi utca 12.',tel:'+36 1 901 7455',hours:'H–P, előzetes egyeztetés alapján',about:'Belgyógyász-diabetológus, endokrinológus a MedSoulYou csapatában, bőrgyógyászati vonatkozású panaszokban is.'},
+    // v2.9 (Mick jelzése): a korábbi Dr. Salánki Zsuzsanna-bejegyzés
+    // törölve -- v2.4-ben még feltételezés alapján ("Mick szerint
+    // bőrgyógyászatot is ellát") került be, de a valódi Medio API-adat
+    // (getSpecializations) szerint az ő regisztrált szakterületei
+    // Belgyógyászat / Endokrinológia / Diabetológia / Állapotfelmérés --
+    // bőrgyógyászati specializáció NINCS köztük. Ne állítsunk olyat egy
+    // konkrét orvosról, amit nem tudunk visszaigazolni az élő adatból.
     {nm:'Bőrgyógyászati Magánrendelő',sp:'Dermatológia · Esztétikai bőrgyógyászat',ic:'✨',tags:['Akne','Psoriasis','Hajhullás'],pct:93,top:false,region:'BU',addr:'1228 Budapest, VI. Andrássy út 33.',tel:'+36 1 331 8787',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
     {nm:'Dr. Lakatos Mária',sp:'Bőrgyógyász · Trichológus',ic:'💇',tags:['Hajhullás','Bőrbetegségek','Hormonális akne'],pct:87,top:false,region:'BU',addr:'1189 Budapest, XI. Bartók Béla út 109.',tel:'+36 1 416 9835',hours:'H–P: 7:00–20:00, Szo: 8:00–14:00'},
     {nm:'SkinLab Budapest',sp:'Endokrinológia + Bőrgyógyászat',ic:'🔬',tags:['Hormonális összefüggés','Labor','Komplex'],pct:81,top:false,region:'BU',addr:'1165 Budapest, XI. Bartók Béla út 113.',tel:'+36 1 729 8397',hours:'H–P: 8:00–18:00'},
