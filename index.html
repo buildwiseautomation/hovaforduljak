@@ -428,6 +428,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .mk-stats{flex-shrink:0;text-align:right;min-width:90px}
 .mk-price{font-family:'Manrope',sans-serif;font-weight:700;font-size:.92rem;color:var(--text)}
 .mk-distance,.mk-wait{font-size:.72rem;color:var(--text3);margin-top:2px}
+/* v2.9 (Mick jelzése): jól látható jelzés, amíg az élő Medio-adat tölt --
+   enélkül a felhasználó nem tudja megkülönböztetni a "még tölt" és a
+   "sosincs élő adat" állapotot, ami úgy hat, mintha a funkció nem működne. */
+.mk-live-loading{color:var(--accent);font-style:italic;animation:mkPulse 1.4s ease-in-out infinite}
+@keyframes mkPulse{0%,100%{opacity:.55}50%{opacity:1}}
 /* v2.6.1 KRITIKUS JAVITAS (Mick valos telefon-screenshotja alapjan): a
    .mk-info (nev/specialitas) es .mk-stats (ar/tavolsag) oldalt-egymas-
    melletti flex-oszlopok keskeny mobil szelessegen (a hosszu "Ar
@@ -4112,7 +4117,15 @@ const MK_STATE={sort:'match',verifiedOnly:false,minRating:0,maxPriceHuf:Infinity
 
 function mkFmtHuf(n){return n.toLocaleString('hu-HU')+' Ft-tól';}
 
+// v2.9 BUGFIX (Mick jelzése): a Medio API-hívás (szerver-hidegindítás +
+// Medio-bejelentkezés miatt) kb. 2-4 másodpercig tart, mire az élő ár/
+// időpont megérkezik -- korábban eddig NEM volt semmilyen jelzés, a kártya
+// egyszerűen a statikus "Ár egyeztetés alapján" szöveget mutatta, ami
+// pontosan úgy néz ki, mintha az egész funkció nem is működne. Mostantól
+// az igazolt (real), még élővé nem vált bejegyzések explicit "töltés
+// alatt" állapotot kapnak, amíg az mkEnhanceWithLiveData() le nem fut.
 function renderMarketplace(basePartners,prim,d){
+  basePartners.forEach(p=>{ if(p.real&&!p.live)p.liveChecking=true; });
   window.__mkBase=basePartners;
   window.__mkD=d;
   mkRenderAll();
@@ -4304,7 +4317,6 @@ function mkNormName(s){
 }
 async function mkEnhanceWithLiveData(category,partnersRef){
   const [data,slotData]=await Promise.all([mkFetchLiveDoctors(category),mkFetchLiveSlots(category)]);
-  if(!data.available||!data.doctors||!data.doctors.length)return;
   // csak akkor alkalmazzuk, ha még mindig ugyanaz a renderelt lista van
   // érvényben (referencia-egyezés) -- ha a felhasználó időközben új
   // eredményt kért (pl. gyorsan újraindította a tesztet), a
@@ -4313,6 +4325,16 @@ async function mkEnhanceWithLiveData(category,partnersRef){
   // kategóriába szúrjon be élő adatot.
   const base=window.__mkBase;
   if(!base||base!==partnersRef)return;
+  // v2.9 BUGFIX: ha ehhez a kategóriához nincs élő adat, a "töltés alatt"
+  // jelzést IS le kell venni (különben örökre "Élő ár lekérdezése…"
+  // szöveg maradna a kártyán) -- a végleges, statikus fallback szöveg
+  // (mkCardHtml-ben) csak akkor jelenik meg helyesen, ha p.liveChecking
+  // már false.
+  if(!data.available||!data.doctors||!data.doctors.length){
+    base.forEach(p=>{ if(p.liveChecking)p.liveChecking=false; });
+    mkRenderAll();
+    return;
+  }
 
   const slotsByDoctor=new Map();
   if(slotData.available&&slotData.slots){
@@ -4354,6 +4376,7 @@ async function mkEnhanceWithLiveData(category,partnersRef){
     match.specializationId=doc.specializationId;
     match.price=doc.price||null;
     match.live=true;
+    match.liveChecking=false;
     if(data.location&&data.location.address)match.addr=data.location.address;
     if(data.location&&data.location.id)match.institutionId=data.location.id;
     const slot=nextSlotFor(doc.doctorId);
@@ -4369,6 +4392,11 @@ async function mkEnhanceWithLiveData(category,partnersRef){
     const allSlots=(slotsByDoctor.get(String(doc.doctorId))||[]).slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
     match.slots=allSlots.slice(0,8).map(s=>({date:s.date,label:mkFormatSlotLabel(s.date)}));
   });
+  // v2.9 BUGFIX: ha bármelyik "töltés alatt" jelzésű bejegyzés véletlenül
+  // nem kapott párt (pl. több igazolt helyőrző volt, mint amennyi élő
+  // orvos visszajött), azoknál is le kell venni a jelzést, különben örökre
+  // "Élő ár lekérdezése…" maradna.
+  base.forEach(p=>{ if(p.liveChecking)p.liveChecking=false; });
   mkRenderAll();
 }
 
@@ -4386,13 +4414,22 @@ function mkCardHtml(p,isFirstNonReal,idx){
   // (p.price), kulonben egyertelmu "ar egyeztetes alapjan" szoveget --
   // SOHA nem ures mezot vagy "0 Ft"-ot. Nem-valos illusztrativ partnernel
   // valtozatlanul a demo-ar (illustrativeStats) jelenik meg.
+  // v2.9 BUGFIX (Mick jelzése): amíg az élő Medio-hívás fut (p.liveChecking
+  // -- ez ténylegesen 2-4 másodpercig is eltarthat szerver-hidegindítás
+  // miatt), EXPLICIT "töltés alatt" szöveget mutatunk a statikus "Ár
+  // egyeztetés alapján" helyett -- különben pontosan úgy néz ki, mintha a
+  // funkció nem is működne.
   const priceBlock=p.real
-    ? `<div class="mk-price">${p.price?mkFmtHuf(p.price):'Ár egyeztetés alapján'}</div>`
+    ? (p.liveChecking
+        ? `<div class="mk-price mk-live-loading">Élő ár lekérdezése…</div>`
+        : `<div class="mk-price">${p.price?mkFmtHuf(p.price):'Ár egyeztetés alapján'}</div>`)
     : `<div class="mk-price">${mkFmtHuf(st.priceHuf)}</div>`;
   // v2.8: valos partnernel, ha van elo szabad idopont-adatunk (p.nextSlotLabel),
   // azt mutatjuk oszinten -- soha nem fabrikalt "X napon belul" szoveget.
   const waitBlock=p.real
-    ? (p.nextSlotLabel?`<div class="mk-wait">Legközelebb: ${p.nextSlotLabel}</div>`:'')
+    ? (p.liveChecking
+        ? `<div class="mk-wait mk-live-loading">Időpontok ellenőrzése…</div>`
+        : (p.nextSlotLabel?`<div class="mk-wait">Legközelebb: ${p.nextSlotLabel}</div>`:''))
     : `<div class="mk-wait">${st.waitDays} napon belül</div>`;
   const verifiedTag=p.real?'<div class="mk-verified-tag">✓ Igazolt partner</div>':'';
   // Badge-tag: az igazolt partner mindig ✓-ot kap; az első nem-igazolt
