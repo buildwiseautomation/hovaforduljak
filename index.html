@@ -6,6 +6,9 @@
 <title>HovaForduljak — Egészségügyi navigáció</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- v2.9 (Mick kérése): térkép-nézet a marketplace-en (Leaflet + OpenStreetMap,
+     ingyenes, API-kulcs nélkül). -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -378,6 +381,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .mk-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:36px 0 14px}
 .mk-header-txt{font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
 .mk-header-badge{font-size:.78rem;font-weight:700;color:var(--success);background:var(--success-soft);border-radius:20px;padding:5px 12px;flex-shrink:0}
+/* v2.9 (Mick kérése): lista/térkép nézetváltó, ugyanaz a pill-stílus mint
+   a rendezés-fülek. */
+.mk-view-toggle{display:flex;gap:8px;margin-bottom:14px}
+.mk-view-btn{font-size:.8rem;font-weight:600;color:var(--text2);background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:8px 16px;cursor:pointer;transition:all .15s}
+.mk-view-btn.sel{background:var(--accent);color:#fff;border-color:var(--accent)}
+#mk-map{height:440px;border-radius:14px;overflow:hidden;border:1px solid var(--border);z-index:1}
+.mk-map-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:.76rem;color:var(--text2)}
+.mk-map-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.mk-map-dot-green{background:#22C55E}
+.mk-map-dot-yellow{background:#EAB308}
+.mk-map-popup b{display:block;margin-bottom:2px}
 .mk-sorttabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 .mk-tab{font-size:.78rem;color:var(--text2);background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:7px 14px;cursor:pointer;transition:all .15s;white-space:nowrap}
 .mk-tab.sel{background:var(--accent);color:#fff;border-color:var(--accent)}
@@ -1774,14 +1788,29 @@ input[type=range]::-webkit-slider-thumb {
         <div class="mk-header-txt">Az ajánlások a válaszaid alapján készültek</div>
         <div class="mk-header-badge" id="mk-header-badge"></div>
       </div>
+      <!-- v2.9 (Mick kérése): lista/térkép nézetváltó -- a térképen a
+           legjobb+legközelebbi 3 találat zölddel, a teljes hálózat többi
+           tagja sárgával (távolabbi, utazást igénylő opcióként) jelenik
+           meg, ld. mkRenderMap(). -->
+      <div class="mk-view-toggle">
+        <button type="button" class="mk-view-btn sel" id="mk-view-btn-list" onclick="mkSetView('list')">📋 Lista</button>
+        <button type="button" class="mk-view-btn" id="mk-view-btn-map" onclick="mkSetView('map')">🗺️ Térkép</button>
+      </div>
       <div class="mk-sorttabs" id="mk-sorttabs"></div>
-      <div class="mk-layout">
+      <div class="mk-layout" id="mk-layout">
         <div class="mk-filters" id="mk-filters"></div>
         <div class="mk-list-wrap">
           <div id="loc-banner-mk"></div>
           <div class="mk-list" id="mk-list"></div>
         </div>
         <div class="mk-side" id="mk-side"></div>
+      </div>
+      <div id="mk-map-wrap" style="display:none">
+        <div id="mk-map"></div>
+        <div class="mk-map-legend">
+          <span><i class="mk-map-dot mk-map-dot-green"></i>Legjobb + legközelebbi 3</span>
+          <span><i class="mk-map-dot mk-map-dot-yellow"></i>Teljes hálózat (távolabbi)</span>
+        </div>
       </div>
       <div id="medsoulyou-booking-mk"></div>
     </div>
@@ -1875,6 +1904,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const A = {};
 const MULTI = {};
@@ -3363,6 +3393,20 @@ const REGIONS={
   ZA:'Zala megye (Zalaegerszeg)',GY:'Győr-Moson-Sopron megye (Győr)',
   VA:'Vas megye (Szombathely)',
 };
+// v2.9 (Mick kérése, térkép-nézet): megyeszékhely-szintű GPS-koordináták
+// (közelítő városközéppont) minden régiókódhoz -- ez elég egy illusztratív
+// térkép-pinhez, NEM egyedi utcaszintű cím. A valódi (Medio API-s) partner
+// saját, pontos koordinátáját (p.lat/p.lng, ha van) a térkép-renderelő
+// ELŐNYBEN részesíti ezekkel a közelítő értékekkel szemben.
+const COUNTY_COORDS={
+  BU:[47.4979,19.0402],PE:[47.3959,18.9188],KE:[47.5692,18.3980],
+  HE:[47.9025,20.3772],NO:[48.0997,19.7987],BZ:[48.1035,20.7784],
+  HB:[47.5316,21.6273],SZ:[47.9554,21.7167],JN:[47.1747,20.1974],
+  BE:[46.6736,21.0877],BK:[46.8964,19.6897],CS:[46.2530,20.1414],
+  TO:[46.3474,18.7062],SO:[46.3593,17.7967],BA:[46.0727,18.2323],
+  FE:[47.1860,18.4221],VE:[47.0932,17.9115],ZA:[46.8417,16.8416],
+  GY:[47.6875,17.6504],VA:[47.2307,16.6218],
+};
 function getRegionCode(postal){
   if(!postal||postal.length<2)return null;
   const prefix=parseInt(postal.slice(0,2),10);
@@ -4121,7 +4165,7 @@ const MK_SORT_TABS=[
 // felhasználó saját régiója, +mindig az igazolt/élő partner, akkor is ha
 // távolabb van) -- a teljes országos hálózat továbbra is elérhető, csak
 // explicit kapcsolóval ("Országos").
-const MK_STATE={sort:'match',verifiedOnly:false,minRating:0,maxPriceHuf:Infinity,maxDistance:'nearby',insurance:[],payMode:null,saved:{},expandedSlots:{}};
+const MK_STATE={sort:'match',verifiedOnly:false,minRating:0,maxPriceHuf:Infinity,maxDistance:'nearby',insurance:[],payMode:null,saved:{},expandedSlots:{},view:'list'};
 
 function mkFmtHuf(n){return n.toLocaleString('hu-HU')+' Ft-tól';}
 
@@ -4136,6 +4180,9 @@ function renderMarketplace(basePartners,prim,d){
   basePartners.forEach(p=>{ if(p.real&&!p.live)p.liveChecking=true; });
   window.__mkBase=basePartners;
   window.__mkD=d;
+  // v2.9: minden új eredménynél listára állunk vissza (ne maradjon a
+  // térkép-nézet egy korábbi, már irreleváns kategóriáról).
+  mkSetView('list');
   mkRenderAll();
 }
 function mkRenderAll(){
@@ -4256,6 +4303,9 @@ function mkRenderAll(){
       </div>`;
   }
   window.__partners=list;
+  // v2.9: ha éppen a térkép-nézet aktív (pl. élő adat érkezett közben,
+  // vagy a felhasználó szűrőt/rendezést váltott), frissítsük a pineket is.
+  if(MK_STATE.view==='map')mkRenderMap();
 }
 
 // v2.7: élő Medio-adat (orvos név, ár, telephely) beillesztése azokhoz az
@@ -4519,6 +4569,77 @@ function mkPriceSliderLabel(v){
   return n>=125000?'Mind (nincs felső határ)':n.toLocaleString('hu-HU')+' Ft alatt';
 }
 function mkSetDistance(v){MK_STATE.maxDistance=v;mkRenderAll();}
+// v2.9 (Mick kérése): lista/térkép nézetváltó -- a térkép a mk-layout
+// (szűrő+lista+oldalsáv) helyett jelenik meg, ugyanabból az adatból.
+let __mkLeafletMap=null;
+let __mkLeafletMarkers=[];
+function mkSetView(v){
+  MK_STATE.view=v;
+  const listBtn=document.getElementById('mk-view-btn-list');
+  const mapBtn=document.getElementById('mk-view-btn-map');
+  const layout=document.getElementById('mk-layout');
+  const mapWrap=document.getElementById('mk-map-wrap');
+  if(listBtn)listBtn.classList.toggle('sel',v==='list');
+  if(mapBtn)mapBtn.classList.toggle('sel',v==='map');
+  if(layout)layout.style.display=v==='list'?'':'none';
+  if(mapWrap)mapWrap.style.display=v==='map'?'':'none';
+  if(v==='map')mkRenderMap();
+}
+// v2.9 (Mick kérése): a legjobb+legközelebbi 3 találat ZÖLDDEL, a teljes
+// hálózat többi (távolabbi, utazást igénylő) tagja SÁRGÁVAL a térképen --
+// a rangsorolást a már meglévő, régió-tudatos sortPartnersBy('match') adja
+// (ugyanaz, ami a lista sorrendjét is meghatározza), tehát a "legjobb 3"
+// itt is figyelembe veszi a szakterület-relevanciát és a közelséget, nem
+// csak a nyers távolságot.
+function mkRenderMap(){
+  const mapEl=document.getElementById('mk-map');
+  if(!mapEl||typeof L==='undefined')return;
+  const base=window.__mkBase||[];
+  if(!base.length)return;
+  const ranked=sortPartnersBy(base,'match');
+  const top3=new Set(ranked.slice(0,3).map(p=>p.nm+'|'+(p.doc||'')));
+  function coordsFor(p){
+    if(p.real&&p.lat&&p.lng)return [parseFloat(p.lat),parseFloat(p.lng)];
+    return COUNTY_COORDS[p.region]||COUNTY_COORDS.BU;
+  }
+  if(!__mkLeafletMap){
+    __mkLeafletMap=L.map(mapEl).setView(COUNTY_COORDS.BU,7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      maxZoom:18,
+      attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+    }).addTo(__mkLeafletMap);
+  }
+  // v2.9 BUGFIX: L.circleMarker() példányok NEM L.Marker (hanem
+  // L.CircleMarker) leszármazottak -- egy instanceof L.Marker ellenőrzés
+  // sosem találta meg és törölte őket, így minden újrarendereléskor (pl.
+  // szűrő/rendezés váltás, élő adat megérkezése) egymásra halmozódtak a
+  // pöttyök. Explicit tömbben tartjuk a saját markereinket, azokat
+  // töröljük -- ez megbízható, függetlenül a Leaflet belső osztály-
+  // hierarchiájától.
+  (__mkLeafletMarkers||[]).forEach(m=>__mkLeafletMap.removeLayer(m));
+  __mkLeafletMarkers=[];
+  const bounds=[];
+  ranked.forEach(p=>{
+    const key=p.nm+'|'+(p.doc||'');
+    const isTop=top3.has(key);
+    const [lat,lng]=coordsFor(p);
+    // apró, determinisztikus szórás, hogy az azonos városban lévő pinek
+    // (pl. 4 budapesti orvos ugyanazon a címen) ne fedjék pontosan egymást
+    const jitter=(s=>{let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return [(h%200-100)/10000,((h>>8)%200-100)/10000];})(key);
+    const marker=L.circleMarker([lat+jitter[0],lng+jitter[1]],{
+      radius:isTop?10:7,
+      fillColor:isTop?'#22C55E':'#EAB308',
+      color:'#fff',weight:2,fillOpacity:.9,
+    }).addTo(__mkLeafletMap);
+    const name=p.doc||p.nm;
+    const priceText=p.real?(p.price?mkFmtHuf(p.price):'Ár egyeztetés alapján'):mkFmtHuf(illustrativeStats(p).priceHuf);
+    marker.bindPopup(`<div class="mk-map-popup"><b>${name}</b>${p.doc?p.nm+'<br>':''}${p.sp||''}<br>${priceText}${p.addr?'<br>📍 '+p.addr:''}</div>`);
+    __mkLeafletMarkers.push(marker);
+    bounds.push([lat+jitter[0],lng+jitter[1]]);
+  });
+  if(bounds.length)__mkLeafletMap.fitBounds(bounds,{padding:[30,30],maxZoom:11});
+  setTimeout(()=>{ if(__mkLeafletMap)__mkLeafletMap.invalidateSize(); },100);
+}
 function mkToggleVerifiedOnly(v){MK_STATE.verifiedOnly=v;mkRenderAll();}
 function mkToggleInsurance(o){
   if(MK_STATE.insurance.includes(o))MK_STATE.insurance=MK_STATE.insurance.filter(x=>x!==o);
@@ -4794,7 +4915,7 @@ if(typeof window!=='undefined'){
     computePreventionTips,SCR_PREVENTION_TIPS,SCR_HERO_AREA_PHRASE,SCR_LIKERT_TO_SPECIALTY,scrFlagToSpecialty,
     illustrativeStats,sortPartnersBy,mkUserRegion,mkRegionTier,MK_STATE,MK_SORT_TABS,renderMarketplace,mkSetSort,
     mkSetMinRating,mkSetMaxPrice,mkSetDistance,mkToggleVerifiedOnly,mkToggleInsurance,
-    mkSetPayMode,mkToggleSave,mkToggleSlots,mkFetchLiveDoctors,mkEnhanceWithLiveData,mkBookingUrl,mkRatingSliderLabel,mkPriceSliderLabel,
+    mkSetPayMode,mkToggleSave,mkToggleSlots,mkFetchLiveDoctors,mkEnhanceWithLiveData,mkBookingUrl,mkRatingSliderLabel,mkPriceSliderLabel,mkSetView,mkRenderMap,COUNTY_COORDS,
     renderAiReport,renderPrivatePublic,choosePrivatePublic,
     downloadReportPdf,shareReportWithDoctor,PP_ROWS,
     SV2_DOC_SORT_TABS,SV2_DOC_STATE,sv2DocCardHtml,sv2RenderDocList,sv2SetDocSort,sv2RenderStats
