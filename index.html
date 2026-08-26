@@ -1232,8 +1232,9 @@ input[type=range]::-webkit-slider-thumb {
   .q-nav, #errbox,
   .mk-sorttabs, .mk-filters, .mk-side, .mk-actions,
   .doc-cta, .pp-cta-row, .btn-restart, #r-detailed-cta,
-  #medsoulyou-booking, #medsoulyou-booking-mk,
-  .mk-header-badge, .ai-report-actions {
+  #medsoulyou-booking,
+  .mk-header-badge, .ai-report-actions,
+  .mk-view-toggle, #mk-map-wrap {
     display: none !important;
   }
   html, body {
@@ -1812,7 +1813,6 @@ input[type=range]::-webkit-slider-thumb {
           <span><i class="mk-map-dot mk-map-dot-yellow"></i>Teljes hálózat (távolabbi)</span>
         </div>
       </div>
-      <div id="medsoulyou-booking-mk"></div>
     </div>
   </div>
   <div class="wrap">
@@ -3606,15 +3606,16 @@ function renderResult(d){
     }else{
       prim=matchCat(d.primary_specialty)||matchCat(firstTerulet)||'Szűrés-Megelőzés';
     }
-    // v2.3 BUGFIX: Screening eseten a regi #medsoulyou-booking widget celpontja
-    // a MOST MAR mindig rejtett #r-partners-section-on belul van -- ha itt is
-    // renderelnenk, az a scr-v2 doc-card-javal egyutt (nem lathato, de felesleges
-    // es DOM-szinten duplikalt) MedSoulYou-emlitest hozna letre. Screeningnel
-    // ezert kihagyjuk; nem-Screening (marketplace) agon valtozatlan marad.
-    if(!isScr){
-      const medsoulyouTargetId='medsoulyou-booking-mk';
-      if(window.MedSoulYouBooking){try{MedSoulYouBooking.render(document.getElementById(medsoulyouTargetId), prim);}catch(e){console.error('MedSoulYou widget hiba:',e);}}
-    }
+    // v2.9 (Mick jelzése, screenshot): a régi, önálló MedSoulYouBooking
+    // widget-hívás (medsoulyou-widget.js) törölve -- ez egy külön,
+    // kategória-szintű, orvos-hozzárendelés NÉLKÜLI, egybefüggő
+    // időpont-listát mutatott a marketplace alján, ami a mostani, minden
+    // kártyán megjelenő, orvoshoz egyértelműen köthető "Szabad időpontok"
+    // fül (ld. mkCardHtml() slotsToggleBlock) mellett feleslegessé és
+    // zavaróvá vált (Mick sem tudta, mire való). A medsoulyou-widget.js
+    // fájl és a benne lévő mélylink-logika egyelőre marad a repóban, csak
+    // ez a hívás (és a #medsoulyou-booking-mk konténer felhasználása)
+    // szűnt meg.
     const sec=matchCat(d.secondary_specialty);
     let partners=PDATA[prim]||PDATA['default'];
     if(sec&&sec!==prim&&PDATA[sec]){
