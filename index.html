@@ -4113,7 +4113,15 @@ const MK_SORT_TABS=[
 // valós, igazolt partnert a listából, és nem is volt mód feloldani (a
 // szűrő-csempék között nem volt "Mind" opció). Az alapértelmezett
 // állapot mostantól "Mind" (nincs ár-sapka), a szűrés opt-in.
-const MK_STATE={sort:'match',verifiedOnly:false,minRating:0,maxPriceHuf:Infinity,maxDistance:'orszagos',insurance:[],payMode:null,saved:{},expandedSlots:{}};
+// v2.9 BUGFIX (Mick jelzése): a "fedjük le az egész országot" korábbi
+// kérés az ADATRA vonatkozott (minden megyéhez legyen illusztratív
+// bejegyzés) -- nem arra, hogy egy megadott irányítószámmal rendelkező
+// felhasználó alapértelmezetten az ÖSSZES (20+ régiós) találatot lássa
+// egyszerre. Az alapértelmezett szűrés mostantól "a közelemben" (csak a
+// felhasználó saját régiója, +mindig az igazolt/élő partner, akkor is ha
+// távolabb van) -- a teljes országos hálózat továbbra is elérhető, csak
+// explicit kapcsolóval ("Országos").
+const MK_STATE={sort:'match',verifiedOnly:false,minRating:0,maxPriceHuf:Infinity,maxDistance:'nearby',insurance:[],payMode:null,saved:{},expandedSlots:{}};
 
 function mkFmtHuf(n){return n.toLocaleString('hu-HU')+' Ft-tól';}
 
@@ -4170,10 +4178,10 @@ function mkRenderAll(){
         <div class="mk-slider-val" id="mk-price-val">${mkPriceSliderLabel(MK_STATE.maxPriceHuf===Infinity?125000:MK_STATE.maxPriceHuf)}</div>
       </div>
       <div class="mk-filter-grp">
-        <div class="mk-filter-lbl">Távolság</div>
+        <div class="mk-filter-lbl">Távolság <span style="font-weight:400;text-transform:none;color:var(--text3)">(${REGIONS[mkUserRegion()||'BU']})</span></div>
         <div class="mk-chip-row">
-          <div class="mk-chip${MK_STATE.maxDistance==='budapest'?' sel':''}" onclick="mkSetDistance('budapest')">Budapest</div>
-          <div class="mk-chip${MK_STATE.maxDistance==='orszagos'?' sel':''}" onclick="mkSetDistance('orszagos')">Országos</div>
+          <div class="mk-chip${MK_STATE.maxDistance==='nearby'?' sel':''}" onclick="mkSetDistance('nearby')">A közelemben</div>
+          <div class="mk-chip${MK_STATE.maxDistance==='orszagos'?' sel':''}" onclick="mkSetDistance('orszagos')">Teljes országos hálózat</div>
         </div>
       </div>
       <div class="mk-filter-grp">
@@ -4204,7 +4212,12 @@ function mkRenderAll(){
       // élő (Medio API) ár esetén az ár-szűrő igazolt partnerre is vonatkozik
       if(p.price>MK_STATE.maxPriceHuf)return false;
     }
-    if(MK_STATE.maxDistance==='budapest'&&p.region&&p.region!=='BU')return false;
+    // v2.9 BUGFIX (Mick jelzése): "a közelemben" a felhasználó TÉNYLEGES
+    // régiójára szűk (nem mindig Budapestre) -- az igazolt/élő (p.real)
+    // partner viszont MINDIG látszik akkor is, ha távolabb van, mert az az
+    // egyetlen ténylegesen ellenőrzött, API-val bekötött opció (a
+    // loc-banner külön jelzi, ha ez távol esik).
+    if(MK_STATE.maxDistance==='nearby'&&!p.real&&p.region&&p.region!==(mkUserRegion()||'BU'))return false;
     return true;
   });
 
