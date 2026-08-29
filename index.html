@@ -85,6 +85,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Manrop
    stacking-szabalyok szerint (ld. a korabbi PDF-export @media print
    javitas jegyzeteit ugyanerrol a jelensegrol). */
 .mk-wrap{position:relative;z-index:1;width:100%;max-width:1080px}
+/* v2.10 (Mick kérése, "16:9-en használjuk ki a helyet"): a lerövidített
+   AI-jelentés + a Magán/Állami összevetés -- mindkettő kompakt -- ≥1100px-en
+   2 oszlopban egymás mellett, hogy ne pazarolják a laptop-szélességet.
+   Keskenyebb (mobil/tablet) nézeten visszaesik 1 oszlopra, változatlan
+   sorrendben (AI-jelentés előbb, Magán/Állami utána). */
+.result-2col{display:flex;flex-direction:column;gap:8px}
+@media (min-width:1100px){
+  .result-2col{display:grid;grid-template-columns:1fr 1fr;align-items:start;gap:20px}
+}
 
 /* LANDING */
 #s-land{padding-top:72px}
@@ -306,14 +315,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 
 /* AI jelentés kártya */
 .ai-report-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 22px 20px;margin-bottom:8px}
-.ai-report-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:6px}
-.ai-score-ring{width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--ai-pct,0)*1%),var(--card2) 0);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative}
-.ai-score-ring::before{content:'';position:absolute;inset:7px;border-radius:50%;background:var(--card)}
-.ai-score-num{position:relative;font-family:'Manrope',sans-serif;font-weight:800;font-size:1.25rem;color:var(--text)}
-.ai-score-lbl{position:relative;font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
-.ai-score-tag{font-size:.78rem;font-weight:600;padding:6px 12px;border-radius:20px;background:var(--accent-soft);color:var(--accent2)}
-.match-ring-caption{font-size:.74rem;line-height:1.5;color:var(--text3);background:var(--card2);border-radius:10px;padding:10px 12px;margin:10px 0 14px}
-.match-ring-caption strong{color:var(--text2)}
 .ai-metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0 4px}
 .ai-metric-box{background:var(--card2);border-radius:12px;padding:12px 14px;text-align:center}
 /* v2.9 (Mick jelzése, mobil screenshot): védőháló, hogy egy hibásan túl
@@ -323,27 +324,23 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
    a másodlagos, CSS-szintű biztosíték. */
 .ai-metric-val{font-family:'Manrope',sans-serif;font-weight:700;font-size:1rem;color:var(--text);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;word-break:break-word}
 .ai-metric-lbl{font-size:.68rem;color:var(--text3);margin-top:3px}
-.ai-causes{display:flex;flex-direction:column;gap:8px}
-.ai-cause-card{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--card2);border-radius:11px;padding:11px 14px}
-.ai-cause-name{font-size:.86rem;font-weight:600;color:var(--text)}
-.ai-cause-pct{font-family:'Manrope',sans-serif;font-weight:700;font-size:.86rem;color:var(--accent2);flex-shrink:0}
-.ai-findings{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
-.ai-finding-item{display:flex;align-items:center;gap:8px;background:var(--card2);border-radius:10px;padding:9px 11px;font-size:.78rem;color:var(--text2)}
-.ai-finding-ic{font-size:1rem;flex-shrink:0}
-.ai-reasons{margin:0;padding-left:18px;color:var(--text2);font-size:.86rem;line-height:1.7}
-.ai-unknowns{display:flex;flex-direction:column;gap:6px}
-.ai-unknown-item{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text3)}
-.ai-unknown-ic{color:var(--warm);flex-shrink:0}
-.ai-plan{display:flex;flex-direction:column;gap:8px}
-.ai-plan-step{display:flex;align-items:center;gap:12px;background:var(--card2);border-radius:11px;padding:11px 14px}
-.ai-plan-when{font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--accent2);background:var(--accent-soft);border-radius:6px;padding:3px 8px;flex-shrink:0;white-space:nowrap}
-.ai-plan-txt{font-size:.84rem;color:var(--text2)}
-.ai-timeline{display:flex;flex-wrap:wrap;gap:10px}
-.ai-timeline-phase{flex:1;min-width:140px;background:var(--card2);border-radius:11px;padding:12px 14px}
-.ai-timeline-ic{font-size:1.1rem;margin-bottom:4px}
-.ai-timeline-t{font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:2px}
-.ai-timeline-d{font-size:.74rem;color:var(--text3);line-height:1.5}
-.ai-report-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.ai-report-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+/* v2.10 (Mick kérése): a %-os egyezés-gyűrű + a 7-szakaszos jelentés
+   (fő okok, mit találtunk, miért gondoljuk ezt, amit még nem tudunk,
+   cselekvési terv, mire számíthatsz) helyett egy %-mentes ok-sor + egy
+   kompakt, ikon-vezérelt, vízszintes "roadmap" csík -- lásd
+   renderAiReport(). */
+.ai-report-card--compact{padding:20px 22px}
+.ai-cause-line{font-size:.92rem;color:var(--text2);margin-bottom:16px}
+.ai-cause-lbl{color:var(--text3);font-weight:500}
+.ai-cause-line b{color:var(--text)}
+.ai-roadmap{display:flex;gap:10px;flex-wrap:wrap}
+.ai-roadmap-step{flex:1;min-width:150px;background:var(--card2);border-radius:12px;padding:14px 14px 12px;position:relative}
+.ai-roadmap-ic{color:var(--accent2);margin-bottom:8px}
+.ai-roadmap-when{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--accent2);background:var(--accent-soft);border-radius:6px;padding:3px 8px;display:inline-block;margin-bottom:6px}
+.ai-roadmap-t{font-size:.86rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.ai-roadmap-d{font-size:.76rem;color:var(--text3);line-height:1.5}
+.ai-report-card--compact .med-disclaimer{margin:16px 0 0}
 
 /* Magán vs. Állami */
 .pp-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px}
@@ -1624,7 +1621,7 @@ input[type=range]::-webkit-slider-thumb {
     <p class="res-sum" id="r-sum"></p>
     <div class="urg" id="r-urg"></div>
 
-    <div class="med-disclaimer" id="r-top-disclaimer">⚠️ Ez az eszköz nem helyettesíti az orvosi ellátást és nem ad diagnózist — kizárólag eligazítást nyújt. Sürgős, életveszélyt jelentő tünetek esetén azonnal hívd a <strong>112</strong>-t vagy fordulj sürgősségi ellátáshoz.</div>
+    <div class="med-disclaimer" id="r-top-disclaimer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ic-svg" aria-hidden="true"><path d="M12 3 2 20h20z"/><line x1="12" y1="9" x2="12" y2="14"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Ez az eszköz nem helyettesíti az orvosi ellátást és nem ad diagnózist — kizárólag eligazítást nyújt. Sürgős, életveszélyt jelentő tünetek esetén azonnal hívd a <strong>112</strong>-t vagy fordulj sürgősségi ellátáshoz.</div>
 
     <!-- v2.3 ota mar mindig ures (a mockup-alapu #scr-v2 vette at a szerepet),
          v2.6.3-ban a hozza tartozo CTA-koncepcio (restartToDetailedQuiz) is
@@ -1681,12 +1678,11 @@ input[type=range]::-webkit-slider-thumb {
         </div>
         <div id="sv2-doc-section" style="display:none">
           <div class="sec-head"><h2>Ha szeretnéd, ezek segíthetnek</h2><span>Ajánlott partnerek</span></div>
-          <!-- v2.6.3 (Mick kerese): a korokkel jelzett %-os szam mellett
-               egyertelmu magyarazat kell, hogy ez a rendszer sajat
-               magabiztossaga az ajanlasban, NEM a felhasznalo egeszsegi
-               kockazata/allapotanak sulyossaga -- egyszer, a lista
-               tetejen, nem kartyankent ismetelve (az mar zavaro lenne). -->
-          <p class="match-ring-caption">A körben látható szám az <strong>egyezési pontszám</strong> — ennyire illeszkedik az ajánlás a válaszaidhoz. Ez a rendszer magabiztossága, nem az egészségi kockázatod mértéke.</p>
+          <!-- v2.10 (Mick kérése, "a %-ozást ki is vehetjük"): a korábbi
+               match-ring (%) és a hozzá tartozó magyarázó felirat törölve a
+               doc-kártyákról -- a rangsorolás (legjobb+legközelebbi elöl)
+               továbbra is ugyanúgy működik, csak nem jelenítjük meg
+               számmal, amit úgyis kevesen értettek. -->
           <div class="mk-sorttabs" id="sv2-doc-sorttabs" style="margin-top:10px"></div>
           <div id="sv2-doc-list"></div>
           <p class="loc-note-v2" id="sv2-loc-note"></p>
@@ -1710,77 +1706,13 @@ input[type=range]::-webkit-slider-thumb {
       <div id="medsoulyou-booking"></div>
     </div>
 
-    <!-- v2.2: panasz-alapú (nem Screening) eredményoldal-redesign — a doksi
-         07b callout-ja és a referenciaképek NEM voltak ténylegesen
-         elérhetők/feltöltve (ld. jelentés a chatben), ezért a chat szöveges
-         leírása alapján épült, saját HovaForduljak-branddel (nincs
-         referenciaképről átvett elem/szín/szöveg). Screeningnél MINDIG
-         rejtve marad — ld. renderResult() háromfelé ágazása.
-         AI jelentés: kör-diagram egyezési %, 3 metrika-doboz, fő lehetséges
-         okok jelölt-kártyák, kötelező disclaimer, "mit találtunk" grid,
-         "miért gondoljuk ezt", "amit még nem tudunk" (statikus,
-         átláthatósági szekció — szándékosan NEM AI-generált, hogy ne
-         legyen kitéve hallucinációnak), cselekvési terv, "mire
-         számíthatsz" (statikus, általános szakaszjelzés — konkrét,
-         kitalált időbeli prognózist NEM adunk), PDF/megosztás gombok. -->
-    <div id="r-ai-report-section" style="display:none">
-      <div class="sec-lbl">AI jelentés</div>
-      <div class="ai-report-card">
-        <div class="ai-report-top">
-          <div class="ai-score-ring" id="ai-score-ring">
-            <div class="ai-score-num" id="ai-score-num">–</div>
-            <div class="ai-score-lbl">egyezés</div>
-          </div>
-          <div class="ai-score-tag" id="ai-score-tag"></div>
-        </div>
-        <!-- v2.6.3 (Mick kerese): egyertelmu magyarazat a kor mellett --
-             ez a rendszer sajat magabiztossaga, NEM a felhasznalo
-             egeszsegi kockazata/allapotanak sulyossaga. -->
-        <p class="match-ring-caption">Az <strong>egyezési pontszám</strong> azt mutatja, ennyire illeszkedik ez az ajánlás a válaszaidhoz — a rendszer magabiztossága, nem az egészségi kockázatod mértéke.</p>
-        <div class="ai-metric-row" id="ai-metric-row"></div>
-        <div class="sec-lbl2">Fő lehetséges okok</div>
-        <div class="ai-causes" id="ai-causes"></div>
-        <div class="med-disclaimer">⚠️ Ez az elemzés nem helyettesíti az orvosi vizsgálatot és nem ad diagnózist. Sürgős, életveszélyt jelentő tünetek esetén azonnal hívd a <strong>112</strong>-t.</div>
-        <div class="sec-lbl2">Mit találtunk</div>
-        <div class="ai-findings" id="ai-findings"></div>
-        <div class="sec-lbl2">Miért gondoljuk ezt</div>
-        <ul class="ai-reasons" id="ai-reasons"></ul>
-        <div class="sec-lbl2">Amit még nem tudunk</div>
-        <div class="ai-unknowns" id="ai-unknowns"></div>
-        <div class="sec-lbl2">Cselekvési terv</div>
-        <div class="ai-plan" id="ai-plan"></div>
-        <div class="sec-lbl2">Mire számíthatsz</div>
-        <div class="ai-timeline" id="ai-timeline"></div>
-        <div class="ai-report-actions">
-          <button class="btn-back" onclick="downloadReportPdf()">⬇ PDF letöltés</button>
-          <button class="btn-back" onclick="shareReportWithDoctor()">📤 Megosztás orvossal</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- v2.2: Magán vs. Állami összevetés — csak panasz-alapú területeken.
-         A számszerű állítások szándékosan minőségi/relatív jellegűek (nem
-         kitalált, pontos napszámok), mivel az app nem rendelkezik valós,
-         intézményi várólista-adattal. -->
-    <div id="r-private-public-section" style="display:none">
-      <div class="sec-lbl">Magán vagy állami ellátás?</div>
-      <div class="pp-table-wrap">
-        <table class="pp-table" id="pp-table"></table>
-      </div>
-      <div class="pp-cards" id="pp-cards"></div>
-      <div class="pp-suggestion" id="pp-suggestion"></div>
-      <div class="pp-cta-row">
-        <button class="btn-p" onclick="choosePrivatePublic('private')">Válaszd a magán utat →</button>
-        <button class="btn-back" onclick="choosePrivatePublic('public')">Válaszd az állami utat →</button>
-      </div>
-    </div>
-
   </div>
-  <!-- v2.6.4: a marketplace szekcio SAJAT, szelesebb konteinerben (.mk-wrap,
-       max-width:1080px) -- nem a szoveges tartalom keskeny .wrap-jeben (660px)
-       -- ld. CSS jegyzet a fajl elejen. Csak ezt a szekciot erinti, minden mas
-       (cim/osszegzes/AI-magyarazat/trust-footer) a korabbi keskeny .wrap-ben
-       marad, olvashatosag miatt. -->
+  <!-- v2.10 (Mick kérése): a marketplace (orvos-ajánlások) feljebb kerül a
+       sorrendben -- közvetlenül a sürgősség/profil-sáv után, még az AI
+       magyarázat/jelentés előtt -- mert ez a leghasznosabb infó a
+       felhasználónak, ezt nem szabad a lap aljára temetni hosszú szöveg
+       mögé. Saját, szelesebb konteinerben (.mk-wrap, max-width:1080px) --
+       nem a szoveges tartalom keskeny .wrap-jeben (660px). -->
   <div class="mk-wrap">
     <!-- v2.2: orvos-first találati lista (marketplace) — csak panasz-alapú
          területeken; Screeningnél az egyszerű #r-partners-section marad. -->
@@ -1794,8 +1726,8 @@ input[type=range]::-webkit-slider-thumb {
            tagja sárgával (távolabbi, utazást igénylő opcióként) jelenik
            meg, ld. mkRenderMap(). -->
       <div class="mk-view-toggle">
-        <button type="button" class="mk-view-btn sel" id="mk-view-btn-list" onclick="mkSetView('list')">📋 Lista</button>
-        <button type="button" class="mk-view-btn" id="mk-view-btn-map" onclick="mkSetView('map')">🗺️ Térkép</button>
+        <button type="button" class="mk-view-btn sel" id="mk-view-btn-list" onclick="mkSetView('list')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ic-svg" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> Lista</button>
+        <button type="button" class="mk-view-btn" id="mk-view-btn-map" onclick="mkSetView('map')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ic-svg" aria-hidden="true"><path d="M9 3 3 5.5v15L9 18l6 2.5 6-2.5v-15L15 5.5 9 3z"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="5.5" x2="15" y2="20.5"/></svg> Térkép</button>
       </div>
       <div class="mk-sorttabs" id="mk-sorttabs"></div>
       <div class="mk-layout" id="mk-layout">
@@ -1817,11 +1749,69 @@ input[type=range]::-webkit-slider-thumb {
   </div>
   <div class="wrap">
 
+    <!-- v2.10 (Mick kérése): az AI magyarázat feljebb kerül, közvetlenül a
+         marketplace után -- ez az EGYETLEN hely, ahol d.explanation
+         megjelenik (a korábbi, lejjebbi "Miért gondoljuk ezt" duplikáció a
+         rövidített AI-jelentésből törölve, ld. renderAiReport()). -->
     <div class="sec-lbl">Miért ezek az ajánlások?</div>
     <div class="ai-box">
-      <div class="ai-hd"><div class="ai-ico">✦</div><div class="ai-ht">AI magyarázat</div></div>
+      <div class="ai-hd"><div class="ai-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ic-svg" aria-hidden="true"><path d="M12 3l1.6 4.9L18.5 9.4l-4.9 1.6L12 15.9l-1.6-4.9L5.5 9.4l4.9-1.6z"/><path d="M19 15l.8 2.3L22 18l-2.2.7L19 21l-.8-2.3L16 18l2.2-.7z"/></svg></div><div class="ai-ht">AI magyarázat</div></div>
       <div class="ai-body" id="r-explain"></div>
     </div>
+  </div>
+  <!-- v2.10 (Mick kérése, 16:9 laptop-kihasználás): a rövidített AI-jelentés
+       és a Magán/Állami összevetés -- mivel MINDKETTŐ kompakt lett -- egy
+       közös, szélesebb konténerben (.mk-wrap, ua. mint a marketplace-nél),
+       ≥1100px-en 2 oszlopban egymás mellett (ld. .result-2col CSS), hogy ne
+       a lap aljára temetve, egymás alatt pazarolják a laptop-szélességet.
+       9:16 mobilon (a .result-2col media query alatt) visszaesik 1
+       oszlopra, változatlan sorrendben. -->
+  <div class="mk-wrap">
+    <div class="result-2col">
+      <!-- v2.2: panasz-alapú (nem Screening) eredményoldal-redesign — a doksi
+           07b callout-ja és a referenciaképek NEM voltak ténylegesen
+           elérhetők/feltöltve (ld. jelentés a chatben), ezért a chat szöveges
+           leírása alapján épült, saját HovaForduljak-branddel (nincs
+           referenciaképről átvett elem/szín/szöveg). Screeningnél MINDIG
+           rejtve marad — ld. renderResult() háromfelé ágazása. -->
+      <!-- v2.10 (Mick kérése): drasztikusan lerövidített "AI jelentés" -- a
+           korábbi match-ring/%, "Fő lehetséges okok" %-kártyák, "Mit találtunk"
+           (=duplikált profil-chip sor) és "Miért gondoljuk ezt" (=duplikált
+           explanation, ld. #r-explain feljebb) törölve; a "Cselekvési terv" +
+           "Mire számíthatsz" egyetlen kompakt, ikonos vízszintes csíkba
+           (ai-roadmap) összevonva. Ld. renderAiReport(). -->
+      <div id="r-ai-report-section" style="display:none">
+        <div class="sec-lbl">A javasolt következő lépések</div>
+        <div class="ai-report-card ai-report-card--compact">
+          <div class="ai-cause-line" id="ai-cause-line"></div>
+          <div class="ai-roadmap" id="ai-roadmap"></div>
+          <div class="med-disclaimer" id="ai-med-disclaimer"></div>
+          <div class="ai-report-actions">
+            <button class="btn-back" onclick="downloadReportPdf()">PDF letöltés</button>
+            <button class="btn-back" onclick="shareReportWithDoctor()">Megosztás orvossal</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- v2.2: Magán vs. Állami összevetés — csak panasz-alapú területeken.
+           A számszerű állítások szándékosan minőségi/relatív jellegűek (nem
+           kitalált, pontos napszámok), mivel az app nem rendelkezik valós,
+           intézményi várólista-adattal. -->
+      <div id="r-private-public-section" style="display:none">
+        <div class="sec-lbl">Magán vagy állami ellátás?</div>
+        <div class="pp-table-wrap">
+          <table class="pp-table" id="pp-table"></table>
+        </div>
+        <div class="pp-cards" id="pp-cards"></div>
+        <div class="pp-suggestion" id="pp-suggestion"></div>
+        <div class="pp-cta-row">
+          <button class="btn-p" onclick="choosePrivatePublic('private')">Válaszd a magán utat →</button>
+          <button class="btn-back" onclick="choosePrivatePublic('public')">Válaszd az állami utat →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
 
     <!-- v2.4: 9 hagyomanyos szakterulet reskin -- trust-footer, ugyanaz a szoveg/ikon
          mint a Screening-mockupban (.trust), csak nem .scr-v2 alatt scope-olva.
@@ -2006,6 +1996,73 @@ const ELOZMENY_OPTS={
 };
 
 function isAllapot(x){return S.allapot===x}
+
+// ── Ikon-réteg (v2.10, Mick kérése: "hagyjuk el az emojikat") ──
+// A PDATA `ic:` mezői és a jelentés-kártya kódja SZÁNDÉKOSAN továbbra is a
+// már meglévő emoji karaktereket tárolja (nem írjuk át mind a 268 adatsort,
+// feleslegesen kockázatos lenne) -- ehelyett RENDERELÉSKOR, az iconSvg()
+// hívásokon keresztül egy kézzel írt, egységes vonalikon-készletre
+// cseréljük őket. Ismeretlen/nem-térképezett emojinál csendes fallback:
+// az eredeti karaktert adja vissza (soha nem tűnik el semmi).
+const ICON_PATHS={
+  heart:'<path d="M12 20.5s-7.5-4.6-10-9.3C.5 7.8 2.6 4.5 6 4.5c2.2 0 3.8 1.3 6 4 2.2-2.7 3.8-4 6-4 3.4 0 5.5 3.3 4 6.7-2.5 4.7-10 9.3-10 9.3z"/>',
+  lungs:'<path d="M9 3v9c0 2.5-1.2 4.5-3.3 4.5S2.5 14.5 2.5 12v-2.5c0-1.2.6-2.3 1.6-3"/><path d="M15 3v9c0 2.5 1.2 4.5 3.3 4.5S21.5 14.5 21.5 12v-2.5c0-1.2-.6-2.3-1.6-3"/><path d="M9 3c0 3.3 1.3 5 3 5s3-1.7 3-5"/>',
+  bone:'<circle cx="5.5" cy="6" r="2.3"/><circle cx="18.5" cy="18" r="2.3"/><line x1="7.3" y1="7.8" x2="16.7" y2="16.2"/>',
+  stomach:'<path d="M8 3v4c0 2.5-2.5 4-2.5 8a4.5 4.5 0 0 0 9 0c0-2-1-3.3-1-5.5"/><path d="M8 3c2.2 0 3 1.2 3 3"/>',
+  brain:'<path d="M9.5 4A2.8 2.8 0 0 0 7 6.6 2.8 2.8 0 0 0 5.3 11a2.8 2.8 0 0 0 1.7 4.6 2.8 2.8 0 0 0 2.5 2.4c1.4 0 2.5-1 2.5-2.5V6.5C12 5.1 10.9 4 9.5 4z"/><path d="M14.5 4a2.8 2.8 0 0 1 2.5 2.6 2.8 2.8 0 0 1 1.7 4.4 2.8 2.8 0 0 1-1.7 4.6 2.8 2.8 0 0 1-2.5 2.4c-1.4 0-2.5-1-2.5-2.5V6.5C12 5.1 13.1 4 14.5 4z"/>',
+  moon:'<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/>',
+  flask:'<path d="M9 3h6M10 3v6.2l-5 8.6A2 2 0 0 0 6.7 21h10.6a2 2 0 0 0 1.7-3.2l-5-8.6V3"/><line x1="8" y1="15" x2="16" y2="15"/>',
+  sparkle:'<path d="M12 3l1.6 4.9L18.5 9.4l-4.9 1.6L12 15.9l-1.6-4.9L5.5 9.4l4.9-1.6z"/>',
+  sparkles:'<path d="M12 3l1.6 4.9L18.5 9.4l-4.9 1.6L12 15.9l-1.6-4.9L5.5 9.4l4.9-1.6z"/><path d="M19 15l.8 2.3L22 18l-2.2.7L19 21l-.8-2.3L16 18l2.2-.7z"/>',
+  zap:'<path d="M13 2 3 14h7l-1 8 10-12h-7z"/>',
+  hospital:'<rect x="4" y="3" width="16" height="18" rx="1.5"/><line x1="12" y1="7.5" x2="12" y2="13.5"/><line x1="9" y1="10.5" x2="15" y2="10.5"/><line x1="8" y1="21" x2="8" y2="17.5"/><line x1="16" y1="21" x2="16" y2="17.5"/>',
+  microscope:'<line x1="5" y1="21" x2="17" y2="21"/><path d="M10 21v-3.5A3.5 3.5 0 0 1 13.5 14H14"/><path d="M13 8.5 16.5 12"/><circle cx="17.5" cy="6.5" r="2.2"/><path d="M9.5 15 7 12.5l3-3 2.5 2.5"/>',
+  syringe:'<path d="M18 3l3 3M9 8l7 7M7 10l7 7M11 6l2-2 3 3-2 2M4 20l4-4"/>',
+  pill:'<rect x="3" y="10.5" width="18" height="7" rx="3.5" transform="rotate(-40 12 14)"/><line x1="12" y1="9.5" x2="12" y2="18.5" transform="rotate(-40 12 14)"/>',
+  cigarette:'<rect x="2" y="12.5" width="14" height="6" rx="1"/><line x1="2" y1="14.5" x2="16" y2="14.5"/><line x1="2" y1="16.5" x2="16" y2="16.5"/><line x1="19" y1="9" x2="19" y2="12"/><line x1="21.5" y1="9" x2="21.5" y2="12"/>',
+  wine:'<path d="M8 3h8l-1 7a3 3 0 0 1-6 0z"/><line x1="12" y1="14" x2="12" y2="20"/><line x1="8" y1="21" x2="16" y2="21"/>',
+  salad:'<path d="M4 12a8 8 0 0 1 16 0z"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M9 12c0-3 1-5 2-6M15 12c0-3-1-5-2-6"/>',
+  run:'<circle cx="14" cy="4.5" r="1.8"/><path d="M9 21l2-5 2 2 3-1"/><path d="M13 13l-2-3 3-2 2 3 3 1"/><path d="M8 12l3-1"/>',
+  alert:'<path d="M12 3 2 20h20z"/><line x1="12" y1="9" x2="12" y2="14"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  check:'<path d="M4 12l5 5L20 6"/>',
+  calendar:'<rect x="3.5" y="5" width="17" height="16" rx="1.5"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/>',
+  pin:'<path d="M12 21s7-6.6 7-12a7 7 0 1 0-14 0c0 5.4 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+  map:'<path d="M9 3 3 5.5v15L9 18l6 2.5 6-2.5v-15L15 5.5 9 3z"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="5.5" x2="15" y2="20.5"/>',
+  leaf:'<path d="M5 20c8 0 13-5 14-14-9 1-14 6-14 14z"/><path d="M5 20c1-4 3-7 6-9"/>',
+  scissors:'<circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><line x1="8" y1="7.5" x2="20" y2="19"/><line x1="8" y1="16.5" x2="20" y2="5"/>',
+  dna:'<path d="M6 4c0 5 12 5 12 10s-12 5-12 10"/><path d="M18 4c0 5-12 5-12 10s12 5 12 10"/><line x1="7.5" y1="8" x2="16.5" y2="8"/><line x1="7.5" y1="16" x2="16.5" y2="16"/>',
+  chat:'<path d="M4 5h16v11H8l-4 4z"/>',
+  nose:'<path d="M9 3v9a3 3 0 0 0 3 3h0a3 3 0 0 0 3-3V3"/><path d="M7 15a5 5 0 0 0 10 0"/>',
+  dot:'<circle cx="12" cy="12" r="7" fill="currentColor" stroke="none"/>',
+  list:'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',
+};
+const EMOJI_TO_ICON={
+  '📋':'list',
+  '❤️':'heart','🫀':'heart','🫁':'lungs','🌪️':'lungs',
+  '🦴':'bone','🔩':'bone','💪':'run','🏃':'run',
+  '🫃':'stomach','🧠':'brain','🌙':'moon',
+  '⚗️':'flask','🧪':'flask','✨':'sparkle',
+  '⚡':'zap','🏥':'hospital','🔬':'microscope',
+  '💉':'syringe','💊':'pill','🚬':'cigarette',
+  '🍷':'wine','🥗':'salad','⚠️':'alert',
+  '✓':'check','✅':'check','📅':'calendar','🗓️':'calendar',
+  '📍':'pin','🕒':'clock','✦':'sparkles','🗺️':'map',
+  '🌿':'leaf','💇':'scissors','🧬':'dna','💬':'chat','👃':'nose',
+  '🟢':'dot','🟡':'dot','🔴':'dot',
+  '😴':'moon','🧘':'leaf','🚭':'cigarette',
+};
+function iconSvg(emoji,size){
+  size=size||20;
+  const key=EMOJI_TO_ICON[emoji];
+  if(!key||!ICON_PATHS[key])return `<span class="ic-emoji-fallback">${emoji||''}</span>`;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ic-svg" aria-hidden="true">${ICON_PATHS[key]}</svg>`;
+}
+function iconSvgByKey(key,size){
+  size=size||20;
+  if(!ICON_PATHS[key])return '';
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ic-svg" aria-hidden="true">${ICON_PATHS[key]}</svg>`;
+}
 
 // ── Partner adatbázis ──
 const PDATA = {
@@ -3437,7 +3494,7 @@ function renderResult(d){
   const urgMap={low:{cls:'low',ic:'🟢'},medium:{cls:'mid',ic:'🟡'},high:{cls:'hi',ic:'🔴'}};
   const u=urgMap[d.urgency]||urgMap.low;
   urgEl.className='urg '+u.cls;
-  urgEl.innerHTML=`<span>${u.ic}</span><span>${d.urgency_label||''}</span>`;
+  urgEl.innerHTML=`<span>${iconSvg(u.ic,15)}</span><span>${d.urgency_label||''}</span>`;
 
   // profile chips
   const pc=document.getElementById('r-profile');
@@ -3668,10 +3725,10 @@ function renderResult(d){
     if(postal && getRegionCode(postal)!=='BU'){
       const region=getRegion(postal)||'a megadott területen';
       if(regionMatchFound){
-        locBannerHtml=`<div class="loc-banner"><span class="li">✓</span><span>A megadott irányítószám alapján <strong>${region}</strong> térségéből mutatjuk elsőként az ajánlást — a budapesti igazolt partnerünk (MedSoulYou) is elérhető, de távolabb esik. (A regionális ajánlás illusztratív, a hálózat bővülésével válik valódivá.)</span></div>`;
+        locBannerHtml=`<div class="loc-banner"><span class="li">${iconSvg('✓',14)}</span><span>A megadott irányítószám alapján <strong>${region}</strong> térségéből mutatjuk elsőként az ajánlást — a budapesti igazolt partnerünk (MedSoulYou) is elérhető, de távolabb esik. (A regionális ajánlás illusztratív, a hálózat bővülésével válik valódivá.)</span></div>`;
         locNoteTextPlain=`A megadott irányítószám alapján ${region} térségéből mutatjuk elsőként az ajánlást — a budapesti igazolt partnerünk (MedSoulYou) is elérhető, de távolabb esik.`;
       }else{
-        locBannerHtml=`<div class="loc-banner"><span class="li">📍</span><span>Az igazolt partnerünk (MedSoulYou) Budapesten érhető el — a megadott irányítószám (${postal}) alapján ez <strong>${region}</strong> térségétől távol esik. A hálózatunk bővül, addig is a lenti ajánlások szakmailag relevánsak, de utazást igényelhetnek.</span></div>`;
+        locBannerHtml=`<div class="loc-banner"><span class="li">${iconSvg('📍',14)}</span><span>Az igazolt partnerünk (MedSoulYou) Budapesten érhető el — a megadott irányítószám (${postal}) alapján ez <strong>${region}</strong> térségétől távol esik. A hálózatunk bővül, addig is a lenti ajánlások szakmailag relevánsak, de utazást igényelhetnek.</span></div>`;
         locNoteTextPlain=`Az igazolt partnerünk (MedSoulYou) Budapesten érhető el — a megadott irányítószám (${postal}) alapján ez ${region} térségétől távol esik. A hálózatunk bővül, addig is a lenti ajánlások szakmailag relevánsak, de utazást igényelhetnek.`;
       }
     }
@@ -3846,10 +3903,10 @@ function sv2DocCardHtml(p,idx){
     `<div class="doc-info"><div class="doc-name-row"><span class="doc-name">${displayName}</span>${badge}</div>`+
     clinicSubtitle+
     `<div class="doc-spec">${p.sp||''}</div>`+
-    `<div class="doc-clinic">📍 ${clinicLine}</div>`+
+    `<div class="doc-clinic">${iconSvg('📍',13)} ${clinicLine}</div>`+
     priceLine+
     `</div>`+
-    `<div class="match-ring">${p.pct}%</div></div>`+
+    `</div>`+
     `<div class="tags">${(p.tags||[]).map(t=>`<span>${t}</span>`).join('')}</div>`+
     profileLink+
     `<button class="doc-cta" onclick="openBooking(${idx})">Időpont érdeklődés</button>`+
@@ -3904,7 +3961,7 @@ function renderScreeningV2(mode, partners, locNoteText){
     let note=null;
     if(hi){hiSeen++;note=hiSeen===1?'Ez az, amire érdemes figyelni':'Ez is emeli a képet';}
     const dots=Array.from({length:5},(_,i)=>`<i class="${i<c.lvl?('on'+(hi?'':' ok')):''}"></i>`).join('');
-    return `<div class="cat-row"><div class="icon ${hi?'lvl-hi':'lvl-ok'}">${c.ic}</div>`+
+    return `<div class="cat-row"><div class="icon ${hi?'lvl-hi':'lvl-ok'}">${iconSvg(c.ic,18)}</div>`+
       `<div class="cat-body"><div class="cat-name">${c.title}</div>${note?`<div class="cat-note">${note}</div>`:''}</div>`+
       `<div class="cat-dots">${dots}</div></div>`;
   }).join('');
@@ -4009,11 +4066,11 @@ function renderScreeningV2(mode, partners, locNoteText){
     // iranyultsagi kerdojelerol). v2.6: Etkezes (uj, 6. kategoria) is
     // sajat kartyat kap, ugyanabban a mintaban.
     if(habitGrid)habitGrid.innerHTML=
-      `<div class="habit"><span class="icon">🏃</span><b>Maradj mozgásban</b><span>Heti 2-3 alkalom mozgás is sokat számít hosszú távon.</span></div>`+
-      `<div class="habit"><span class="icon">😴</span><b>Alvásritmus</b><span>A jelenlegi alvásmintád jó jel — érdemes tartani.</span></div>`+
-      `<div class="habit"><span class="icon">🧘</span><b>Stresszkezelés</b><span>Néhány perces napi levezetés sokat számít hosszú távon.</span></div>`+
-      `<div class="habit"><span class="icon">🚭</span><b>Dohányzás</b><span>A jelenlegi szokásaid alapján nincs sürgető teendő.</span></div>`+
-      `<div class="habit"><span class="icon">🥗</span><b>Étkezés</b><span>Már napi egy kis zöldség/gyümölcs és elég folyadék is számít.</span></div>`;
+      `<div class="habit"><span class="icon">${iconSvg('🏃',20)}</span><b>Maradj mozgásban</b><span>Heti 2-3 alkalom mozgás is sokat számít hosszú távon.</span></div>`+
+      `<div class="habit"><span class="icon">${iconSvg('😴',20)}</span><b>Alvásritmus</b><span>A jelenlegi alvásmintád jó jel — érdemes tartani.</span></div>`+
+      `<div class="habit"><span class="icon">${iconSvg('🧘',20)}</span><b>Stresszkezelés</b><span>Néhány perces napi levezetés sokat számít hosszú távon.</span></div>`+
+      `<div class="habit"><span class="icon">${iconSvg('🚭',20)}</span><b>Dohányzás</b><span>A jelenlegi szokásaid alapján nincs sürgető teendő.</span></div>`+
+      `<div class="habit"><span class="icon">${iconSvg('🥗',20)}</span><b>Étkezés</b><span>Már napi egy kis zöldség/gyümölcs és elég folyadék is számít.</span></div>`;
   }
 
   // v2.6.3 (Mick kerese): a korabbi sticky CTA ("Töltsd ki a részletesebb
@@ -4495,12 +4552,12 @@ function mkCardHtml(p,isFirstNonReal,idx){
         ? `<div class="mk-wait mk-live-loading">Időpontok ellenőrzése…</div>`
         : (p.nextSlotLabel?`<div class="mk-wait">Legközelebb: ${p.nextSlotLabel}</div>`:''))
     : `<div class="mk-wait">${st.waitDays} napon belül</div>`;
-  const verifiedTag=p.real?'<div class="mk-verified-tag">✓ Igazolt partner</div>':'';
-  // Badge-tag: az igazolt partner mindig ✓-ot kap; az első nem-igazolt
+  const verifiedTag=p.real?`<div class="mk-verified-tag">${iconSvg('✓',12)} Igazolt partner</div>`:'';
+  // Badge-tag: az igazolt partner mindig pipa-ikont kap; az első nem-igazolt
   // találat a jelenlegi rendezési szempontnak megfelelő címkét kapja
   // (AI első ajánlás / legjobb ár-érték / leggyorsabb időpont).
   let badge='';
-  if(p.real)badge='<div class="mk-badge-tag">✓ Igazolt partner</div>';
+  if(p.real)badge=`<div class="mk-badge-tag">${iconSvg('✓',12)} Igazolt partner</div>`;
   else if(isFirstNonReal){
     const tagBySort={match:'AI első ajánlás',price:'Legjobb ár-érték',fastest:'Leggyorsabb időpont',rating:'Legjobb értékelés',closest:'Legközelebbi'};
     badge=`<div class="mk-badge-tag">${tagBySort[MK_STATE.sort]||'Legjobb találat'}</div>`;
@@ -4521,7 +4578,7 @@ function mkCardHtml(p,isFirstNonReal,idx){
   const hasSlots=p.real&&Array.isArray(p.slots)&&p.slots.length>0;
   const slotsExpanded=hasSlots&&!!MK_STATE.expandedSlots[slotsKey];
   const slotsToggleBlock=hasSlots
-    ?`<button type="button" class="mk-slots-toggle" onclick="mkToggleSlots('${slotsKey.replace(/'/g,"\\'")}')">🕒 Szabad időpontok (${p.slots.length})<span class="mk-slots-chev">${slotsExpanded?'▲':'▼'}</span></button>`
+    ?`<button type="button" class="mk-slots-toggle" onclick="mkToggleSlots('${slotsKey.replace(/'/g,"\\'")}')">${iconSvg('🕒',14)} Szabad időpontok (${p.slots.length})<span class="mk-slots-chev">${slotsExpanded?'▲':'▼'}</span></button>`
     :'';
   const slotsPanelBlock=hasSlots&&slotsExpanded
     ?`<div class="mk-slots-panel">${p.slots.map(s=>`<button type="button" class="mk-slot-chip" onclick="window.open('${mkBookingUrl(p,s.date)}','_blank','noopener')">${s.label}</button>`).join('')}<div class="mk-slots-note">A kiválasztott időpontra egyből a(z) ${p.doc||p.nm} foglalási oldalára jutsz.</div></div>`
@@ -4529,7 +4586,7 @@ function mkCardHtml(p,isFirstNonReal,idx){
   return `<div class="mk-card${p.top?' top':''}${p.real?' real':''}">
     ${badge}
     <div class="mk-card-top">
-      <div class="mk-photo">${p.ic}</div>
+      <div class="mk-photo">${iconSvg(p.ic,24)}</div>
       <div class="mk-info">
         ${nameBlock}
         <div class="mk-sp">${p.sp}</div>
@@ -4549,7 +4606,7 @@ function mkCardHtml(p,isFirstNonReal,idx){
     ${slotsToggleBlock}
     ${slotsPanelBlock}
     <div class="mk-actions">
-      <button class="mk-book-btn" onclick="${p.real?`openBooking(${idx})`:'void(0)'}">📅 Időpont foglalása</button>
+      <button class="mk-book-btn" onclick="${p.real?`openBooking(${idx})`:'void(0)'}">${iconSvg('📅',14)} Időpont foglalása</button>
       <button class="mk-save-btn${saved}" onclick="mkToggleSave('${(p.nm||'').replace(/'/g,"\\'")}')">${savedIc}</button>
     </div>
   </div>`;
@@ -4634,7 +4691,7 @@ function mkRenderMap(){
     }).addTo(__mkLeafletMap);
     const name=p.doc||p.nm;
     const priceText=p.real?(p.price?mkFmtHuf(p.price):'Ár egyeztetés alapján'):mkFmtHuf(illustrativeStats(p).priceHuf);
-    marker.bindPopup(`<div class="mk-map-popup"><b>${name}</b>${p.doc?p.nm+'<br>':''}${p.sp||''}<br>${priceText}${p.addr?'<br>📍 '+p.addr:''}</div>`);
+    marker.bindPopup(`<div class="mk-map-popup"><b>${name}</b>${p.doc?p.nm+'<br>':''}${p.sp||''}<br>${priceText}${p.addr?'<br>'+iconSvg('📍',11)+' '+p.addr:''}</div>`);
     __mkLeafletMarkers.push(marker);
     bounds.push([lat+jitter[0],lng+jitter[1]]);
   });
@@ -4656,82 +4713,45 @@ function mkToggleSave(nm){MK_STATE.saved[nm]=!MK_STATE.saved[nm];mkRenderAll();}
 // külön AI-promptmezőt ahhoz, hogy éles környezetben is helyesen
 // jelenjen meg, még ha a backend prompt egyelőre nem is ad vissza minden
 // opcionális v2.2-es mezőt (possible_causes stb.) minden válaszban.
+// v2.10 (Mick kérése): a korábbi 7-szakaszos, %-os "AI jelentés" helyett
+// egy rövid, %-mentes ok-sor + egy kompakt, ikonos, vízszintes "roadmap"
+// csík (a régi "Cselekvési terv" + "Mire számíthatsz" összevonva) + egy
+// mondatos disclaimer. A `partners` argumentum megmarad (a hívó oldal
+// átadja), de a %-os `pct` itt már nincs felhasználva.
 function renderAiReport(d,partners){
-  const top=partners[0]||{};
-  const pct=top.pct||0;
-  const ring=document.getElementById('ai-score-ring');
-  if(ring)ring.style.setProperty('--ai-pct',pct);
-  const numEl=document.getElementById('ai-score-num');
-  if(numEl)numEl.textContent=pct?pct+'%':'–';
-  const tagEl=document.getElementById('ai-score-tag');
-  if(tagEl)tagEl.textContent=pct>=90?'Magas egyezés':(pct>=75?'Közepes egyezés':'Alapszintű egyezés');
-
-  const improvementMap={low:'Valószínűleg jól kezelhető megfelelő szakemberrel',medium:'Megfelelő ellátással jó eséllyel javítható',high:'Mielőbbi ellátással jobban kezelhető'};
-  const metrics=[
-    {val:(pct?pct+'%':'–'),lbl:'Tüneti egyezés'},
-    {val:d.urgency_label||'–',lbl:'Sürgősségi szint'},
-    {val:improvementMap[d.urgency]||improvementMap.low,lbl:'Várható javulás'}
-  ];
-  const metricEl=document.getElementById('ai-metric-row');
-  if(metricEl)metricEl.innerHTML=metrics.map(m=>`<div class="ai-metric-box"><div class="ai-metric-val">${m.val}</div><div class="ai-metric-lbl">${m.lbl}</div></div>`).join('');
-
-  // Fő lehetséges okok — ha az AI ad possible_causes mezőt, azt használjuk;
-  // enélkül a fő/másodlagos szakterületből képzünk 1-2 jelölt kártyát,
-  // ugyanazt a meglévő %-egyezést újrahasznosítva (nem találunk ki külön
-  // számot okonként).
-  const causes=(d.possible_causes&&d.possible_causes.length)
-    ? d.possible_causes
-    : [d.primary_specialty?{name:d.primary_specialty,pct:pct}:null,d.secondary_specialty?{name:d.secondary_specialty,pct:Math.max(0,pct-15)}:null].filter(Boolean);
-  const causesEl=document.getElementById('ai-causes');
-  if(causesEl)causesEl.innerHTML=causes.length
-    ? causes.map(c=>`<div class="ai-cause-card"><span class="ai-cause-name">${c.name}</span><span class="ai-cause-pct">${c.pct}%</span></div>`).join('')
-    : `<div class="ai-cause-card"><span class="ai-cause-name">Nincs kiemelt jelölt terület</span></div>`;
-
-  // Mit találtunk — a meglévő profile_chips-ekből, ikonnal kiegészítve
-  const findEl=document.getElementById('ai-findings');
-  if(findEl){
-    const chips=d.profile_chips||[];
-    findEl.innerHTML=chips.length
-      ? chips.map(c=>`<div class="ai-finding-item"><span class="ai-finding-ic">✓</span><span>${c.label}: ${c.value}</span></div>`).join('')
-      : '<div class="ai-finding-item"><span class="ai-finding-ic">✓</span><span>A megadott válaszok alapján készült az elemzés</span></div>';
+  // Leginkább érintett terület(ek) — %-mentesen, csak névvel
+  const causeEl=document.getElementById('ai-cause-line');
+  if(causeEl){
+    const names=[d.primary_specialty,d.secondary_specialty].filter(Boolean);
+    causeEl.innerHTML=names.length
+      ? `<span class="ai-cause-lbl">Leginkább érintett terület${names.length>1?'ek':''}:</span> <b>${names.join(', ')}</b>`
+      : '';
   }
 
-  // Miért gondoljuk ezt — az explanation mondatokra bontva
-  const reasonsEl=document.getElementById('ai-reasons');
-  if(reasonsEl){
-    const sentences=(d.explanation||'').split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean);
-    reasonsEl.innerHTML=sentences.length
-      ? sentences.map(s=>`<li>${s}</li>`).join('')
-      : '<li>A megadott válaszok mintázata alapján készült az elemzés.</li>';
-  }
-
-  // Amit még nem tudunk — SZÁNDÉKOSAN statikus, nem AI-generált
-  // (a kérdőív eleve nem tud helyettesíteni ilyen vizsgálatokat, ez nem
-  // egyéni becslés kérdése)
-  const unknownsEl=document.getElementById('ai-unknowns');
-  if(unknownsEl){
-    const items=['Labor eredmények','Képalkotó vizsgálat (pl. röntgen, ultrahang)','Fizikai vizsgálat','Egyéb, korábbi orvosi dokumentáció'];
-    unknownsEl.innerHTML=items.map(i=>`<div class="ai-unknown-item"><span class="ai-unknown-ic">○</span><span>${i}</span></div>`).join('');
-  }
-
-  // Cselekvési terv — a meglévő next_steps-ekből, idő+sürgősség jelzéssel
-  const planEl=document.getElementById('ai-plan');
-  if(planEl){
-    const whens=[d.urgency==='high'?'Mielőbb':'Most',' Ezután','Hosszabb távon'];
+  // Roadmap — a személyre szabott next_steps + a korábbi statikus
+  // időzítés-címkék (Mielőbb/Most, Ezután, Hosszabb távon) egyetlen
+  // kompakt, ikon-vezérelt csíkban
+  const roadmapEl=document.getElementById('ai-roadmap');
+  if(roadmapEl){
+    const whens=[d.urgency==='high'?'Mielőbb':'Most','Ezután','Hosszabb távon'];
+    const stepIcons=['zap','calendar','clock'];
     const steps=d.next_steps||[];
-    planEl.innerHTML=steps.length
-      ? steps.map((s,i)=>`<div class="ai-plan-step"><span class="ai-plan-when">${whens[i]||'Folyamatosan'}</span><span class="ai-plan-txt"><b>${s.title}</b> — ${s.desc}</span></div>`).join('')
-      : '<div class="ai-plan-step"><span class="ai-plan-txt">Egyelőre nincs konkrét javasolt lépés.</span></div>';
+    roadmapEl.innerHTML=steps.length
+      ? steps.slice(0,3).map((s,i)=>`
+          <div class="ai-roadmap-step">
+            <div class="ai-roadmap-ic">${iconSvgByKey(stepIcons[i]||'check',20)}</div>
+            <div class="ai-roadmap-when">${whens[i]||'Folyamatosan'}</div>
+            <div class="ai-roadmap-t">${s.title}</div>
+            <div class="ai-roadmap-d">${s.desc}</div>
+          </div>`).join('')
+      : '<div class="ai-roadmap-step"><div class="ai-roadmap-t">Egyelőre nincs konkrét javasolt lépés.</div></div>';
   }
 
-  // Mire számíthatsz — SZÁNDÉKOSAN statikus, általános szakaszjelzés,
-  // nem konkrét, kitalált időbeli prognózis
-  const tlEl=document.getElementById('ai-timeline');
-  if(tlEl){
-    tlEl.innerHTML=`
-      <div class="ai-timeline-phase"><div class="ai-timeline-ic">1️⃣</div><div class="ai-timeline-t">Rövid távon</div><div class="ai-timeline-d">Az első szakember-találkozó és a kivizsgálás megkezdése.</div></div>
-      <div class="ai-timeline-phase"><div class="ai-timeline-ic">2️⃣</div><div class="ai-timeline-t">Középtávon</div><div class="ai-timeline-d">A kivizsgálás eredményei alapján kezelési vagy életmódterv kialakítása.</div></div>
-      <div class="ai-timeline-phase"><div class="ai-timeline-ic">3️⃣</div><div class="ai-timeline-t">Hosszabb távon</div><div class="ai-timeline-d">Rendszeres kontroll és a válaszaidban jelzett terület nyomon követése.</div></div>`;
+  // Egy mondatos, összevont disclaimer (a régi "Amit még nem tudunk" +
+  // az orvosi figyelmeztetés összevonva)
+  const discEl=document.getElementById('ai-med-disclaimer');
+  if(discEl){
+    discEl.innerHTML=`${iconSvg('⚠️',15)} Ez az elemzés nem helyettesíti a labor-, képalkotó- vagy fizikális vizsgálatot, és nem ad diagnózist. Sürgős, életveszélyt jelentő tünet esetén azonnal hívd a <strong>112</strong>-t.`;
   }
 }
 function downloadReportPdf(){
