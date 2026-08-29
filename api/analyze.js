@@ -38,7 +38,11 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
-        max_tokens: 3000,
+        // v2.11 (Mick jelzése, mobil teszt: csonka/hibás JSON-válasz):
+        // 3000 -> 4000, hogy legyen biztonsági tartalék a magyar szöveg
+        // (ékezetes karakterek gyakran több tokent igényelnek) + 3 profil-
+        // chip + 3 next_steps mező számára, mielőtt a válasz levágódna.
+        max_tokens: 4000,
         system: "Kizárólag valid, TELJES JSON objektummal válaszolj a kért struktúra szerint. Semmi más szöveg, magyarázat vagy markdown. FONTOS: tartsd tömören a szövegmezőket (összefoglaló max 3 mondat, leírások max 2 mondat), hogy a JSON biztosan befejeződjön és valid maradjon.",
         messages: [{ role: "user", content: finalPrompt }]
       })

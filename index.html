@@ -3396,25 +3396,48 @@ Válaszolj KIZÁRÓLAG az alábbi JSON struktúrában, semmi más szöveg vagy m
 }`;
 
   go('s-load');
-  try{
-    // A kulcs NEM itt van -- a sajat backend endpoint hivja biztonsagosan
+  // v2.11 (Mick jelzése, mobil teszt: "nem töltött be a végső oldal, hibát
+  // dobott valami JSON"): az /api/analyze néha nem-valid vagy csonka JSON-t
+  // ad vissza (AI-válasz levágódás vagy hálózati megszakadás miatt, ez
+  // gyakoribb mobilon, gyengébb kapcsolatnál) -- ezt korábban AZONNAL
+  // hibaüzenetként dobtuk vissza a felhasználónak a nyers szerver-szöveggel
+  // ("Hiba: Szerver 502: {"error":"JSON parse hiba..."}"), ami ijesztő és
+  // értelmezhetetlen egy nem-technikai látogatónak. Most: 1x csendes,
+  // automatikus újrapróbálkozás (rövid váltással a MÁSODIK Claude-hívás
+  // valószínűleg sikeres lesz), és csak ha MINDKÉT próbálkozás elhasal,
+  // akkor jelenik meg egy rövid, emberi hibaüzenet a nyers technikai szöveg
+  // helyett.
+  const body=JSON.stringify({prompt:prompt, allapot:(A.allapot||'A')});
+  async function callAnalyze(){
     const resp=await fetch("/api/analyze",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({prompt:prompt, allapot:(A.allapot||'A')})
+      body
     });
     if(!resp.ok){
       const errTxt=await resp.text();
       throw new Error('Szerver '+resp.status+': '+errTxt.substring(0,200));
     }
-    const result=sanitizeResultNumbers(await resp.json());
-    // a backend mar kesz JSON objektumot ad vissza
+    // a backend mar kesz JSON objektumot ad vissza -- de ha csonka/hibas
+    // valaszt kapunk (halozati megszakadas, AI-valasz levagodas), a
+    // resp.json() itt dob hibat, amit a hivo fog el es probal ujra
+    return sanitizeResultNumbers(await resp.json());
+  }
+  try{
+    let result;
+    try{
+      result=await callAnalyze();
+    }catch(firstErr){
+      console.warn('HovaForduljak: első próbálkozás sikertelen, újrapróbálás...',firstErr);
+      await new Promise(r=>setTimeout(r,800));
+      result=await callAnalyze();
+    }
     renderResult(result);
   }catch(e){
     console.error('HovaForduljak hiba:',e);
     go('s-quiz');showQ(10);
     const eb=document.getElementById('errbox');
-    eb.textContent='Hiba: '+e.message;
+    eb.textContent='Most nem sikerült elkészíteni az elemzést — ez általában egy pillanatnyi hálózati vagy szerver-akadozás, nem a válaszaiddal van baj. Kérjük, próbáld újra az "Elemzés kérése" gombbal.';
     eb.classList.add('on');
   }
 }
