@@ -1,12 +1,12 @@
 {
     "_megjegyzes": "2026-08-23: Laci elküldte a MedSoulYou TÉNYLEGES, éles Medio-fiókját (medsoulyouapi@mymedio.hu) -- ez lecseréli a korábbi 'Hovaforduljak.hu teszt' sandboxot (locationId 2802), ami sose volt valós MedSoulYou-adat. A valódi telephely id-je 2322. A specialtyMap kategóriánként egy TÖMBÖT tartalmaz {doctorId, specializationId} párokból -- azért tömb és nem egyetlen pár, mert egy kategóriához több MedSoulYou-orvos is tartozhat (pl. 4 pszichológus), és mert ugyanaz az orvos több kategóriában is szerepelhet MÁS-MÁS konkrét specializationId-vel (pl. Dr. Salánki Zsuzsanna belgyógyász-konzultációja az Anyagcsere-Hormonálisban, állapotfelmérési csomagja a Szűrés-Megelőzésben). Csak azok a kategóriák vannak kitöltve, ahol a MedSoulYou 8 orvosa között TÉNYLEG van releváns szakember -- a többi (Alvás, Mozgásszervi, Szív és keringés, Légzőszervi, Neurológiai, Bőr-Haj) szándékosan üres, mert ott jelenleg nincs MedSoulYou-s szakorvos a Medio rendszerében -- ne fabrikálj hozzájuk párosítást.",
+    "_megjegyzes2": "2026-08-29: a doctorId 455874 (Mentális-Pszichés, specializationId 10087558) törölve -- élő ellenőrzéssel (getDoctors()) igazoltan MÁR NEM szerepel a Medio /doctors végpont válaszában (jelenleg 7, korábban 8 élő orvos), tehát az orvos időközben eltávolításra/inaktiválásra került a MedSoulYou Medio-fiókjából. Ez a stale bejegyzés okozta, hogy a /api/medsoulyou-slots a teljes Mentális-Pszichés kategóriára hibázott (Promise.all egyetlen taggal is elhasal) -- a másik 3, valós orvosnál pedig ténylegesen lett volna élő időpont-adat. Ha Laci/MedSoulYou új pszichológust köt be, ide kell felvenni az új doctorId/specializationId párt.",
     "locationId": "2322",
     "specialtyMap": {
           "Mentális-Pszichés": [
                 { "doctorId": 456878, "specializationId": 10090786 },
                 { "doctorId": 456647, "specializationId": 10101512 },
-                { "doctorId": 453547, "specializationId": 10087651 },
-                { "doctorId": 455874, "specializationId": 10087558 }
+                { "doctorId": 453547, "specializationId": 10087651 }
           ],
           "Alvás": [],
           "Anyagcsere-Hormonális": [
