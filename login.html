@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Belépés — HovaForduljak</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8FAFC;--card:#FFFFFF;--border:#E2E8F0;--border2:#CBD5E1;
+  --accent:#2F6FED;--accent2:#1E56D6;--accent-soft:rgba(47,111,237,0.08);
+  --teal:#16BFC8;--red:#DC4C4C;--red-soft:rgba(220,76,76,0.10);
+  --text:#0F172A;--text2:#475569;--text3:#64748B;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:16px;line-height:1.6}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px 16px;
+  background:radial-gradient(900px 500px at 15% -10%,rgba(47,111,237,.10),transparent 60%),
+             radial-gradient(800px 500px at 110% 110%,rgba(22,191,200,.10),transparent 60%),var(--bg)}
+.logo{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;margin-bottom:22px}
+.card{width:100%;max-width:400px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 28px;box-shadow:0 10px 40px rgba(15,23,42,.06)}
+.ico{width:46px;height:46px;border-radius:14px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+h1{font-size:1.3rem;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+.sub{font-size:.92rem;color:var(--text2);margin-bottom:22px}
+label{display:block;font-size:.84rem;font-weight:600;margin-bottom:7px}
+.field{position:relative}
+input[type=password],input[type=text]{width:100%;font:inherit;font-size:1rem;padding:13px 48px 13px 14px;border:1.5px solid var(--border2);border-radius:12px;background:#fff;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(47,111,237,.14)}
+.show{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:none;background:none;border-radius:9px;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.show:hover{background:var(--accent-soft);color:var(--accent)}
+.err{display:none;margin-top:12px;font-size:.86rem;color:var(--red);background:var(--red-soft);border-radius:10px;padding:9px 12px}
+.err.on{display:block}
+.btn{width:100%;min-height:48px;margin-top:18px;font:inherit;font-size:.95rem;font-weight:600;color:#fff;background:var(--accent);border:none;border-radius:12px;cursor:pointer;transition:background .2s}
+.btn:hover{background:var(--accent2)}
+.btn:disabled{opacity:.7;cursor:default}
+.foot{margin-top:18px;font-size:.78rem;color:var(--text3);text-align:center;max-width:400px}
+</style>
+</head>
+<body>
+  <div class="logo">HovaForduljak</div>
+  <main class="card">
+    <div class="ico" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    </div>
+    <h1>Belépés</h1>
+    <p class="sub">Az oldal jelenleg zárt tesztüzemben működik. A folytatáshoz add meg a jelszót.</p>
+    <form method="POST" action="/api/login" id="f">
+      <input type="hidden" name="next" id="next">
+      <label for="pw">Jelszó</label>
+      <div class="field">
+        <input type="password" name="password" id="pw" autocomplete="current-password" required autofocus>
+        <button type="button" class="show" id="show" aria-label="Jelszó megjelenítése">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="err" id="err" role="alert"></div>
+      <button class="btn" type="submit" id="go">Tovább</button>
+    </form>
+  </main>
+  <p class="foot">Ha nincs jelszavad, kérd el attól, aki az oldalt megosztotta veled.</p>
+<script>
+  var q = new URLSearchParams(location.search);
+  document.getElementById('next').value = q.get('next') || '/';
+  var err = document.getElementById('err');
+  if (q.get('hiba') === '1') { err.textContent = 'Hibás jelszó. Próbáld újra.'; err.classList.add('on'); }
+  if (q.get('hiba') === 'beallitas') { err.textContent = 'A belépés még nincs beállítva a szerveren.'; err.classList.add('on'); }
+  var pw = document.getElementById('pw');
+  document.getElementById('show').onclick = function () {
+    pw.type = pw.type === 'password' ? 'text' : 'password';
+    this.setAttribute('aria-label', pw.type === 'password' ? 'Jelszó megjelenítése' : 'Jelszó elrejtése');
+    pw.focus();
+  };
+  document.getElementById('f').onsubmit = function () {
+    var b = document.getElementById('go'); b.disabled = true; b.textContent = 'Ellenőrzés…';
+  };
+  // Vissza-gombbal visszatérve ne maradjon "Ellenőrzés…" állapotban
+  window.addEventListener('pageshow', function () {
+    var b = document.getElementById('go'); b.disabled = false; b.textContent = 'Tovább';
+  });
+</script>
+</body>
+</html>
