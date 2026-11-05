@@ -594,6 +594,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .ib-note{font-size:.78rem;color:var(--text3)}
 .ib-submit{width:100%;min-height:48px}
 .ib-submit:disabled{opacity:.7;cursor:default}
+.ib-ext{display:flex;align-items:center;justify-content:center;text-decoration:none}
+.ib-empty{font-size:.9rem;color:var(--text2);margin-bottom:14px}
+.ib-alt{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:11px 14px;margin-bottom:8px;font:inherit;color:var(--text);cursor:pointer}
+.ib-alt:hover{border-color:var(--accent)}
+.ib-alt strong{font-size:.92rem;font-weight:700}
+.ib-alt span{font-size:.78rem;color:var(--text3)}
 .ib-done{text-align:center}
 .ib-done-card{display:flex;flex-direction:column;gap:8px;text-align:left;background:var(--card2);border-radius:12px;padding:14px 16px;margin:16px 0}
 .ib-done-card div{display:flex;justify-content:space-between;gap:14px;font-size:.84rem}
@@ -1943,7 +1949,7 @@ input[type=range]::-webkit-slider-thumb {
 
     <div id="ib-step-slots">
       <div class="ib-notice" id="ib-slots-notice" role="alert"></div>
-      <div class="bk-slots-label">Válassz szabad időpontot:</div>
+      <div class="bk-slots-label" id="ib-slots-label">Válassz szabad időpontot:</div>
       <div id="ib-slot-days"></div>
     </div>
 
@@ -1975,6 +1981,9 @@ input[type=range]::-webkit-slider-thumb {
           </select>
         </label>
       </div>
+      <label class="ib-field">TAJ-szám (nem kötelező)
+        <input name="patientTAJ" inputmode="numeric" maxlength="11" pattern="[0-9]{3}[ \-]?[0-9]{3}[ \-]?[0-9]{3}" title="9 számjegy, például 123 456 789" autocomplete="off">
+      </label>
       <div class="ib-section">Számlázási cím</div>
       <div class="ib-row ib-row-zip">
         <label class="ib-field">Irányítószám
@@ -1999,7 +2008,7 @@ input[type=range]::-webkit-slider-thumb {
         <input type="checkbox" name="consent" required>
         <span>Hozzájárulok, hogy a fenti adataimat a foglalás rögzítéséhez továbbítsátok a(z) <span id="ib-consent-clinic"></span> és a Medio foglalási rendszere felé. Az adataimat a HovaForduljak nem tárolja.</span>
       </label>
-      <div class="ib-note">Itt nem kell fizetned. A fizetés részleteiről a klinika tájékoztat.</div>
+      <div class="ib-note" id="ib-pay-note"></div>
       <div class="ib-notice" id="ib-form-err" role="alert"></div>
       <button class="bk-confirm-btn ib-submit" id="ib-submit" type="submit">Időpont lefoglalása</button>
     </form>
@@ -4586,6 +4595,7 @@ function mkNormName(s){
 }
 async function mkEnhanceWithLiveData(category,partnersRef){
   const [data,slotData]=await Promise.all([mkFetchLiveDoctors(category),mkFetchLiveSlots(category)]);
+  if('bookingEnabled' in slotData)IB.enabled=!!slotData.bookingEnabled;
   // csak akkor alkalmazzuk, ha még mindig ugyanaz a renderelt lista van
   // érvényben (referencia-egyezés) -- ha a felhasználó időközben új
   // eredményt kért (pl. gyorsan újraindította a tesztet), a
@@ -4593,7 +4603,7 @@ async function mkEnhanceWithLiveData(category,partnersRef){
   // (lekésett) hívás csendben nem csinál semmit, hogy ne a rossz
   // kategóriába szúrjon be élő adatot.
   const base=window.__mkBase;
-  if(!base||base!==partnersRef)return;
+  if(!base||base!==partnersRef){ibResolvePending();return;}
   // v2.9 BUGFIX: ha ehhez a kategóriához nincs élő adat, a "töltés alatt"
   // jelzést IS le kell venni (különben örökre "Élő ár lekérdezése…"
   // szöveg maradna a kártyán) -- a végleges, statikus fallback szöveg
@@ -4602,6 +4612,7 @@ async function mkEnhanceWithLiveData(category,partnersRef){
   if(!data.available||!data.doctors||!data.doctors.length){
     base.forEach(p=>{ if(p.liveChecking)p.liveChecking=false; });
     mkRenderAll();
+    ibResolvePending();
     return;
   }
 
@@ -4644,6 +4655,7 @@ async function mkEnhanceWithLiveData(category,partnersRef){
     match.doctorId=doc.doctorId;
     match.specializationId=doc.specializationId;
     match.price=doc.price||null;
+    match.onlineConsult=!!doc.online;
     match.live=true;
     match.liveChecking=false;
     if(data.location&&data.location.address)match.addr=data.location.address;
@@ -4676,6 +4688,7 @@ async function mkEnhanceWithLiveData(category,partnersRef){
   const ctaText=document.getElementById('result-cta-text');
   const firstP=(window.__partners||[])[0];
   if(ctaText&&firstP&&firstP.real&&firstP.inlineBooking)ctaText.textContent='Időpont foglalása';
+  ibResolvePending();
 }
 
 function mkCardHtml(p,isFirstNonReal,idx){
@@ -5014,8 +5027,15 @@ function resultStickyCtaClick(){
 function openBooking(idx){
   const p=(window.__partners||[])[idx];
   if(!p)return;
-  // v2.12: élő, foglalható partnernél az oldalon belüli foglalás nyílik meg.
-  if(p.real && p.inlineBooking){
+  // v2.12 (Mick kérése: a foglalás végig nálunk menjen): bekapcsolt foglalásnál
+  // valós partnertől SOHA nem navigálunk ki, akkor sem, ha épp nincs szabad
+  // időpontja (ilyenkor az ablak ezt írja ki, és más orvost ajánl), vagy ha az
+  // élő adat még töltődik (ilyenkor az ablak megvárja).
+  if(p.real && p.liveChecking){
+    ibOpenLoading(p);
+    return;
+  }
+  if(p.real && (p.inlineBooking || IB.enabled)){
     ibOpen(p);
     return;
   }
@@ -5081,7 +5101,7 @@ function closeBooking(){
 // A foglalás a /api/medsoulyou-book végponton át a Medio rendszerébe, onnan a
 // klinika naptárába kerül. A beteg adatait nem tároljuk: bezáráskor az űrlap
 // is kiürül.
-const IB={p:null,slot:null};
+const IB={p:null,slot:null,enabled:false,pending:null};
 const IB_TZ='Europe/Budapest';
 function ibDayLabel(iso){return new Date(iso).toLocaleDateString('hu-HU',{weekday:'long',month:'long',day:'numeric',timeZone:IB_TZ});}
 function ibTimeLabel(iso){return new Date(iso).toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit',timeZone:IB_TZ});}
@@ -5094,17 +5114,76 @@ function ibOpenIdx(idx,iso){
   const p=(window.__partners||[])[idx];
   if(p)ibOpen(p,iso);
 }
-function ibOpen(p,iso){
+function ibFillHead(p){
   IB.p=p;
   document.getElementById('ib-doc').textContent=p.doc||p.nm;
   document.getElementById('ib-sp').textContent=[p.sp,p.nm].filter(Boolean).join(' · ');
-  document.getElementById('ib-addr').textContent=p.addr||'';
+  document.getElementById('ib-addr').textContent=p.onlineConsult?'Online konzultáció':(p.addr||'');
   document.getElementById('ib-price').textContent=p.price?mkFmtHuf(p.price):'Ár egyeztetés alapján';
-  document.getElementById('ib-dob').max=new Date().toISOString().slice(0,10);
+  document.getElementById('ib-pay-note').textContent=p.onlineConsult
+    ?'Online konzultáció: a díjat online kell fizetni. A fizetés menetéről a klinika tájékoztat.'
+    :'Itt nem kell fizetned. A díjat a helyszínen rendezheted.';
   document.getElementById('ib-modal').classList.add('on');
+}
+function ibOpen(p,iso){
+  ibFillHead(p);
+  document.getElementById('ib-dob').max=new Date().toISOString().slice(0,10);
   const slot=iso&&(p.allSlots||[]).find(s=>s.date===iso);
   if(slot)ibPickSlot(slot.date);
   else ibRenderSlots();
+}
+function ibOpenLoading(p){
+  ibFillHead(p);
+  IB.pending=p;
+  document.getElementById('ib-slots-label').style.display='none';
+  document.getElementById('ib-slots-notice').classList.remove('on');
+  document.getElementById('ib-slot-days').textContent='Szabad időpontok betöltése…';
+  ibShow('slots');
+}
+// Az élő adat megérkezett: a várakozó ablak folytatódik. Kikapcsolt foglalásnál
+// (jogi kapu) marad a klinika oldala, de linkként, mert aszinkron window.open-t
+// a böngésző letiltana.
+function ibResolvePending(){
+  const p=IB.pending;
+  if(!p)return;
+  IB.pending=null;
+  if(IB.enabled||p.inlineBooking)return ibOpen(p);
+  const wrap=document.getElementById('ib-slot-days');
+  wrap.textContent='';
+  const a=document.createElement('a');
+  a.className='bk-confirm-btn ib-submit ib-ext';
+  a.href=mkBookingUrl(p,p.nextSlotIso);
+  a.target='_blank';
+  a.rel='noopener';
+  a.textContent='Foglalás a klinika oldalán';
+  wrap.appendChild(a);
+}
+// Nincs szabad időpont: nem küldjük el az oldalról, hanem más foglalható orvost
+// ajánlunk a találatok közül.
+function ibRenderNoSlots(wrap){
+  wrap.textContent='';
+  const msg=document.createElement('p');
+  msg.className='ib-empty';
+  msg.textContent='Ennél az orvosnál most nincs online foglalható időpont.';
+  wrap.appendChild(msg);
+  const others=(window.__partners||[]).filter(o=>o!==IB.p&&o.real&&o.inlineBooking);
+  if(!others.length)return;
+  const lbl=document.createElement('div');
+  lbl.className='bk-slots-label';
+  lbl.textContent='Nála most tudsz időpontot foglalni:';
+  wrap.appendChild(lbl);
+  others.forEach(o=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='ib-alt';
+    b.onclick=()=>ibOpen(o);
+    const nm=document.createElement('strong');
+    nm.textContent=o.doc||o.nm;
+    const when=document.createElement('span');
+    when.textContent=`Legközelebb: ${o.nextSlotLabel||''}`;
+    b.append(nm,when);
+    wrap.appendChild(b);
+  });
 }
 function ibRenderSlots(notice){
   const days=new Map();
@@ -5134,7 +5213,8 @@ function ibRenderSlots(notice){
     dayEl.append(lbl,grid);
     wrap.appendChild(dayEl);
   });
-  if(!days.size)wrap.textContent='Ennél az orvosnál most nincs szabad időpont.';
+  if(!days.size)ibRenderNoSlots(wrap);
+  document.getElementById('ib-slots-label').style.display=days.size?'':'none';
   const n=document.getElementById('ib-slots-notice');
   n.textContent=notice||'';
   n.classList.toggle('on',!!notice);
@@ -5190,7 +5270,7 @@ async function ibSubmit(ev){
     if(res.ok&&data.success){
       document.getElementById('ib-done-doc').textContent=p.doc||p.nm;
       document.getElementById('ib-done-when').textContent=`${ibDayLabel(slot.date)}, ${ibTimeLabel(slot.date)}`;
-      document.getElementById('ib-done-addr').textContent=p.addr||'';
+      document.getElementById('ib-done-addr').textContent=p.onlineConsult?'Online':(p.addr||'');
       document.getElementById('ib-done-email').textContent=f.patientEmail;
       document.getElementById('ib-done-code').textContent=data.authorizationCode||data.bookingId||'';
       form.reset();
@@ -5215,6 +5295,7 @@ function ibClose(){
   ibFormError('');
   IB.p=null;
   IB.slot=null;
+  IB.pending=null;
 }
 
 // ── Test hook (additive only, no behavior change) ──────────────────────

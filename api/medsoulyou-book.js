@@ -3,8 +3,8 @@
 // POST /api/medsoulyou-book
 // Body: { category, doctorId, specializationId, date, patientName,
 //         patientPhone, patientEmail, patientDateOfBirth, patientGender,
-//         billingZip, billingSettlement, billingAddress, billingHouseNr?,
-//         billingFloorDoor?, consent: true }
+//         patientTAJ?, billingZip, billingSettlement, billingAddress,
+//         billingHouseNr?, billingFloorDoor?, consent: true }
 //
 // doctorId/specializationId/date a kiválasztott szabad időponttól (Medio
 // /slots válaszából) származik. A foglalás előtt a végpont visszakérdez a
@@ -19,8 +19,14 @@
 // ADATVÉDELMI ALAPELV: ez a végpont a beteg adatait KIZÁRÓLAG továbbítja a
 // Mediónak, sehol nem menti el (nincs adatbázisunk). A logban csak a
 // foglalás azonosítója és a szakterület jelenik meg — semmilyen egészségügyi
-// vagy személyes adat nem kerül naplózásra. Csak a Medio API által KÖTELEZŐ
-// mezőket kérjük be: TAJ-számot, anyja nevét, születési helyet nem.
+// vagy személyes adat nem kerül naplózásra. A Medio API által KÖTELEZŐ
+// mezőkön túl csak a TAJ-számot kérjük be, az is opcionális (Mick döntése);
+// anyja nevét, születési helyet nem.
+//
+// FIZETÉS: személyes vizsgálatnál helyszíni, online konzultációnál nem
+// helyszíni (isOnsitePayment: false, Mick döntése). Ez utóbbinál a Medio a
+// klinikánál beállított fizetési móddal rögzíti a foglalást; fizetési végpontja
+// az API-nak nincs.
 //
 // FONTOS, MIELŐTT ÉLESBE MEGY: a beteg-adatok gyűjtése és továbbítása
 // GDPR/egészségügyi adatkezelési szempontból külön jogi jóváhagyást igényel
@@ -33,7 +39,7 @@
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import { createBooking, getFreeSlots } from '../lib/medioClient.js';
+import { createBooking, getFreeSlots, getServicesWithAmounts, isOnlineService } from '../lib/medioClient.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const mapping = JSON.parse(
@@ -79,6 +85,9 @@ function validatePatient(p) {
           return 'Kérjük, ellenőrizd a születési dátumot.';
     }
     if (p.patientGender !== 'Male' && p.patientGender !== 'Female') return 'Kérjük, válaszd ki a nemet.';
+    if (p.patientTAJ && !/^\d{3}[ -]?\d{3}[ -]?\d{3}$/.test(String(p.patientTAJ).trim())) {
+          return 'A TAJ-szám 9 számjegyből áll. Kérjük, ellenőrizd, vagy hagyd üresen.';
+    }
     if (!/^\d{4}$/.test(String(p.billingZip))) return 'Kérjük, 4 számjegyű irányítószámot adj meg.';
     return null;
 }
@@ -134,17 +143,26 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: 'Érvénytelen időpont.' });
     }
   let slot;
+  let isOnlineConsult;
     try {
-          const free = await getFreeSlots({
-                  locationId: mapping.locationId,
-                  specializationId: payload.specializationId,
-                  doctorId: payload.doctorId,
-                  startDate: new Date(slotTime - 60_000).toISOString(),
-                  endDate: new Date(slotTime + 86_400_000).toISOString(),
-          });
+          const [free, amounts] = await Promise.all([
+                  getFreeSlots({
+                          locationId: mapping.locationId,
+                          specializationId: payload.specializationId,
+                          doctorId: payload.doctorId,
+                          startDate: new Date(slotTime - 60_000).toISOString(),
+                          endDate: new Date(slotTime + 86_400_000).toISOString(),
+                  }),
+                  getServicesWithAmounts(),
+          ]);
           slot = (free || []).find(
                   (s) => new Date(s.date).getTime() === slotTime && String(s.doctorId) === String(payload.doctorId)
                 );
+          isOnlineConsult = isOnlineService(amounts.find(
+                  (a) =>
+                        String(a.doctor_id) === String(payload.doctorId) &&
+                        String(a.specialization_id) === String(payload.specializationId)
+                ));
     } catch (err) {
           console.error('[medsoulyou-book] időpont-ellenőrzés sikertelen', err.status);
           return res.status(502).json({
@@ -167,13 +185,16 @@ export default async function handler(req, res) {
         patientEmail: String(payload.patientEmail).trim(),
         patientDateOfBirth: `${payload.patientDateOfBirth}T00:00:00Z`,
         patientGender: payload.patientGender,
+        patientTAJ: payload.patientTAJ
+          ? String(payload.patientTAJ).replace(/\D/g, '').replace(/^(\d{3})(\d{3})(\d{3})$/, '$1-$2-$3')
+          : undefined,
         billingCountry: 'Magyarország',
         billingZip: Number(payload.billingZip),
         billingSettlement: String(payload.billingSettlement).trim(),
         billingAddress: String(payload.billingAddress).trim(),
         billingHouseNr: payload.billingHouseNr || undefined,
         billingFloorDoor: payload.billingFloorDoor || undefined,
-        isOnsitePayment: true,
+        isOnsitePayment: !isOnlineConsult,
         emailNotification: true,
         reservationSource: 'hovaforduljak',
   };

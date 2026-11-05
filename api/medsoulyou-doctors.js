@@ -11,7 +11,7 @@
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import { getDoctors, getLocations, getServicesWithAmounts } from '../lib/medioClient.js';
+import { getDoctors, getLocations, getServicesWithAmounts, isOnlineService } from '../lib/medioClient.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const mapping = JSON.parse(
@@ -57,6 +57,7 @@ export default async function handler(req, res) {
                               specializationId: pick.specializationId,
                               name: doc.name,
                               price: amt ? amt.amount : null,
+                              online: isOnlineService(amt),
                       };
               })
               .filter(Boolean);

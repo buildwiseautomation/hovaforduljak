@@ -25,6 +25,10 @@ export default async function handler(req, res) {
           return res.status(405).json({ error: 'Method not allowed' });
     }
 
+  // bookingEnabled: a frontend ez alapján dönt az oldalon belüli foglalásról
+  // (jogi kapu, ld. api/medsoulyou-book.js).
+  const bookingEnabled = !!process.env.MEDIO_BOOKING_LEGAL_APPROVED;
+
   const { category, startDate, endDate } = req.query;
     if (!category) {
           return res.status(400).json({ error: 'Hiányzó "category" paraméter.' });
@@ -34,6 +38,7 @@ export default async function handler(req, res) {
     if (!mapping.locationId || !Array.isArray(picks) || !picks.length) {
           return res.status(200).json({
                   available: false,
+                  bookingEnabled,
                   slots: [],
                   reason: 'Ehhez a szakterülethez még nincs beállítva MedSoulYou Medio-azonosító.',
           });
@@ -66,6 +71,7 @@ export default async function handler(req, res) {
         if (!validPicks.length) {
               return res.status(200).json({
                     available: false,
+                    bookingEnabled,
                     slots: [],
                     reason: 'Ehhez a szakterülethez jelenleg nincs élő MedSoulYou-orvos.',
               });
@@ -97,14 +103,13 @@ export default async function handler(req, res) {
         if (allFailed) {
               return res.status(502).json({
                     available: false,
+                    bookingEnabled,
                     slots: [],
                     error: 'A MedSoulYou időpont-lekérdezés jelenleg egyik orvosnál sem sikerült.',
               });
         }
-        // bookingEnabled: a frontend ez alapján dönt az oldalon belüli foglalásról
-        // (jogi kapu, ld. api/medsoulyou-book.js).
-        res.status(200).json({ available: true, slots, bookingEnabled: !!process.env.MEDIO_BOOKING_LEGAL_APPROVED });
+        res.status(200).json({ available: true, slots, bookingEnabled });
   } catch (err) {
-        res.status(500).json({ available: false, slots: [], error: err.message });
+        res.status(500).json({ available: false, bookingEnabled, slots: [], error: err.message });
   }
 }
