@@ -101,7 +101,9 @@ export default async function handler(req, res) {
                     error: 'A MedSoulYou időpont-lekérdezés jelenleg egyik orvosnál sem sikerült.',
               });
         }
-        res.status(200).json({ available: true, slots });
+        // bookingEnabled: a frontend ez alapján dönt az oldalon belüli foglalásról
+        // (jogi kapu, ld. api/medsoulyou-book.js).
+        res.status(200).json({ available: true, slots, bookingEnabled: !!process.env.MEDIO_BOOKING_LEGAL_APPROVED });
   } catch (err) {
         res.status(500).json({ available: false, slots: [], error: err.message });
   }

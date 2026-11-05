@@ -564,6 +564,43 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .bk-confirm-info strong{color:var(--accent2)}
 .bk-confirm-btn{background:var(--accent);color:#fff;border:none;font-family:'Manrope',sans-serif;font-size:.9rem;font-weight:500;padding:13px;border-radius:11px;cursor:pointer;transition:background .2s;box-shadow:0 4px 20px rgba(47,111,237,.3)}
 .bk-confirm-btn:hover{background:var(--accent2)}
+/* v2.12: oldalon belüli foglalás */
+.ib-modal{max-width:520px}
+.ib-head{display:flex;flex-direction:column;gap:2px;padding-right:36px;margin-bottom:18px}
+.ib-doc{font-size:1.15rem;font-weight:700;color:var(--text)}
+.ib-sp{font-size:.82rem;color:var(--text3)}
+.ib-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 14px;margin-top:8px;padding-top:10px;border-top:1px solid var(--border);font-size:.82rem;color:var(--text2)}
+.ib-meta strong{color:var(--text);font-weight:700}
+.ib-day{margin-bottom:14px}
+.ib-day-lbl{font-size:.8rem;font-weight:600;color:var(--text);margin-bottom:6px}
+.ib-day-lbl::first-letter{text-transform:uppercase}
+.ib-day-slots{display:flex;flex-wrap:wrap;gap:6px}
+.ib-day-slots .mk-slot-chip{min-width:64px;min-height:40px}
+.ib-notice{display:none;font-size:.84rem;color:var(--red);background:var(--red-soft);border-radius:10px;padding:9px 12px;margin-bottom:12px}
+.ib-notice.on{display:block}
+.ib-form{flex-direction:column;gap:12px}
+.ib-picked{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--accent-soft);border-radius:12px;padding:10px 14px}
+.ib-picked span{display:block;font-size:.72rem;color:var(--text3)}
+.ib-picked strong{font-size:.9rem;font-weight:700;color:var(--text)}
+.ib-link{background:none;border:none;color:var(--accent);font:inherit;font-size:.8rem;font-weight:600;cursor:pointer;white-space:nowrap;padding:6px 0}
+.ib-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ib-row-zip{grid-template-columns:120px 1fr}
+.ib-field{display:flex;flex-direction:column;gap:5px;font-size:.8rem;font-weight:600;color:var(--text);min-width:0}
+.ib-field input,.ib-field select{width:100%;min-height:44px;font:inherit;font-size:.95rem;font-weight:400;color:var(--text);background:var(--card);border:1.5px solid var(--border2);border-radius:10px;padding:9px 12px;outline:none}
+.ib-field input:focus,.ib-field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.ib-section{font-size:.85rem;font-weight:700;color:var(--text);margin-top:4px}
+.ib-consent{display:flex;gap:10px;align-items:flex-start;font-size:.8rem;line-height:1.5;color:var(--text2);cursor:pointer}
+.ib-consent input{width:18px;height:18px;flex-shrink:0;margin-top:2px;accent-color:var(--accent)}
+.ib-note{font-size:.78rem;color:var(--text3)}
+.ib-submit{width:100%;min-height:48px}
+.ib-submit:disabled{opacity:.7;cursor:default}
+.ib-done{text-align:center}
+.ib-done-card{display:flex;flex-direction:column;gap:8px;text-align:left;background:var(--card2);border-radius:12px;padding:14px 16px;margin:16px 0}
+.ib-done-card div{display:flex;justify-content:space-between;gap:14px;font-size:.84rem}
+.ib-done-card span{color:var(--text3);flex-shrink:0}
+.ib-done-card strong{color:var(--text);font-weight:600;text-align:right}
+.ib-done .ib-submit{margin-top:18px}
+@media(max-width:480px){.ib-row{grid-template-columns:1fr}.ib-row-zip{grid-template-columns:110px 1fr}}
 #booking-success{display:none;text-align:center;padding:20px 0}
 .bk-success-icon{width:60px;height:60px;border-radius:50%;background:var(--teal-soft);border:2px solid var(--teal);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 18px}
 .bk-success-title{font-family:'Manrope',sans-serif;font-size:1.4rem;font-weight:600;margin-bottom:10px}
@@ -1890,6 +1927,94 @@ input[type=range]::-webkit-slider-thumb {
       <div class="bk-success-txt">Időpont: <strong id="bk-success-slot"></strong></div>
       <div class="bk-success-sub">Egy megerősítő emailt küldtünk. A klinika hamarosan felveszi veled a kapcsolatot.</div>
       <button class="bk-confirm-btn" onclick="closeBooking()" style="margin-top:20px">Bezárás</button>
+    </div>
+  </div>
+</div>
+
+<!-- v2.12: oldalon belüli, valós foglalás a Medio rendszerébe -->
+<div class="modal-overlay" id="ib-modal">
+  <div class="modal ib-modal" role="dialog" aria-modal="true" aria-labelledby="ib-doc">
+    <button class="modal-close" onclick="ibClose()" aria-label="Bezárás">✕</button>
+    <div class="ib-head" id="ib-head">
+      <div class="ib-doc" id="ib-doc"></div>
+      <div class="ib-sp" id="ib-sp"></div>
+      <div class="ib-meta"><span id="ib-addr"></span><strong id="ib-price"></strong></div>
+    </div>
+
+    <div id="ib-step-slots">
+      <div class="ib-notice" id="ib-slots-notice" role="alert"></div>
+      <div class="bk-slots-label">Válassz szabad időpontot:</div>
+      <div id="ib-slot-days"></div>
+    </div>
+
+    <form id="ib-step-form" class="ib-form" onsubmit="ibSubmit(event)">
+      <div class="ib-picked">
+        <div><span>Kiválasztott időpont</span><strong id="ib-picked"></strong></div>
+        <button type="button" class="ib-link" onclick="ibRenderSlots()">Másik időpont</button>
+      </div>
+      <label class="ib-field">Teljes név
+        <input name="patientName" required minlength="3" maxlength="50" autocomplete="name">
+      </label>
+      <div class="ib-row">
+        <label class="ib-field">Telefonszám
+          <input name="patientPhone" type="tel" required maxlength="45" autocomplete="tel" placeholder="+36 30 123 4567">
+        </label>
+        <label class="ib-field">E-mail cím
+          <input name="patientEmail" type="email" required maxlength="100" autocomplete="email">
+        </label>
+      </div>
+      <div class="ib-row">
+        <label class="ib-field">Születési dátum
+          <input name="patientDateOfBirth" id="ib-dob" type="date" required min="1900-01-01" autocomplete="bday">
+        </label>
+        <label class="ib-field">Nem
+          <select name="patientGender" required>
+            <option value="">Válassz…</option>
+            <option value="Female">Nő</option>
+            <option value="Male">Férfi</option>
+          </select>
+        </label>
+      </div>
+      <div class="ib-section">Számlázási cím</div>
+      <div class="ib-row ib-row-zip">
+        <label class="ib-field">Irányítószám
+          <input name="billingZip" required inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="postal-code">
+        </label>
+        <label class="ib-field">Település
+          <input name="billingSettlement" required maxlength="100" autocomplete="address-level2">
+        </label>
+      </div>
+      <label class="ib-field">Utca
+        <input name="billingAddress" required maxlength="100" autocomplete="address-line1">
+      </label>
+      <div class="ib-row">
+        <label class="ib-field">Házszám
+          <input name="billingHouseNr" maxlength="20">
+        </label>
+        <label class="ib-field">Emelet, ajtó (nem kötelező)
+          <input name="billingFloorDoor" maxlength="20">
+        </label>
+      </div>
+      <label class="ib-consent">
+        <input type="checkbox" name="consent" required>
+        <span>Hozzájárulok, hogy a fenti adataimat a foglalás rögzítéséhez továbbítsátok a(z) <span id="ib-consent-clinic"></span> és a Medio foglalási rendszere felé. Az adataimat a HovaForduljak nem tárolja.</span>
+      </label>
+      <div class="ib-note">Itt nem kell fizetned. A fizetés részleteiről a klinika tájékoztat.</div>
+      <div class="ib-notice" id="ib-form-err" role="alert"></div>
+      <button class="bk-confirm-btn ib-submit" id="ib-submit" type="submit">Időpont lefoglalása</button>
+    </form>
+
+    <div id="ib-step-done" class="ib-done">
+      <div class="bk-success-icon">✓</div>
+      <div class="bk-success-title">Foglalás rögzítve</div>
+      <div class="ib-done-card">
+        <div><span>Orvos</span><strong id="ib-done-doc"></strong></div>
+        <div><span>Időpont</span><strong id="ib-done-when"></strong></div>
+        <div><span>Helyszín</span><strong id="ib-done-addr"></strong></div>
+        <div><span>Foglalási kód</span><strong id="ib-done-code"></strong></div>
+      </div>
+      <div class="bk-success-sub">A visszaigazolást a(z) <strong id="ib-done-email"></strong> címre küldi a foglalási rendszer. Ha nem tudsz elmenni, jelezd a klinikának.</div>
+      <button class="bk-confirm-btn ib-submit" type="button" onclick="ibClose()">Bezárás</button>
     </div>
   </div>
 </div>
@@ -4535,6 +4660,11 @@ async function mkEnhanceWithLiveData(category,partnersRef){
     // kezelhetetlenül hosszú a lista.
     const allSlots=(slotsByDoctor.get(String(doc.doctorId))||[]).slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
     match.slots=allSlots.slice(0,8).map(s=>({date:s.date,label:mkFormatSlotLabel(s.date)}));
+    // v2.12 (Mick kérése): oldalon belüli foglalás -- csak ha a szerver
+    // engedi (jogi kapu, ld. api/medsoulyou-book.js) és van szabad időpont.
+    match.category=category;
+    match.allSlots=allSlots;
+    match.inlineBooking=!!slotData.bookingEnabled&&allSlots.length>0;
   });
   // v2.9 BUGFIX: ha bármelyik "töltés alatt" jelzésű bejegyzés véletlenül
   // nem kapott párt (pl. több igazolt helyőrző volt, mint amennyi élő
@@ -4542,6 +4672,10 @@ async function mkEnhanceWithLiveData(category,partnersRef){
   // "Élő ár lekérdezése…" maradna.
   base.forEach(p=>{ if(p.liveChecking)p.liveChecking=false; });
   mkRenderAll();
+  // v2.12: ha az első találat itt az oldalon foglalható, ezt mondja a sticky gomb is
+  const ctaText=document.getElementById('result-cta-text');
+  const firstP=(window.__partners||[])[0];
+  if(ctaText&&firstP&&firstP.real&&firstP.inlineBooking)ctaText.textContent='Időpont foglalása';
 }
 
 function mkCardHtml(p,isFirstNonReal,idx){
@@ -4594,9 +4728,9 @@ function mkCardHtml(p,isFirstNonReal,idx){
   const savedIc=MK_STATE.saved[p.nm]?'♥':'♡';
   // v2.9 (Mick jelzése): lenyitható "Szabad időpontok" fül, KIZÁRÓLAG az
   // élő (Medio API-val bekötött) partnereknél, akiknél ténylegesen van
-  // szabad időpont-adatunk. A tényleges foglalás mindig a klinika saját
-  // oldalán történik (nincs saját TAJ-adatgyűjtés, ld. korábbi
-  // GDPR-döntés) -- egy konkrét időpontra kattintva oda navigálunk ki.
+  // szabad időpont-adatunk. v2.12: ha a szerver engedi (p.inlineBooking),
+  // az időpontra kattintva itt az oldalon foglal; különben, a jogi kapu
+  // feloldásáig, a klinika saját oldalára navigálunk ki.
   const slotsKey=p.doc||p.nm;
   const hasSlots=p.real&&Array.isArray(p.slots)&&p.slots.length>0;
   const slotsExpanded=hasSlots&&!!MK_STATE.expandedSlots[slotsKey];
@@ -4604,7 +4738,7 @@ function mkCardHtml(p,isFirstNonReal,idx){
     ?`<button type="button" class="mk-slots-toggle" onclick="mkToggleSlots('${slotsKey.replace(/'/g,"\\'")}')">${iconSvg('🕒',14)} Szabad időpontok (${p.slots.length})<span class="mk-slots-chev">${slotsExpanded?'▲':'▼'}</span></button>`
     :'';
   const slotsPanelBlock=hasSlots&&slotsExpanded
-    ?`<div class="mk-slots-panel">${p.slots.map(s=>`<button type="button" class="mk-slot-chip" onclick="window.open('${mkBookingUrl(p,s.date)}','_blank','noopener')">${s.label}</button>`).join('')}<div class="mk-slots-note">A kiválasztott időpontra egyből a(z) ${p.doc||p.nm} foglalási oldalára jutsz.</div></div>`
+    ?`<div class="mk-slots-panel">${p.slots.map(s=>`<button type="button" class="mk-slot-chip" onclick="${p.inlineBooking?`ibOpenIdx(${idx},'${s.date}')`:`window.open('${mkBookingUrl(p,s.date)}','_blank','noopener')`}">${s.label}</button>`).join('')}<div class="mk-slots-note">${p.inlineBooking?'Válassz egy időpontot, és itt az oldalon lefoglalhatod.':`A kiválasztott időpontra egyből a(z) ${p.doc||p.nm} foglalási oldalára jutsz.`}</div></div>`
     :'';
   return `<div class="mk-card${p.top?' top':''}${p.real?' real':''}">
     ${badge}
@@ -4880,6 +5014,11 @@ function resultStickyCtaClick(){
 function openBooking(idx){
   const p=(window.__partners||[])[idx];
   if(!p)return;
+  // v2.12: élő, foglalható partnernél az oldalon belüli foglalás nyílik meg.
+  if(p.real && p.inlineBooking){
+    ibOpen(p);
+    return;
+  }
   // Valódi partner (pl. MedSoulYou) -> tényleges foglalási oldalra visz, nem demo modal.
   // v2.9: ha van élő legközelebbi időpont-adatunk, egyenesen ARRA az
   // orvosra/időpontra mutató mélylinket adjuk (mkBookingUrl), nem csak az
@@ -4935,6 +5074,147 @@ function closeBooking(){
     document.getElementById('booking-body').style.display='block';
     document.getElementById('booking-success').style.display='none';
   },300);
+}
+
+// ── Oldalon belüli foglalás (Medio) ── v2.12 (Mick kérése)
+// A felhasználó nem hagyja el az oldalt: időpont -> adatok -> visszaigazolás.
+// A foglalás a /api/medsoulyou-book végponton át a Medio rendszerébe, onnan a
+// klinika naptárába kerül. A beteg adatait nem tároljuk: bezáráskor az űrlap
+// is kiürül.
+const IB={p:null,slot:null};
+const IB_TZ='Europe/Budapest';
+function ibDayLabel(iso){return new Date(iso).toLocaleDateString('hu-HU',{weekday:'long',month:'long',day:'numeric',timeZone:IB_TZ});}
+function ibTimeLabel(iso){return new Date(iso).toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit',timeZone:IB_TZ});}
+function ibShow(step){
+  ['slots','form','done'].forEach(s=>{document.getElementById('ib-step-'+s).style.display=s===step?(s==='form'?'flex':'block'):'none';});
+  document.getElementById('ib-head').style.display=step==='done'?'none':'flex';
+  document.querySelector('#ib-modal .modal').scrollTop=0;
+}
+function ibOpenIdx(idx,iso){
+  const p=(window.__partners||[])[idx];
+  if(p)ibOpen(p,iso);
+}
+function ibOpen(p,iso){
+  IB.p=p;
+  document.getElementById('ib-doc').textContent=p.doc||p.nm;
+  document.getElementById('ib-sp').textContent=[p.sp,p.nm].filter(Boolean).join(' · ');
+  document.getElementById('ib-addr').textContent=p.addr||'';
+  document.getElementById('ib-price').textContent=p.price?mkFmtHuf(p.price):'Ár egyeztetés alapján';
+  document.getElementById('ib-dob').max=new Date().toISOString().slice(0,10);
+  document.getElementById('ib-modal').classList.add('on');
+  const slot=iso&&(p.allSlots||[]).find(s=>s.date===iso);
+  if(slot)ibPickSlot(slot.date);
+  else ibRenderSlots();
+}
+function ibRenderSlots(notice){
+  const days=new Map();
+  (IB.p.allSlots||[]).forEach(s=>{
+    const k=ibDayLabel(s.date);
+    if(!days.has(k))days.set(k,[]);
+    days.get(k).push(s);
+  });
+  const wrap=document.getElementById('ib-slot-days');
+  wrap.innerHTML='';
+  days.forEach((slots,day)=>{
+    const dayEl=document.createElement('div');
+    dayEl.className='ib-day';
+    const lbl=document.createElement('div');
+    lbl.className='ib-day-lbl';
+    lbl.textContent=day;
+    const grid=document.createElement('div');
+    grid.className='ib-day-slots';
+    slots.forEach(s=>{
+      const b=document.createElement('button');
+      b.type='button';
+      b.className='mk-slot-chip';
+      b.textContent=ibTimeLabel(s.date);
+      b.onclick=()=>ibPickSlot(s.date);
+      grid.appendChild(b);
+    });
+    dayEl.append(lbl,grid);
+    wrap.appendChild(dayEl);
+  });
+  if(!days.size)wrap.textContent='Ennél az orvosnál most nincs szabad időpont.';
+  const n=document.getElementById('ib-slots-notice');
+  n.textContent=notice||'';
+  n.classList.toggle('on',!!notice);
+  ibShow('slots');
+}
+function ibPickSlot(iso){
+  IB.slot=(IB.p.allSlots||[]).find(s=>s.date===iso)||null;
+  if(!IB.slot)return ibRenderSlots();
+  document.getElementById('ib-picked').textContent=`${ibDayLabel(iso)}, ${ibTimeLabel(iso)}`;
+  document.getElementById('ib-consent-clinic').textContent=IB.p.nm||'a klinika';
+  ibFormError('');
+  ibShow('form');
+}
+function ibFormError(msg){
+  const e=document.getElementById('ib-form-err');
+  e.textContent=msg;
+  e.classList.toggle('on',!!msg);
+}
+// A lefoglalt (vagy közben elkelt) időpont tűnjön el a kártyáról is
+function ibDropSlot(p,iso){
+  p.allSlots=(p.allSlots||[]).filter(s=>s.date!==iso);
+  p.slots=p.allSlots.slice(0,8).map(s=>({date:s.date,label:mkFormatSlotLabel(s.date)}));
+  const next=p.allSlots[0];
+  p.nextSlotIso=next?next.date:null;
+  p.nextSlotLabel=next?mkFormatSlotLabel(next.date):null;
+  p.inlineBooking=p.allSlots.length>0;
+  mkRenderAll();
+}
+async function ibSubmit(ev){
+  ev.preventDefault();
+  const form=ev.target;
+  const btn=document.getElementById('ib-submit');
+  const p=IB.p,slot=IB.slot;
+  if(!p||!slot||btn.disabled)return;
+  const f=Object.fromEntries(new FormData(form));
+  ibFormError('');
+  btn.disabled=true;
+  btn.textContent='Foglalás folyamatban…';
+  try{
+    const res=await fetch('/api/medsoulyou-book',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        ...f,
+        consent:!!f.consent,
+        category:p.category,
+        doctorId:slot.doctorId,
+        specializationId:slot.specializationId,
+        date:slot.date
+      })
+    });
+    const data=await res.json().catch(()=>({}));
+    if(res.ok&&data.success){
+      document.getElementById('ib-done-doc').textContent=p.doc||p.nm;
+      document.getElementById('ib-done-when').textContent=`${ibDayLabel(slot.date)}, ${ibTimeLabel(slot.date)}`;
+      document.getElementById('ib-done-addr').textContent=p.addr||'';
+      document.getElementById('ib-done-email').textContent=f.patientEmail;
+      document.getElementById('ib-done-code').textContent=data.authorizationCode||data.bookingId||'';
+      form.reset();
+      ibDropSlot(p,slot.date);
+      ibShow('done');
+    }else if(data.slotTaken){
+      ibDropSlot(p,slot.date);
+      ibRenderSlots(data.error);
+    }else{
+      ibFormError(data.error||'A foglalást most nem sikerült rögzíteni. Kérjük, próbáld újra.');
+    }
+  }catch(e){
+    ibFormError('Nem sikerült elérni a szervert. Ellenőrizd az internetkapcsolatot, és próbáld újra.');
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Időpont lefoglalása';
+  }
+}
+function ibClose(){
+  document.getElementById('ib-modal').classList.remove('on');
+  document.getElementById('ib-step-form').reset();
+  ibFormError('');
+  IB.p=null;
+  IB.slot=null;
 }
 
 // ── Test hook (additive only, no behavior change) ──────────────────────
